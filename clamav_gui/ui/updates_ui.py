@@ -188,7 +188,6 @@ class UpdateDialog(QDialog):
             
         self.changelog_label.setText(changelog)
     
-    def skip_update(self):
         """Skip this version of the update."""
         self.done(2)  # Custom return code for skip
 
@@ -202,30 +201,67 @@ def check_for_updates(parent=None, current_version: str = "1.0.0", force_check: 
         force_check: If True, skip the cache and force a check.
     """
     try:
+        # Create a progress dialog
+        progress = QProgressDialog(
+            parent.tr("Checking for updates..."),
+            parent.tr("Cancel"),
+            0, 0, parent
+        )
+        progress.setWindowModality(Qt.WindowModal)
+        progress.setMinimumDuration(1000)
+        progress.setValue(0)
+        progress.setMaximum(0)  # Indeterminate progress
+        progress.canceled.connect(progress.close)
+
         # Create and configure the update checker
         checker = UpdateChecker(current_version=current_version)
         
-        # Check for updates
-        update_available, update_info = checker.check_for_updates(force=force_check)
+        # Connect signals
+        def on_update_available(version, release_notes, download_url):
+            try:
+                progress.close()
+                dialog = UpdatesDialog(parent, current_version)
+                dialog.on_update_available(version, release_notes, download_url)
+                result = dialog.exec()
+                
+                if result == 2:  # Skip this version
+                    checker.skip_version(version)
+            except Exception as e:
+                logger.error(f"Error in update available handler: {e}", exc_info=True)
         
-        if not update_available:
-            if force_check:
-                QMessageBox.information(
+        def on_no_update_available():
+            try:
+                progress.close()
+                if force_check:
+                    QMessageBox.information(
+                        parent,
+                        parent.tr("No Updates"),
+                        parent.tr("You are using the latest version of ClamAV GUI.")
+                    )
+            except Exception as e:
+                logger.error(f"Error in no update handler: {e}", exc_info=True)
+        
+        def on_error(error_msg):
+            try:
+                progress.close()
+                QMessageBox.warning(
                     parent,
-                    parent.tr("No Updates"),
-                    parent.tr("You are running the latest version of ClamAV GUI.")
+                    parent.tr("Update Error"),
+                    parent.tr(f"Error checking for updates: {error_msg}")
                 )
-            return
+            except Exception as e:
+                logger.error(f"Error in error handler: {e}", exc_info=True)
         
-        # Show update dialog
-        dialog = UpdateDialog(update_info, parent)
-        result = dialog.exec()
+        # Connect signals
+        checker.update_available.connect(on_update_available)
+        checker.no_update_available.connect(on_no_update_available)
+        checker.error_occurred.connect(on_error)
         
-        if result == QDialog.DialogCode.Accepted:
-            # User wants to update
-            pass  # Update logic will be handled by the main application
-        elif result == 2:  # Skip this version
-            checker.skip_version(update_info.get('latest_version'))
+        # Start the update check
+        checker.start()
+        
+        # Show the progress dialog
+        progress.show()
         
     except Exception as e:
         logger.error(f"Error checking for updates: {e}", exc_info=True)
