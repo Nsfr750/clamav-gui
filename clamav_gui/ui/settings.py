@@ -4,6 +4,9 @@ Settings management for the ClamAV GUI application.
 from PySide6.QtCore import QSettings
 from pathlib import Path
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 class AppSettings:
     """Manages application settings and configuration."""
@@ -96,8 +99,10 @@ class AppSettings:
             if 'scan_pua' in settings:
                 self.settings.setValue('scan_pua', settings['scan_pua'])
             
-            # Sync settings and return success status
-            return self.settings.sync()
+            # Sync settings - on Windows, sync() doesn't return a value
+            self.settings.sync()
+            return True
+            
         except Exception as e:
             logger.error(f"Failed to save settings: {e}")
             return False
@@ -134,7 +139,8 @@ class AppSettings:
         """
         try:
             self.settings.setValue(key, value)
-            return self.settings.sync()
+            self.settings.sync()
+            return True
         except Exception as e:
             logger.error(f"Failed to set setting '{key}': {e}")
             return False
