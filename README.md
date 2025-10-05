@@ -156,7 +156,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Support
 
-For support, please open an issue on GitHub or contact me at [nsfr750@yandex.com](mailto:nsfr750@yandex.com)
+For support, please open an issue on GitHub or contact me: [Nsfr750](mailto:nsfr750@yandex.com)
 
 ## Donate
 
