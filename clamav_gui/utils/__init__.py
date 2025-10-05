@@ -1,0 +1,5 @@
+"""
+PDF Duplicate Finder
+
+"""
+
