@@ -13,7 +13,7 @@ from wand.drawing import Drawing
 from wand.color import Color
 
 # Import language manager
-from ..lang.lang_manager import SimpleLanguageManager
+from clamav_gui.lang.lang_manager import SimpleLanguageManager
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ class SponsorDialog(QDialog):
         layout = QVBoxLayout(self)
         
         # Title
-        title = QLabel(self.tr("sponsor.title", "Support PDF Duplicate Finder"))
+        title = QLabel(self.tr("sponsor.title", "Support ClamAV GUI"))
         title.setStyleSheet("font-size: 18px; font-weight: bold; margin-bottom: 20px;")
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title)
@@ -143,7 +143,7 @@ class SponsorDialog(QDialog):
         other_help.setHtml(f"""
         <h3>{self.tr('sponsor.other_ways.title', 'Other Ways to Help:')}</h3>
         <ul>
-            <li>{self.tr('sponsor.other_ways.star', 'Star the project on')} <a href="https://github.com/Nsfr750/PDF_Finder">GitHub</a></li>
+            <li>{self.tr('sponsor.other_ways.star', 'Star the project on')} <a href="https://github.com/Nsfr750/ClamAV-GUI">GitHub</a></li>
             <li>{self.tr('sponsor.other_ways.report', 'Report bugs and suggest features')}</li>
             <li>{self.tr('sponsor.other_ways.share', 'Share with others who might find it useful')}</li>
         </ul>

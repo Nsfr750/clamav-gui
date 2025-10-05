@@ -3,16 +3,88 @@ Update UI for ClamAV GUI.
 """
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QLabel, QPushButton, QCheckBox, 
-    QDialogButtonBox, QProgressDialog, QApplication
+    QDialogButtonBox, QProgressDialog, QApplication, QTextBrowser, QMessageBox
 )
-from PySide6.QtCore import Qt, QThread, Signal, QObject
-from PySide6.QtGui import QIcon
+from PySide6.QtCore import Qt, QThread, Signal, QObject, QUrl
+from PySide6.QtGui import QIcon, QDesktopServices
 
-from ..utils.updates import UpdateChecker
-from ..lang.lang_manager import SimpleLanguageManager
-from ..utils.logger import get_logger
+import logging
+import webbrowser
 
-logger = get_logger(__name__)
+from clamav_gui.utils.updates import UpdateChecker
+from clamav_gui.lang.lang_manager import SimpleLanguageManager
+
+logger = logging.getLogger(__name__)
+
+class UpdatesDialog(QDialog):
+    """Dialog for checking and applying updates."""
+    
+    def __init__(self, parent=None, current_version="1.0.0"):
+        super().__init__(parent)
+        self.current_version = current_version
+        self.setWindowTitle(self.tr("Check for Updates"))
+        self.setMinimumSize(500, 300)
+        
+        layout = QVBoxLayout(self)
+        
+        # Status label
+        self.status_label = QLabel(self.tr("Checking for updates..."))
+        layout.addWidget(self.status_label)
+        
+        # Update info
+        self.info_browser = QTextBrowser()
+        self.info_browser.setOpenExternalLinks(True)
+        layout.addWidget(self.info_browser)
+        
+        # Buttons
+        self.button_box = QDialogButtonBox()
+        self.update_button = QPushButton(self.tr("Update Now"))
+        self.update_button.setVisible(False)
+        self.update_button.clicked.connect(self.download_update)
+        
+        self.close_button = QPushButton(self.tr("Close"))
+        self.close_button.clicked.connect(self.close)
+        
+        self.button_box.addButton(self.update_button, QDialogButtonBox.ButtonRole.AcceptRole)
+        self.button_box.addButton(self.close_button, QDialogButtonBox.ButtonRole.RejectRole)
+        
+        # Start checking for updates
+        self.check_for_updates()
+    
+    def check_for_updates(self):
+        """Check for updates."""
+        try:
+            import clamav_gui
+            self.checker = UpdateChecker(current_version=clamav_gui.__version__)
+            self.checker.update_available.connect(self.on_update_available)
+            self.checker.no_update_available.connect(self.on_no_update_available)
+            self.checker.error_occurred.connect(self.on_error)  # Changed to on_error to match the actual method name
+            self.checker.start()
+        except Exception as e:
+            logger.error(f"Error initializing update checker: {e}")
+            self.on_error(str(e))  # Changed to on_error to match the actual method name
+    
+    def on_update_available(self, version, release_notes, download_url):
+        """Handle when an update is available."""
+        self.status_label.setText(self.tr(f"Version {version} is available! (Current: {self.current_version})"))
+        self.info_browser.setHtml(release_notes)
+        self.update_button.setVisible(True)
+        self.download_url = download_url
+    
+    def on_no_update_available(self):
+        """Handle when no update is available."""
+        self.status_label.setText(self.tr("You have the latest version."))
+        self.info_browser.setPlainText(self.tr("No updates are currently available."))
+    
+    def on_error(self, error_message):
+        """Handle errors during update check."""
+        self.status_label.setText(self.tr("Error checking for updates"))
+        self.info_browser.setPlainText(error_message)
+    
+    def download_update(self):
+        """Open the download URL in the default web browser."""
+        if hasattr(self, 'download_url'):
+            QDesktopServices.openUrl(QUrl(self.download_url))
 
 class UpdateDialog(QDialog):
     """Dialog for showing update information and options."""

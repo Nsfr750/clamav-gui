@@ -5,23 +5,27 @@ A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows.
 ## Features
 
 - **Virus Scanning**
+
   - Scan files and directories
   - Real-time scan progress tracking
   - Detailed scan reports
   - Quarantine management
 
 - **Database Management**
+
   - One-click virus database updates
   - Automatic update scheduling
   - Database integrity verification
 
 - **Configuration**
+
   - Easy access to ClamAV configuration
   - Built-in configuration file editor
   - Custom scan options
   - Path management for ClamAV executables
 
 - **User Interface**
+
   - Intuitive tab-based navigation
   - Dark/Light theme support
   - Real-time status updates
@@ -38,12 +42,14 @@ A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows.
 ### Quick Start
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/Nsfr750/clamav-gui.git
    cd clamav-gui
    ```
 
 2. Set up a virtual environment (recommended):
+
    ```bash
    # Windows
    python -m venv venv
@@ -55,11 +61,13 @@ A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows.
    ```
 
 3. Install dependencies:
+
    ```bash
    pip install -r requirements.txt
    ```
 
 4. Install in development mode:
+
    ```bash
    pip install -e .
    ```
@@ -69,11 +77,13 @@ A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows.
 ### Starting the Application
 
 Run using the launcher:
+
 ```bash
 clamav-gui
 ```
 
 Or directly with Python:
+
 ```bash
 python -m clamav_gui
 ```

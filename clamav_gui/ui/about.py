@@ -1,32 +1,34 @@
 """
-About Dialog Module
-
 This module provides an about dialog for the ClamAV GUI application.
 It displays version information, system details, and credits.
 """
 
-from PySide6.QtWidgets import (QDialog, QVBoxLayout, QLabel, QPushButton, 
-                             QHBoxLayout, QTextBrowser, QApplication, 
-                             QScrollArea, QWidget, QSizePolicy)
-from PySide6.QtCore import Qt, QSize, QUrl, QT_VERSION_STR, PYQT_VERSION_STR
+from PySide6 import QtWidgets
+from PySide6.QtWidgets import (
+    QDialog, QVBoxLayout, QLabel, QPushButton, QTextBrowser, QScrollArea, 
+    QWidget, QFrame, QHBoxLayout, QApplication, QSizePolicy
+)
+from PySide6.QtCore import Qt, QSize, QUrl
+from PySide6 import __version__ as QT_VERSION_STR
+# PYQT_VERSION_STR is not available in PySide6, using PySide6 version instead
 from PySide6.QtGui import QPixmap, QIcon, QDesktopServices
 
 # Import version information
-from ..utils.version import (
+from clamav_gui.utils.version import (
     get_version, get_version_info, get_version_history,
     get_latest_changes, is_development, get_codename,
     __author__, __email__, __license__, __description__
 )
 
 # Import language manager
-from ..lang.lang_manager import SimpleLanguageManager
-
+from clamav_gui.lang.lang_manager import SimpleLanguageManager
 import os
 import sys
 import platform
 from pathlib import Path
 import logging
-import subprocess
+import os
+import sys
 import psutil
 
 try:
@@ -40,9 +42,22 @@ logger = logging.getLogger(__name__)
 class AboutDialog(QDialog):
     def __init__(self, parent=None, language_manager=None):
         super().__init__(parent)
-        self.language_manager = language_manager if language_manager else SimpleLanguageManager()
-        self.setWindowTitle(self.language_manager.tr("about.title", "About ClamAV GUI"))
-        self.setMinimumSize(600, 600)
+        try:
+            # Initialize language manager with fallback
+            self.language_manager = language_manager if language_manager else SimpleLanguageManager()
+            
+            # Set window title with fallback
+            try:
+                self.setWindowTitle(self.language_manager.tr("about.title", "About ClamAV GUI"))
+            except Exception as e:
+                logger.warning(f"Error setting window title: {e}")
+                self.setWindowTitle("About ClamAV GUI")
+                
+            self.setMinimumSize(600, 600)
+        except Exception as e:
+            logger.error(f"Error initializing AboutDialog: {e}")
+            self.setWindowTitle("About")
+            self.setMinimumSize(600, 400)
         
         layout = QVBoxLayout(self)
         
@@ -77,22 +92,35 @@ class AboutDialog(QDialog):
         title.setStyleSheet("""
             font-size: 24px; 
             font-weight: bold;
-            color: #2c3e50;
+            color: yellow;
             margin-bottom: 5px;
         """)
         
         # Version information
-        version_text = self.language_manager.tr(
-            "about.version", 
-            "Version {version} {codename} ({status})"
-        ).format(
-            version=get_version(),
-            codename=get_codename(),
-            status="Development" if is_development() else "Stable"
-        )
+        try:
+            version = get_version()
+            version_text = f"Version {version}"
+            
+            # Try to get additional version info if available
+            try:
+                if callable(get_codename):
+                    codename = get_codename()
+                    if codename and codename != 'unknown':
+                        version_text += f" {codename}"
+                
+                if callable(is_development):
+                    status = "Development" if is_development() else "Stable"
+                    version_text += f" ({status})"
+                    
+            except Exception as e:
+                logger.debug(f"Could not get extended version info: {e}")
+                
+        except Exception as e:
+            logger.error(f"Error getting version info: {e}")
+            version_text = "Version Unknown"  # Final fallback
         version = QLabel(version_text)
         version.setStyleSheet("""
-            color: #7f8c8d;
+            color: yellow;
             font-size: 14px;
             margin-bottom: 10px;
         """)
@@ -118,19 +146,18 @@ class AboutDialog(QDialog):
         )
         description.setWordWrap(True)
         description.setStyleSheet("""
-            color: #34495e;
+            color: yellow;
             font-size: 14px;
             margin: 10px 0;
             padding: 10px;
-            background-color: #f8f9fa;
             border-radius: 5px;
         """)
         layout.addWidget(description)
         
         # Create a scrollable area for system info
+        # Set up scroll area
         scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        scroll.setFrameShape(Qt.Shape.NoFrame)
+        scroll.setFrameShape(QFrame.Shape.NoFrame)
         
         # System info widget
         sys_info_widget = QWidget()
@@ -146,7 +173,23 @@ class AboutDialog(QDialog):
         # System info content
         sys_info = QTextBrowser()
         sys_info.setOpenLinks(True)
+        sys_info.setStyleSheet("""
+            QTextBrowser {
+                background-color: #f0f0f0;
+                border: 1px solid #d0d0d0;
+                border-radius: 4px;
+                padding: 8px;
+            }
+        """)
         sys_info.setHtml(self.get_system_info())
+        sys_info_layout.addWidget(sys_info)
+        
+        # Set the widget to the scroll area
+        scroll.setWidget(sys_info_widget)
+        scroll.setWidgetResizable(True)
+        
+        # Add scroll area to the main layout
+        layout.addWidget(scroll, 1)  # The 1 makes it take up remaining space
         sys_info.setStyleSheet("""
             QTextBrowser {
                 background-color: #f8f9fa;
@@ -155,6 +198,7 @@ class AboutDialog(QDialog):
                 padding: 10px;
                 font-family: monospace;
                 font-size: 12px;
+                color: black;
             }
         """)
         sys_info_layout.addWidget(sys_info)
@@ -176,7 +220,7 @@ class AboutDialog(QDialog):
             )
         )
         copyright.setStyleSheet("""
-            color: #7f8c8d;
+            color: yellow;
             font-size: 11px;
             margin-top: 10px;
             padding-top: 10px;
@@ -231,156 +275,105 @@ class AboutDialog(QDialog):
             }
         """)
         
+        # Add buttons to layout with proper spacing
         buttons.addStretch()
         buttons.addWidget(github_btn)
         buttons.addWidget(close_btn)
         
+        # Add buttons layout to main layout with some spacing
         layout.addLayout(buttons)
+        layout.setContentsMargins(20, 20, 20, 20)
         
-        # Connect language change signal
-        self.language_manager.language_changed.connect(self.retranslate_ui)
-    
-    def retranslate_ui(self):
-        """Update the UI when the language changes."""
-        self.setWindowTitle(self.language_manager.tr("about.title", "About PDF Duplicate Finder"))
-        
-        # Update version text
-        for i in range(self.layout().count()):
-            widget = self.layout().itemAt(i).widget()
-            if isinstance(widget, QLabel) and "Version" in widget.text():
-                widget.setText(self.language_manager.tr("about.version", "Version {version}").format(version=get_version()))
-                break
-        
-        # Update description and other translatable text
-        for widget in self.findChildren(QLabel):
-            if widget.text() == "System Information:":
-                widget.setText(self.language_manager.tr("about.system_info", "<b>System Information:</b>"))
-            elif "This software is licensed" in widget.text():
-                widget.setText(
-                    self.language_manager.tr(
-                        "about.copyright",
-                        " {year} Nsfr750\n"
-                        "This software is licensed under the GPL3 License."
-                    ).format(year="2025")
-                )
-        
-        # Update button text
-        for button in self.findChildren(QPushButton):
-            if button.text() == "Close":
-                button.setText(self.language_manager.tr("about.close", "Close"))
-    
-    def get_imagemagick_version(self):
-        """Get ImageMagick version information."""
+        # Connect language change signal if language manager is available
+        if hasattr(self, 'language_manager') and hasattr(self.language_manager, 'language_changed'):
+            self.language_manager.language_changed.connect(self.retranslate_ui)
+            
+    def retranslate_ui(self, language_code=None):
+        """Retranslate the UI when language changes."""
         try:
-            # Try to get version from Wand first
-            from wand.version import MAGICK_VERSION, MAGICK_VERSION_NUMBER
-            return f"{MAGICK_VERSION} ({MAGICK_VERSION_NUMBER})"
-        except ImportError:
-            pass
-        except Exception as e:
-            logger.warning(f"Could not get ImageMagick version from Wand: {e}")
-        
-        # Fallback: try to run magick/convert command
-        try:
-            # Try different possible command names
-            commands = ['magick', 'convert', 'identify']
-            for cmd in commands:
+            # Update window title
+            self.setWindowTitle(self.language_manager.tr("about.title", "About ClamAV GUI"))
+            
+            # Update other translatable elements here if needed
+            if hasattr(self, 'title_label'):
+                self.title_label.setText(self.language_manager.tr("about.title", "ClamAV GUI"))
+                
+            # Update version info
+            if hasattr(self, 'version_label'):
                 try:
-                    result = subprocess.run([cmd, '-version'], 
-                                          capture_output=True, text=True, timeout=5)
-                    if result.returncode == 0:
-                        # Extract version from first line
-                        first_line = result.stdout.split('\n')[0]
-                        if 'Version:' in first_line:
-                            version = first_line.split('Version:')[1].split(',')[0].strip()
-                            return version
-                        return first_line.strip()
-                except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
-                    continue
+                    version = get_version()
+                    codename = get_codename()
+                    status = "Development" if is_development() else "Stable"
+                    version_format = self.language_manager.tr(
+                        "about.version", 
+                        "Version {version} {codename} ({status})"
+                    )
+                    version_text = version_format.format(
+                        version=version,
+                        codename=codename,
+                        status=status
+                    )
+                    self.version_label.setText(version_text)
+                except Exception as e:
+                    logger.error(f"Error updating version info: {e}")
+                    self.version_label.setText(f"Version {get_version()}")
+                    
         except Exception as e:
-            logger.warning(f"Could not get ImageMagick version from command: {e}")
-        
-        return 'Not found'
+            logger.error(f"Error retranslating UI: {e}")
     
-    def get_ghostscript_version(self):
-        """Get Ghostscript version information."""
-        try:
-            # Try different possible command names
-            commands = ['gs', 'gswin64c', 'gswin32c', 'ghostscript']
-            for cmd in commands:
-                try:
-                    result = subprocess.run([cmd, '--version'], 
-                                          capture_output=True, text=True, timeout=5)
-                    if result.returncode == 0:
-                        return result.stdout.strip()
-                except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
-                    continue
-        except Exception as e:
-            logger.warning(f"Could not get Ghostscript version: {e}")
-        
-        return 'Not found'
-
     def get_system_info(self):
-        import psutil
-
-        system = platform.system()
-        release = platform.release()
-        machine = platform.machine()
-        python_version = platform.python_version()
-
-        # Get CPU information
-        cpu_info = platform.processor()
-        if not cpu_info and system == "Windows":
-            cpu_info = platform.processor() or "Unknown"
-        elif not cpu_info and system == "Darwin":
-            cpu_info = (
-                subprocess.check_output(
-                    ["sysctl", "-n", "machdep.cpu.brand_string"]
-                )
-                .strip()
-                .decode()
-            )
-        elif not cpu_info and system == "Linux":
-            cpu_info = ""
-            with open("/proc/cpuinfo", "r") as f:
-                for line in f:
-                    if "model name" in line:
-                        cpu_info = line.split(":", 1)[1].strip()
-                        break
-
-        # Get core count
-        core_count = psutil.cpu_count(logical=True)
-        physical_cores = psutil.cpu_count(logical=False) or core_count
-
-        # Get RAM information
-        ram = psutil.virtual_memory()
-        total_ram = ram.total / (1024**3)  # Convert to GB
-        available_ram = ram.available / (1024**3)  # Convert to GB
-
-        # Get Wand version
+        """Generate HTML-formatted system information."""
         try:
-            wand_version = getattr(WandImage, 'VERSION', 'Unknown')
-            # If VERSION is a callable (like in newer versions), call it
-            if callable(wand_version):
-                wand_version = wand_version()
+            # Get system information
+            system = platform.system()
+            release = platform.release()
+            version = platform.version()
+            machine = platform.machine()
+            processor = platform.processor()
+            
+            # Get Python information
+            python_version = platform.python_version()
+            python_implementation = platform.python_implementation()
+            
+            # Get PySide6 version
+            from PySide6 import __version__ as pyside_version
+            pyside6_version = QT_VERSION_STR
+            
+            # Get application information
+            app_version = get_version()
+            app_codename = get_codename()
+            app_status = "Development" if is_development() else "Stable"
+            
+            # Format the information as HTML
+            info = f"""
+            <html>
+            <body>
+                <h3>Application</h3>
+                <table>
+                    <tr><td><b>Name:</b></td><td>ClamAV GUI</td></tr>
+                    <tr><td><b>Version:</b></td><td>{app_version} {app_codename} ({app_status})</td></tr>
+                </table>
+                
+                <h3>System</h3>
+                <table>
+                    <tr><td><b>OS:</b></td><td>{system} {release}</td></tr>
+                    <tr><td><b>Version:</b></td><td>{version}</td></tr>
+                    <tr><td><b>Machine:</b></td><td>{machine}</td></tr>
+                    <tr><td><b>Processor:</b></td><td>{processor}</td></tr>
+                </table>
+                
+                <h3>Python</h3>
+                <table>
+                    <tr><td><b>Version:</b></td><td>{python_implementation} {python_version}</td></tr>
+                    <tr><td><b>PySide6:</b></td><td>{pyside6_version}</td></tr>
+                </table>
+            </body>
+            </html>
+            """
+            
+            return info
+            
         except Exception as e:
-            logger.warning(f"Could not get Wand version: {e}")
-            wand_version = 'Unknown'
-            
-        imagemagick_version = self.get_imagemagick_version()
-        ghostscript_version = self.get_ghostscript_version()
-            
-        info = [
-            f"<b>OS:</b> {platform.system()} {platform.release()} ({platform.version()})<br>",
-            f"<b>System:</b> ({machine})<br>",
-            f"<b>Processor:</b> {cpu_info}<br>",
-            f"<b>Core Count:</b> {core_count} ({physical_cores} physical cores)<br>",
-            f"<b>RAM:</b> {total_ram:.2f} GB ({available_ram:.2f} GB available)<br>",
-            f"<b>Python:</b> {platform.python_version()}<br>",
-            f"<b>Qt:</b> {QT_VERSION_STR}<br>",
-            f"<b>PyQt:</b> {PYQT_VERSION_STR}<br>",
-            f"<b>Wand:</b> {wand_version}<br>",
-            f"<b>ImageMagick:</b> {imagemagick_version}<br>",
-            f"<b>Ghostscript:</b> {ghostscript_version}<br>"
-        ]
-        return ''.join(info)
+            logger.error(f"Error getting system info: {e}")
+            return "<p>Error retrieving system information.</p>"
+    

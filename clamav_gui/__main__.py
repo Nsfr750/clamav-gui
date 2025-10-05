@@ -5,6 +5,7 @@ import sys
 import os
 import logging
 from pathlib import Path
+from datetime import datetime
 
 # Set up basic logging first
 logging.basicConfig(
@@ -16,7 +17,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger("ClamAV-GUI")
 
-# Now import Qt and other modules
 try:
     from PySide6.QtWidgets import QApplication, QMessageBox
     from PySide6.QtCore import QTranslator, QLocale, QLibraryInfo
@@ -25,19 +25,15 @@ try:
     # Now that PySide6 is imported, we can import our modules that might use it
     from clamav_gui.main_window import ClamAVGUI
     from clamav_gui.lang.lang_manager import SimpleLanguageManager
-    from clamav_gui.utils.logger import setup_logger
     from clamav_gui import __version__
+    from clamav_gui.ui.updates_ui import check_for_updates
     
-    # Reconfigure logger with our custom setup
-    logger = setup_logger("ClamAV-GUI", log_level="INFO")
+    logger.info("Application starting...")
     
 except ImportError as e:
-    logger.critical(f"Failed to import required modules: {e}")
-    logger.critical("Please make sure all dependencies are installed with: pip install -r requirements.txt")
+    logging.critical(f"Failed to import required modules: {e}")
+    logging.critical("Please make sure all dependencies are installed with: pip install -r requirements.txt")
     sys.exit(1)
-except Exception as e:
-    logger.critical(f"Unexpected error: {e}")
-    raise
 
 def setup_application():
     """Set up the Qt application with translations and styles."""
@@ -54,12 +50,19 @@ def setup_application():
     
     # Set application icon
     try:
-        from .resources import icons_rc  # noqa: F401
-        app_icon = QIcon(":/icons/app_icon.png")
-        if not app_icon.isNull():
-            app.setWindowIcon(app_icon)
-    except ImportError:
-        logger.warning("Failed to load application icon")
+        # Try to load icon from assets folder
+        icon_path = Path(__file__).parent.parent / "assets" / "icon.png"
+        if icon_path.exists():
+            app_icon = QIcon(str(icon_path))
+            if not app_icon.isNull():
+                app.setWindowIcon(app_icon)
+                logger.info("Successfully loaded application icon")
+            else:
+                logger.warning("Failed to load application icon: Invalid image file")
+        else:
+            logger.warning(f"Icon not found at: {icon_path}")
+    except Exception as e:
+        logger.warning(f"Failed to load application icon: {e}")
     
     # Set up translations
     translator = QTranslator()
@@ -67,10 +70,18 @@ def setup_application():
     
     # Try to load system language
     system_lang = QLocale.system().name()
-    if lang_manager.set_language(system_lang):
-        logger.info(f"Using system language: {system_lang}")
+    # Try exact match first (e.g., 'en_US')
+    if not lang_manager.set_language(system_lang):
+        # If exact match fails, try language code only (e.g., 'en')
+        lang_code = system_lang.split('_')[0]
+        if not lang_manager.set_language(lang_code):
+            # Fall back to English if system language is not available
+            logger.warning(f"System language {system_lang} not available, falling back to English")
+            lang_manager.set_language('en')
+        else:
+            logger.info(f"Using language: {lang_code}")
     else:
-        logger.warning(f"System language {system_lang} not available, using default")
+        logger.info(f"Using system language: {system_lang}")
     
     # Load Qt's built-in translations
     qt_translator = QTranslator()

@@ -3,25 +3,31 @@ import os
 import subprocess
 import logging
 from pathlib import Path
-from PySide6.QtWidgets import (QMainWindow, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout,
-                             QLabel, QPushButton, QFileDialog, QMessageBox, QApplication,
-                             QStatusBar, QProgressBar, QSizePolicy, QMenuBar, QMenu,
-                             QDialog, QTextEdit, QComboBox, QLineEdit, QCheckBox, QGroupBox,
+from PySide6.QtWidgets import (QMainWindow, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QFormLayout,
+                             QStatusBar, QProgressBar, QSizePolicy, QMenuBar, QMenu, QPushButton,
+                             QDialog, QTextEdit, QPlainTextEdit, QComboBox, QLineEdit, QCheckBox, QGroupBox,
                              QScrollArea, QFrame, QSplitter, QToolBar, QStyle, QInputDialog,
                              QListWidget, QListWidgetItem, QTreeWidget, QTreeWidgetItem, QHeaderView,
-                             QAbstractItemView, QTableWidget, QTableWidgetItem, QToolButton, QStyleFactory)
-from PySide6.QtCore import Qt, QTimer, QSize, QThread, Signal, QObject, QEvent, QSettings, QPoint, QByteArray, QBuffer, QIODevice, QProcess, QProcessEnvironment, QStandardPaths, QUrl, Slot
+                             QAbstractItemView, QTableWidget, QTableWidgetItem, QToolButton, QStyleFactory,
+                             QMessageBox, QFileDialog)
+from PySide6.QtCore import (Qt, QThread, Signal, QObject, QUrl, QProcess, QTimer, QSettings, 
+                           QPoint, QByteArray, QBuffer, QIODevice, QProcessEnvironment, 
+                           QStandardPaths, Slot)
 from PySide6.QtGui import (QIcon, QPixmap, QFont, QColor, QTextCursor, QDesktopServices, 
                         QAction, QKeySequence, QTextCharFormat, QTextDocument, QTextFormat, 
                         QSyntaxHighlighter, QTextBlockUserData, QTextBlock, QPainter, QPalette, 
-                        FontMetrics, QGuiApplication, QClipboard, QImage, QMovie, QPixmap, QRegion)
-from clamav_gui.ui import check_for_updates
+                        QFontMetrics, QGuiApplication, QClipboard, QImage, QMovie, QRegion)
+from clamav_gui.ui.updates_ui import check_for_updates
+from clamav_gui.ui.settings import AppSettings
+from clamav_gui.ui.help import HelpDialog
+from clamav_gui.ui.menu import ClamAVMenuBar
+from clamav_gui.ui.about import AboutDialog
+from clamav_gui.ui.sponsor import SponsorDialog
 
 # Import language manager
 from clamav_gui.lang.lang_manager import SimpleLanguageManager
 
 # Setup logger
-{{ ... }}
 logger = logging.getLogger(__name__)
 
 class ClamAVGUI(QMainWindow):
@@ -39,15 +45,30 @@ class ClamAVGUI(QMainWindow):
         self.process = None
         self.scan_thread = None
         
-        # Set up language manager
         self.lang_manager = lang_manager or SimpleLanguageManager()
         
         # Connect language changed signal
         if hasattr(self.lang_manager, 'language_changed'):
             self.lang_manager.language_changed.connect(self.retranslate_ui)
-        
-        self.setWindowTitle("ClamAV GUI")
+        # Set up the main window
+        self.setWindowTitle(self.tr("ClamAV GUI"))
         self.setMinimumSize(800, 600)
+        
+        # Set application icon
+        try:
+            icon_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'icon.ico')
+            if os.path.exists(icon_path):
+                self.setWindowIcon(QIcon(icon_path))
+            else:
+                logger.warning(f"Icon not found at: {icon_path}")
+        except Exception as e:
+            logger.warning(f"Failed to load application icon: {e}")
+        
+        # Initialize menu attributes
+        self.file_menu = None
+        self.tools_menu = None
+        self.help_menu = None
+        self.language_menu = None
         
         # Initialize UI
         self.init_ui()
@@ -94,79 +115,117 @@ class ClamAVGUI(QMainWindow):
         self.update_timer.start(24 * 60 * 60 * 1000)  # 24 hours in milliseconds
     
     def setup_menu(self):
-        """Set up the menu bar."""
-        menubar = self.menuBar()
+        """Set up the menu bar using ClamAVMenuBar."""
+        # Create and set up the menu bar
+        self.menu_bar = ClamAVMenuBar(self)
+        self.setMenuBar(self.menu_bar)
         
-        # File menu
-        self.file_menu = menubar.addMenu(self.tr("&File"))
+        # Set the language manager for the menu bar
+        if hasattr(self, 'lang_manager') and self.lang_manager is not None:
+            self.menu_bar.set_language_manager(self.lang_manager)
         
-        # Add menu items
-        self.exit_action = QAction(self.tr("E&xit"), self)
-        self.exit_action.setShortcut("Ctrl+Q")
-        self.exit_action.triggered.connect(self.close)
-        self.file_menu.addAction(self.exit_action)
+        # Connect menu signals
+        self.menu_bar.help_requested.connect(self.show_help)
+        self.menu_bar.about_requested.connect(self.show_about)
+        self.menu_bar.sponsor_requested.connect(self.show_sponsor)
+        self.menu_bar.update_check_requested.connect(lambda: self.check_for_updates(force_check=True))
         
-        # Tools menu
-        self.tools_menu = menubar.addMenu(self.tr("&Tools"))
-        
-        # Check for updates action
-        self.check_updates_action = QAction(self.tr("Check for &Updates..."), self)
-        self.check_updates_action.triggered.connect(self.check_for_updates)
-        self.tools_menu.addAction(self.check_updates_action)
-        
-        # Language menu
-        self.language_menu = menubar.addMenu(self.tr("&Language"))
-        self.language_group = None
+        # Set up the language menu
         self.setup_language_menu()
-        
-        # Help menu
-        self.help_menu = menubar.addMenu(self.tr("&Help"))
-        
-        self.help_action = QAction(self.tr("&Help"), self)
-        self.help_action.setShortcut("F1")
-        self.help_action.triggered.connect(show_help)
-        self.help_menu.addAction(self.help_action)
-        
-        self.help_menu.addSeparator()
-        
-        self.about_action = QAction(self.tr("&About"), self)
-        self.about_action.triggered.connect(show_about)
-        self.help_menu.addAction(self.about_action)
-        
-        self.sponsor_action = QAction(self.tr("&Support the Project"), self)
-        self.sponsor_action.triggered.connect(show_sponsor)
-        self.help_menu.addAction(self.sponsor_action)
+    
+    def show_help(self):
+        """Open the help dialog by executing help.py."""
+        try:
+            import subprocess
+            import sys
+            import os
+            help_script = os.path.join(os.path.dirname(__file__), '..', 'script', 'help.py')
+            if os.path.exists(help_script):
+                subprocess.Popen([sys.executable, help_script])
+            else:
+                QMessageBox.warning(self, self.tr("Error"), 
+                                 self.tr("Help file not found at: {}".format(help_script)))
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Error"), 
+                              self.tr("Failed to open help: {}".format(str(e))))
+    
+    def show_about(self):
+        """Open the about dialog by executing about.py."""
+        try:
+            import subprocess
+            import sys
+            import os
+            about_script = os.path.join(os.path.dirname(__file__), 'ui', 'about.py')
+            if os.path.exists(about_script):
+                subprocess.Popen([sys.executable, about_script])
+            else:
+                QMessageBox.warning(self, self.tr("Error"), 
+                                 self.tr("About file not found at: {}".format(about_script)))
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Error"), 
+                              self.tr("Failed to open about: {}".format(str(e))))
+    
+    def show_sponsor(self):
+        """Open the sponsor dialog by executing sponsor.py."""
+        try:
+            import subprocess
+            import sys
+            import os
+            sponsor_script = os.path.join(os.path.dirname(__file__), 'ui', 'sponsor.py')
+            if os.path.exists(sponsor_script):
+                subprocess.Popen([sys.executable, sponsor_script])
+            else:
+                # Fallback to opening the sponsor URL if the script doesn't exist
+                url = "https://github.com/sponsors/Nsfr750"
+                QDesktopServices.openUrl(QUrl(url))
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Error"), 
+                              self.tr("Failed to open sponsor: {}".format(str(e))))
     
     def setup_language_menu(self):
-        """Set up the language selection menu."""
+        """Set up the language selection menu with only available languages."""
         if not hasattr(self, 'lang_manager') or not self.lang_manager:
             return
             
+        # Get the language menu from the menu bar if not already set
+        if not hasattr(self, 'language_menu') or self.language_menu is None:
+            if hasattr(self, 'menu_bar') and hasattr(self.menu_bar, 'language_menu'):
+                self.language_menu = self.menu_bar.language_menu
+            else:
+                return
+                
         # Clear existing actions
-        self.language_menu.clear()
-        
-        # Create a new action group for language selection
-        self.language_group = QActionGroup(self)
-        self.language_group.setExclusive(True)
-        
-        # Add available languages
-        for lang_code, lang_name in self.lang_manager.available_languages.items():
-            action = QAction(lang_name, self, checkable=True)
-            action.setData(lang_code)
-            action.triggered.connect(self.change_language)
-            self.language_menu.addAction(action)
-            self.language_group.addAction(action)
+        if self.language_menu is not None:
+            self.language_menu.clear()
             
-            # Check current language
-            if lang_code == self.lang_manager.current_lang:
-                action.setChecked(True)
+            # Make the menu exclusive (like a radio button group)
+            self.language_menu.setToolTipsVisible(True)
+            
+            # Add only available languages that have translations
+            for lang_code, lang_name in self.lang_manager.available_languages.items():
+                # Only add languages that have actual translations
+                if hasattr(self.lang_manager, 'is_language_available') and \
+                   self.lang_manager.is_language_available(lang_code):
+                    action = self.language_menu.addAction(lang_name, self.change_language)
+                    action.setCheckable(True)
+                    action.setData(lang_code)
+                    
+                    # Check current language
+                    if hasattr(self.lang_manager, 'current_lang') and \
+                       lang_code == self.lang_manager.current_lang:
+                        action.setChecked(True)
+                
+                # Check current language
+                if lang_code == self.lang_manager.current_lang:
+                    action.setChecked(True)
     
     def change_language(self):
         """Change the application language."""
-        if not hasattr(self, 'language_group') or not self.language_group.checkedAction():
+        action = self.sender()
+        if not action or not hasattr(self, 'lang_manager'):
             return
             
-        lang_code = self.language_group.checkedAction().data()
+        lang_code = action.data()
         if lang_code and self.lang_manager.set_language(lang_code):
             logger.info(f"Language changed to {lang_code}")
             
@@ -185,18 +244,29 @@ class ClamAVGUI(QMainWindow):
             # Update window title
             self.setWindowTitle(self.tr("ClamAV GUI"))
             
-            # Update menu bar
-            self.file_menu.setTitle(self.tr("&File"))
-            self.tools_menu.setTitle(self.tr("&Tools"))
-            self.help_menu.setTitle(self.tr("&Help"))
-            self.language_menu.setTitle(self.tr("&Language"))
+            # Update menu bar if it exists
+            if hasattr(self, 'menu_bar'):
+                # Update menu titles if they exist
+                if hasattr(self, 'file_menu') and self.file_menu:
+                    self.file_menu.setTitle(self.tr("&File"))
+                if hasattr(self, 'tools_menu') and self.tools_menu:
+                    self.tools_menu.setTitle(self.tr("&Tools"))
+                if hasattr(self, 'help_menu') and self.help_menu:
+                    self.help_menu.setTitle(self.tr("&Help"))
+                if hasattr(self, 'language_menu') and self.language_menu:
+                    self.language_menu.setTitle(self.tr("&Language"))
             
-            # Update menu actions
-            self.exit_action.setText(self.tr("E&xit"))
-            self.check_updates_action.setText(self.tr("Check for &Updates..."))
-            self.help_action.setText(self.tr("&Help"))
-            self.about_action.setText(self.tr("&About"))
-            self.sponsor_action.setText(self.tr("&Support the Project"))
+            # Update menu actions if they exist
+            if hasattr(self, 'exit_action') and self.exit_action:
+                self.exit_action.setText(self.tr("E&xit"))
+            if hasattr(self, 'check_updates_action') and self.check_updates_action:
+                self.check_updates_action.setText(self.tr("Check for &Updates..."))
+            if hasattr(self, 'help_action') and self.help_action:
+                self.help_action.setText(self.tr("&Help"))
+            if hasattr(self, 'about_action') and self.about_action:
+                self.about_action.setText(self.tr("&About"))
+            if hasattr(self, 'sponsor_action') and self.sponsor_action:
+                self.sponsor_action.setText(self.tr("&Support the Project"))
             
             # Update tab names
             if hasattr(self, 'tabs'):
@@ -388,11 +458,39 @@ class ClamAVGUI(QMainWindow):
             QMessageBox.warning(self, self.tr("Error"), self.tr("Please select a target to scan"))
             return
         
-        # Build the command
-        cmd = ["clamscan", "-r"] if self.recursive_scan.isChecked() else ["clamscan"]
+        # Get the path to clamscan from settings or use default
+        clamscan_path = self.clamscan_path.text().strip()
+        if not clamscan_path:
+            clamscan_path = "clamscan"  # Default to system path if not set
+            
+        # Create a database directory in the user's AppData folder
+        app_data = os.getenv('APPDATA')
+        clamav_dir = os.path.join(app_data, 'ClamAV')
+        db_dir = os.path.join(clamav_dir, 'database')
+        
+        try:
+            os.makedirs(db_dir, exist_ok=True)
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Error"), 
+                               self.tr(f"Failed to create database directory: {e}"))
+            return
+            
+        # Build the command with proper options
+        cmd = [clamscan_path]
+        
+        # Add database directory
+        cmd.extend(['--database', db_dir])
+        
+        # Add recursive flag if enabled
+        if self.recursive_scan.isChecked():
+            cmd.append("-r")
+            
+        # Add heuristic scan if enabled (use --heuristic-alerts for newer versions)
         if self.heuristic_scan.isChecked():
-            cmd.append("--heuristic")
-        cmd.append(target)
+            cmd.append("--heuristic-alerts")
+            
+        # Add target and output options
+        cmd.extend([target, "--verbose", "--stdout"])
         
         # Start the scan in a separate thread
         self.scan_thread = ScanThread(cmd)
@@ -425,13 +523,34 @@ class ClamAVGUI(QMainWindow):
         self.stop_btn.setEnabled(False)
         
         if exit_code == 0:
-            self.status_bar.showMessage(self.tr("Scan completed successfully"))
+            self.status_bar.showMessage(self.tr("Scan completed successfully - No threats found"))
+            QMessageBox.information(self, self.tr("Scan Complete"), 
+                                 self.tr("The scan completed successfully. No threats were found."))
+        elif exit_code == 1:
+            self.status_bar.showMessage(self.tr("Scan completed - Viruses found!"))
+            QMessageBox.warning(self, self.tr("Threats Detected"), 
+                             self.tr("The scan completed and found potential threats. Check the scan results for details."))
         else:
-            self.status_bar.showMessage(self.tr("Scan completed with errors"))
+            self.status_bar.showMessage(self.tr("Scan failed with errors"))
+            QMessageBox.critical(self, self.tr("Scan Failed"), 
+                              self.tr("The scan failed to complete. Please check if ClamAV is properly installed and configured."))
     
     def update_database(self):
         """Update the ClamAV virus database."""
-        cmd = ["freshclam", "--verbose"]
+        # Create the database directory if it doesn't exist
+        app_data = os.getenv('APPDATA')
+        clamav_dir = os.path.join(app_data, 'ClamAV')
+        db_dir = os.path.join(clamav_dir, 'database')
+        
+        try:
+            os.makedirs(db_dir, exist_ok=True)
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Error"), 
+                               self.tr(f"Failed to create database directory: {e}"))
+            return
+            
+        # Build the update command
+        cmd = ["freshclam", "--verbose", f"--datadir={db_dir}"]
         
         # Start the update in a separate thread
         self.update_thread = UpdateThread(cmd)
@@ -440,6 +559,7 @@ class ClamAVGUI(QMainWindow):
         
         # Update UI
         self.update_output.clear()
+        self.update_output.append(self.tr("Updating virus definitions... This may take a few minutes."))
         
         # Start the thread
         self.update_thread.start()

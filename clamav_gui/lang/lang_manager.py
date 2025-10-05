@@ -14,7 +14,7 @@ class SimpleLanguageManager(QObject):
     """Simple language manager for the application."""
 
     # Signal emitted when the language is changed
-    language_changed = pyqtSignal(str)
+    language_changed = Signal(str)
 
     def __init__(self, default_lang: str = 'en', parent: Optional[QObject] = None):
         """Initialize the language manager.
@@ -44,6 +44,12 @@ class SimpleLanguageManager(QObject):
     def _load_languages(self):
         """Load all available language files from the script/lang directory."""
         lang_dir = os.path.dirname(__file__)
+        
+        # Map of language codes to their display names
+        self.available_languages = {
+            'en': 'English',
+            'it': 'Italiano',
+        }
         
         # Check if we're running in a Nuitka-compiled environment
         is_nuitka = '__compiled__' in globals()
@@ -96,6 +102,17 @@ class SimpleLanguageManager(QObject):
         
         logger.info(f"Loaded {len(self.translations)} languages: {list(self.translations.keys())}")
 
+    def is_language_available(self, lang_code: str) -> bool:
+        """Check if a language is available.
+        
+        Args:
+            lang_code: Language code to check
+            
+        Returns:
+            bool: True if the language is available, False otherwise
+        """
+        return lang_code in self.translations
+        
     def set_language(self, lang_code: str) -> bool:
         """Set the current language.
 
@@ -105,19 +122,33 @@ class SimpleLanguageManager(QObject):
         Returns:
             bool: True if the language was changed successfully, False otherwise
         """
-        if lang_code not in self.translations:
-            logger.warning(f"Language {lang_code} not found")
+        if not lang_code:
+            logger.warning("No language code provided")
             return False
-
-        if lang_code != self.current_lang:
-            old_lang = self.current_lang
-            self.current_lang = lang_code
-            logger.info(f"Language changed from {old_lang} to {lang_code}")
-
-            # Emit the signal
-            self.language_changed.emit(lang_code)
-            return True
-
+            
+        # If the exact language is available, use it
+        if lang_code in self.translations:
+            if lang_code != self.current_lang:
+                old_lang = self.current_lang
+                self.current_lang = lang_code
+                logger.info(f"Language changed from {old_lang} to {lang_code}")
+                self.language_changed.emit(lang_code)
+                return True
+            return True  # Already set to this language
+            
+        # Try language code without region (e.g., 'en' from 'en_US')
+        base_lang = lang_code.split('_')[0]
+        if base_lang in self.translations and base_lang != lang_code:
+            if base_lang != self.current_lang:
+                old_lang = self.current_lang
+                self.current_lang = base_lang
+                logger.info(f"Language {lang_code} not found, using {base_lang} instead")
+                logger.info(f"Language changed from {old_lang} to {base_lang}")
+                self.language_changed.emit(base_lang)
+                return True
+            return True  # Already set to base language
+            
+        logger.warning(f"Language {lang_code} not found in available languages")
         return False
 
     def get_language(self) -> str:
@@ -138,43 +169,43 @@ class SimpleLanguageManager(QObject):
 
     def get_available_languages(self) -> Dict[str, str]:
         """Get the available languages.
-
+        
         Returns:
-            Dict[str, str]: Dictionary of language codes to language names
+            Dict[str, str]: Dictionary of language codes to display names
         """
-        return self.available_languages.copy()
-
-    def tr(self, key: str, default: str = None) -> str:
-        """Translate a key to the current language.
-
+        return self.available_languages
+    
+    def tr(self, key: str, default: str = "") -> str:
+        """Translate a string using the current language.
+        
         Args:
             key: The translation key
-            default: Default text if key not found (optional)
-
+            default: Default text if key is not found
+            
         Returns:
-            str: The translated text or default/key if not found
+            The translated string or the default if not found
         """
-        # Try to get the translation for the current language
-        if self.current_lang in self.translations:
-            translation = self.translations[self.current_lang]
-            if key in translation:
-                return translation[key]
-
-        # If not found, try the default language
-        if self.default_lang in self.translations:
-            translation = self.translations[self.default_lang]
-            if key in translation:
-                return translation[key]
-
-        # If still not found, try English as fallback
-        if 'en' in self.translations and self.default_lang != 'en':
-            translation = self.translations['en']
-            if key in translation:
-                return translation[key]
-
-        # If not found anywhere, return default or key
-        if default is not None:
+        if not key:
             return default
-
-        logger.warning(f"Translation key not found: {key}")
-        return key
+            
+        # Get translations for current language
+        translations = self.translations.get(self.current_lang, {})
+        
+        # Try to get the translation
+        result = translations.get(key)
+        
+        # If not found and current language is en_US, try falling back to en
+        if result is None and self.current_lang == 'en_US':
+            en_translations = self.translations.get('en', {})
+            result = en_translations.get(key)
+        
+        # If still not found, try English as fallback
+        if result is None and 'en' in self.translations and self.current_lang != 'en':
+            en_translations = self.translations['en']
+            result = en_translations.get(key)
+        
+        # If still not found, use the default
+        if result is None:
+            result = default
+            
+        return result

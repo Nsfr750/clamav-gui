@@ -8,7 +8,7 @@ setup(
     version="1.0.0",
     author="Nsfr750",
     author_email="nsfr750@yandex.com",
-    description="A PySide6 GUI for ClamAV Antivirus",
+    description="A GUI for ClamAV Antivirus",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Nsfr750/clamav-gui",

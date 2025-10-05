@@ -1,5 +1,5 @@
 """
-Version information for PDF Duplicate Finder.
+Version information for ClamAV GUI.
 """
 
 # Version as a tuple (major, minor, patch)

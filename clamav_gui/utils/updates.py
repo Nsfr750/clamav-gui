@@ -17,7 +17,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, QThread, Signal, QObject
 
 # Import language manager
-from script.lang.lang_manager import SimpleLanguageManager
+from clamav_gui.lang.lang_manager import SimpleLanguageManager
 
 # Get the application directory (project root)
 APP_DIR = Path(__file__).parent.parent.parent
@@ -34,7 +34,7 @@ class UpdateChecker(QObject):
     """Handles checking for application updates."""
     
     # Signal emitted when update check is complete
-    update_check_complete = pyqtSignal(dict, bool)
+    update_check_complete = Signal(dict, bool)
     
     def __init__(self, current_version: str, config_path: Optional[Path] = None):
         """Initialize the update checker.
