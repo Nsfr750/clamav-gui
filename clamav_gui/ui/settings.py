@@ -70,29 +70,37 @@ class AppSettings:
         
         Args:
             settings (dict): Dictionary containing settings to save
+            
+        Returns:
+            bool: True if settings were saved successfully, False otherwise
         """
-        # Save paths
-        for key in ['clamd_path', 'freshclam_path', 'clamscan_path']:
-            if key in settings:
-                self.settings.setValue(key, settings[key])
-        
-        # Save window state
-        if 'geometry' in settings:
-            self.settings.setValue('geometry', settings['geometry'])
-        if 'window_state' in settings:
-            self.settings.setValue('windowState', settings['window_state'])
-        
-        # Save other settings
-        if 'auto_update' in settings:
-            self.settings.setValue('auto_update', settings['auto_update'])
-        if 'scan_archives' in settings:
-            self.settings.setValue('scan_archives', settings['scan_archives'])
-        if 'scan_heuristics' in settings:
-            self.settings.setValue('scan_heuristics', settings['scan_heuristics'])
-        if 'scan_pua' in settings:
-            self.settings.setValue('scan_pua', settings['scan_pua'])
-        
-        self.settings.sync()
+        try:
+            # Save paths
+            for key in ['clamd_path', 'freshclam_path', 'clamscan_path']:
+                if key in settings:
+                    self.settings.setValue(key, settings[key])
+            
+            # Save window state
+            if 'geometry' in settings:
+                self.settings.setValue('geometry', settings['geometry'])
+            if 'window_state' in settings:
+                self.settings.setValue('windowState', settings['window_state'])
+            
+            # Save other settings
+            if 'auto_update' in settings:
+                self.settings.setValue('auto_update', settings['auto_update'])
+            if 'scan_archives' in settings:
+                self.settings.setValue('scan_archives', settings['scan_archives'])
+            if 'scan_heuristics' in settings:
+                self.settings.setValue('scan_heuristics', settings['scan_heuristics'])
+            if 'scan_pua' in settings:
+                self.settings.setValue('scan_pua', settings['scan_pua'])
+            
+            # Sync settings and return success status
+            return self.settings.sync()
+        except Exception as e:
+            logger.error(f"Failed to save settings: {e}")
+            return False
     
     def reset_to_defaults(self):
         """Reset all settings to their default values."""
@@ -120,6 +128,13 @@ class AppSettings:
         Args:
             key (str): Setting key
             value: Value to set
+            
+        Returns:
+            bool: True if setting was saved successfully, False otherwise
         """
-        self.settings.setValue(key, value)
-        self.settings.sync()
+        try:
+            self.settings.setValue(key, value)
+            return self.settings.sync()
+        except Exception as e:
+            logger.error(f"Failed to set setting '{key}': {e}")
+            return False
