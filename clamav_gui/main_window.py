@@ -23,6 +23,7 @@ from clamav_gui.ui.help import HelpDialog
 from clamav_gui.ui.menu import ClamAVMenuBar
 from clamav_gui.ui.about import AboutDialog
 from clamav_gui.ui.sponsor import SponsorDialog
+from clamav_gui.utils.virus_db import VirusDBUpdater
 
 # Import language manager
 from clamav_gui.lang.lang_manager import SimpleLanguageManager
@@ -44,6 +45,7 @@ class ClamAVGUI(QMainWindow):
         self.settings = AppSettings()
         self.process = None
         self.scan_thread = None
+        self.virus_db_updater = VirusDBUpdater()
         
         self.lang_manager = lang_manager or SimpleLanguageManager()
         
@@ -495,6 +497,7 @@ class ClamAVGUI(QMainWindow):
         # Start the scan in a separate thread
         self.scan_thread = ScanThread(cmd)
         self.scan_thread.update_output.connect(self.update_scan_output)
+        self.scan_thread.update_progress.connect(self.update_progress)
         self.scan_thread.finished.connect(self.scan_finished)
         
         # Update UI
@@ -537,43 +540,55 @@ class ClamAVGUI(QMainWindow):
     
     def update_database(self):
         """Update the ClamAV virus database."""
-        # Create the database directory if it doesn't exist
-        app_data = os.getenv('APPDATA')
-        clamav_dir = os.path.join(app_data, 'ClamAV')
-        db_dir = os.path.join(clamav_dir, 'database')
-        
-        try:
-            os.makedirs(db_dir, exist_ok=True)
-        except Exception as e:
-            QMessageBox.critical(self, self.tr("Error"), 
-                               self.tr(f"Failed to create database directory: {e}"))
-            return
+        # Disconnect any existing connections to avoid duplicates
+        self.virus_db_updater.signals.disconnect_all()
             
-        # Build the update command
-        cmd = ["freshclam", "--verbose", f"--datadir={db_dir}"]
+        self.virus_db_updater.signals.output.connect(self.update_update_output)
+        self.virus_db_updater.signals.finished.connect(self.update_finished)
         
-        # Start the update in a separate thread
-        self.update_thread = UpdateThread(cmd)
-        self.update_thread.update_output.connect(self.update_update_output)
-        self.update_thread.finished.connect(self.update_finished)
-        
-        # Update UI
+        # Clear and update UI
         self.update_output.clear()
-        self.update_output.append(self.tr("Updating virus definitions... This may take a few minutes."))
         
-        # Start the thread
-        self.update_thread.start()
+        # Get freshclam path from settings if available
+        freshclam_path = None
+        if hasattr(self, 'freshclam_path') and self.freshclam_path.text().strip():
+            freshclam_path = self.freshclam_path.text().strip()
+        
+        # Start the update
+        if not self.virus_db_updater.start_update(freshclam_path):
+            QMessageBox.critical(self, self.tr("Error"), 
+                               self.tr("Failed to start virus database update."))
     
-    def update_update_output(self, text):
-        """Update the update output with new text."""
-        self.update_output.append(text)
+    def update_progress(self, value):
+        """Update the progress bar with the current value."""
+        if hasattr(self, 'progress'):
+            self.progress.setValue(value)
+    
+    def update_scan_output(self, text):
+        """Update the scan output with new text."""
+        if hasattr(self, 'output'):
+            self.output.append(text)
+            
+            # Try to extract progress from the output
+            if 'Scanned file:' in text:
+                # This is a simple way to show progress is happening
+                # The actual progress is handled by the update_progress signal
+                if hasattr(self, 'progress'):
+                    current = self.progress.value()
+                    self.progress.setValue(min(99, current + 1))
     
     def update_finished(self, exit_code, status):
         """Handle update completion."""
         if exit_code == 0:
             self.status_bar.showMessage(self.tr("Database updated successfully"))
+            if hasattr(self, 'progress'):
+                self.progress.setValue(100)
+            QMessageBox.information(self, self.tr("Success"),
+                                 self.tr("Virus database updated successfully."))
         else:
             self.status_bar.showMessage(self.tr("Database update failed"))
+            QMessageBox.warning(self, self.tr("Warning"), 
+                             self.tr("Virus database update failed. Please check the logs for details."))
     
     def save_settings(self):
         """Save the application settings."""
@@ -622,6 +637,7 @@ class ClamAVGUI(QMainWindow):
 class ScanThread(QThread):
     """Thread for running ClamAV scans."""
     update_output = Signal(str)
+    update_progress = Signal(int)  # Signal for progress updates (0-100)
     finished = Signal(int, int)
     
     def __init__(self, command):
@@ -639,7 +655,32 @@ class ScanThread(QThread):
             
             # Start the process
             self.process.start(self.command[0], self.command[1:])
-            self.process.waitForFinished(-1)
+            
+            # Track progress
+            total_files = 0
+            processed_files = 0
+            
+            while not self.process.waitForFinished(100):  # Check every 100ms
+                # Parse output to get progress
+                output = self.process.readAllStandardOutput().data().decode()
+                if output:
+                    self.update_output.emit(output)
+                    # Look for progress in the output
+                    if 'Scanned file:' in output:
+                        processed_files += 1
+                        # Emit progress as a percentage (this is a simple approximation)
+                        # In a real implementation, you'd want to know the total files first
+                        if total_files > 0:
+                            progress = min(100, int((processed_files / total_files) * 100))
+                            self.update_progress.emit(progress)
+                    elif ' files, ' in output and 'infested files: ' in output:
+                        # Try to get total files from summary
+                        try:
+                            parts = output.split(' files, ')
+                            if len(parts) > 1:
+                                total_files = int(parts[0].split()[-1])
+                        except (ValueError, IndexError):
+                            pass
             
         except Exception as e:
             self.update_output.emit(str(e))

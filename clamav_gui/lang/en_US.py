@@ -1,6 +1,6 @@
 # Translation data
 TRANSLATIONS = {
-    "en": {
+    "en_US": {
         # Main window
         "window.title": "ClamAV GUI",
         "status.ready": "Ready",
@@ -75,5 +75,5 @@ AVAILABLE_LANGUAGES = {
     "en": "English",
     "en_US": "English (United States)",
     "it": "Italiano",
-    "it_IT": "Italiano (Italia)",
+    "it_IT": "Italiano (Italia)",   
 }

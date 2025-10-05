@@ -1,6 +1,6 @@
 # Translation data
 TRANSLATIONS = {
-    "it": {
+    "it_IT": {
         # Main window
         "window.title": "ClamAV GUI",
         "status.ready": "Pronto",

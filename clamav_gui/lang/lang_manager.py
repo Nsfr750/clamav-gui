@@ -48,7 +48,9 @@ class SimpleLanguageManager(QObject):
         # Map of language codes to their display names
         self.available_languages = {
             'en': 'English',
+            'en_US': 'English (United States)',
             'it': 'Italiano',
+            'it_IT': 'Italiano (Italia)',
         }
         
         # Check if we're running in a Nuitka-compiled environment
