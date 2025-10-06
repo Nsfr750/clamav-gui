@@ -1,23 +1,139 @@
 #!/usr/bin/env python3
 """
-Build script for ClamAV GUI using PyInstaller.
+Build script for ClamAV GUI using Nuitka.
+
+This script compiles the ClamAV GUI application into a standalone executable
+using Nuitka. It handles all necessary dependencies and build configurations.
 """
 import os
 import sys
 import shutil
-import PyInstaller.__main__
+import argparse
+import platform
+import subprocess
 from pathlib import Path
 
-def clean_build_dirs():
-    """Remove build and dist directories."""
-    for dir_name in ['build', 'dist']:
-        if os.path.exists(dir_name):
-            print(f"Removing {dir_name} directory...")
-            shutil.rmtree(dir_name)
+# Project information
+PROJECT_NAME = "clamav-gui"
+MAIN_SCRIPT = "clamav_gui/__main__.py"
+VERSION_FILE = "clamav_gui/version.py"
+
+# Get version from version.py
+version = {}
+with open(VERSION_FILE, "r", encoding="utf-8") as f:
+    exec(f.read(), version)
+VERSION = version["__version__"]
+
+# Build directories
+BUILD_DIR = Path("build")
+DIST_DIR = Path("dist")
+SPEC_DIR = Path("spec")
+
+# Platform-specific configurations
+IS_WINDOWS = platform.system() == "Windows"
+IS_MACOS = platform.system() == "Darwin"
+IS_LINUX = platform.system() == "Linux"
+
+def clean_build():
+    """Clean up build directories."""
+    for directory in [BUILD_DIR, DIST_DIR, SPEC_DIR]:
+        if directory.exists():
+            print(f"Removing {directory}...")
+            shutil.rmtree(directory, ignore_errors=True)
+
+def build_nuitka(standalone=True, onefile=False, clean=False, debug=False):
+    """
+    Build the application using Nuitka.
+    
+    Args:
+        standalone: If True, create a standalone build.
+        onefile: If True, create a single executable file.
+        clean: If True, clean build directories before building.
+        debug: If True, include debug information and disable optimizations.
+    """
+    if clean:
+        clean_build()
+    
+    # Create output directories
+    BUILD_DIR.mkdir(exist_ok=True)
+    DIST_DIR.mkdir(exist_ok=True)
+    SPEC_DIR.mkdir(exist_ok=True)
+    
+    # Base Nuitka command
+    cmd = [
+        sys.executable, "-m", "nuitka",
+        "--follow-imports",
+        "--show-progress",
+        "--show-memory",
+        "--assume-yes-for-downloads",
+        "--enable-plugin=pyside6",
+        "--enable-plugin=no-qt" if not IS_WINDOWS else "--enable-plugin=qt-plugins=all",
+        "--windows-icon-from-ico=assets/icon.ico" if IS_WINDOWS and os.path.exists("assets/icon.ico") else "",
+        "--windows-disable-console" if IS_WINDOWS and not debug else "",
+        "--output-dir", str(BUILD_DIR),
+        "--windows-company-name=Tuxxle",
+        f"--windows-file-version={VERSION}",
+        f"--windows-product-version={VERSION}",
+        f"--windows-product-name={PROJECT_NAME}",
+        f"--windows-file-description={PROJECT_NAME} - A graphical interface for ClamAV Antivirus",
+        f"--version-file={VERSION_FILE}",
+        "--copyright=© Copyright 2025 Nsfr750 - All Rights Reserved",
+        "--msvc=latest" if IS_WINDOWS else "",
+        "--lto=yes" if not debug else "--lto=no",
+        "--standalone" if standalone else "",
+        "--onefile" if onefile else "--no-onefile",
+        "--remove-output" if clean else "",
+        "--include-package=clamav_gui",
+        "--include-package-data=clamav_gui/*.ui,clamav_gui/*.qss,clamav_gui/*.png",
+        "--include-data-dir=assets=assets" if os.path.exists("assets") else "",
+        "--windows-uac-admin" if IS_WINDOWS else "",
+        "--windows-uac-uiaccess" if IS_WINDOWS else "",
+        "--windows-target-version=10" if IS_WINDOWS else "",
+    ]
+    
+    # Debug options
+    if debug:
+        cmd.extend([
+            "--debug",
+            "--show-modules",
+            "--show-scons",
+            "--show-progress",
+            "--verbose",
+        ])
+    else:
+        cmd.extend([
+            "--remove-output",
+            "--follow-imports",
+            "--jobs=0",  # Use all available CPU cores
+        ])
+    
+    # Add main script
+    cmd.append(str(MAIN_SCRIPT))
+    
+    # Filter out empty strings from command list
+    cmd = [arg for arg in cmd if arg]
+    
+    print("Running command:", " ".join(cmd))
+    
+    try:
+        subprocess.check_call(cmd)
+        print("\nBuild completed successfully!")
+        print(f"Output directory: {DIST_DIR.absolute()}")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"\nBuild failed with error: {e}", file=sys.stderr)
+        return False
+
+def parse_arguments():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(description="Build ClamAV GUI with Nuitka")
+    parser.add_argument("--clean", action="store_true", help="Clean build directories before building")
+    parser.add_argument("--debug", action="store_true", help="Build with debug information")
+    parser.add_argument("--onefile", action="store_true", help="Create a single executable file")
+    parser.add_argument("--standalone", action="store_true", default=True, help="Create a standalone build (default: True)")
+    return parser.parse_args()
 
 def build():
-    """Build the application using PyInstaller."""
-    # Project paths
     base_path = Path(__file__).parent
     icon_path = base_path / 'assets' / 'icon.ico'
     main_script = base_path / 'clamav_gui' / '__main__.py'

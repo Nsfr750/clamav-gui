@@ -1,6 +1,6 @@
 # Project Structure
 
-```
+```text
 clamav-gui/
 ├── assets/                  # Static assets (icons, images, etc.)
 ├── clamav_gui/              # Main application package
@@ -29,33 +29,39 @@ clamav-gui/
 ├── LICENSE                  # License information
 ├── README.md                # Project documentation
 ├── REQUIREMENTS.md          # Dependencies list
-├── SECURITY.md              # Security policy
+└── SECURITY.md              # Security policy
 └── setup.py                 # Installation script
 ```
 
 ## Key Components
 
 ### Main Application
+
 - `main.py`: Entry point that initializes and runs the application
 - `main_window.py`: Implements the main window and core functionality
 
 ### Core Functionality
+
 - `settings.py`: Manages application settings and preferences
 - `utils/updates.py`: Handles update checking and downloading
 - `utils/virus_db.py`: Manages virus database operations
 
 ### Internationalization
+
 - `lang/`: Contains language files and translation logic
 - `lang_manager.py`: Handles language loading and switching
 
 ### User Interface
+
 - `ui/`: Contains custom UI components and dialogs
 - `assets/`: Contains images, icons, and other static files
 
 ### Testing
+
 - `tests/`: Contains unit and integration tests
 
 ## Dependencies
+
 - PySide6: For the GUI
 - ClamAV: For virus scanning
 - Other dependencies listed in requirements.txt

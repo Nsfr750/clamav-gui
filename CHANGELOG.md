@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+
 - Initial project structure
 - Basic GUI with PySide6
 - Virus scanning functionality
@@ -14,12 +15,14 @@ All notable changes to this project will be documented in this file.
 - Automatic update checking
 
 ### Changed
+
 - Improved error handling for scan operations
 - Enhanced progress tracking during scans
 - Updated translation files with more complete coverage
 - Refactored code for better maintainability
 
 ### Fixed
+
 - Fixed progress bar not updating during scans
 - Fixed database update permissions on Windows
 - Fixed language selection persistence
@@ -27,7 +30,8 @@ All notable changes to this project will be documented in this file.
 
 ## [1.0.0] - 2025-10-05
 
-### Added
+### Added (1.0.0)
+
 - Initial release of ClamAV GUI
 - Basic scanning and updating functionality
 - English and Italian language support

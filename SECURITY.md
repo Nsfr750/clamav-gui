@@ -18,6 +18,7 @@ Please report security vulnerabilities by emailing us at [Nsfr750](mailto:nsfr75
 ### What to Include
 
 When reporting a vulnerability, please include:
+
 - A description of the vulnerability
 - Steps to reproduce the issue
 - The version of the software you're using
@@ -27,16 +28,19 @@ When reporting a vulnerability, please include:
 ## Security Considerations
 
 ### Data Protection
+
 - All scan operations are performed locally on the user's machine
 - No files or scan results are transmitted to external servers
 - Application settings are stored in the user's local AppData directory
 
 ### Permissions
+
 - The application requests only the necessary permissions to function
 - Database updates are stored in the user's AppData directory
 - The application does not require administrative privileges for basic functionality
 
 ### Secure Development
+
 - Dependencies are regularly updated to address known vulnerabilities
 - Code reviews are performed for all changes
 - Security best practices are followed throughout the codebase

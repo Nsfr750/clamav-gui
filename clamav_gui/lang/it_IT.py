@@ -7,7 +7,6 @@ TRANSLATIONS = {
         "status.scanning": "Scansione in corso...",
         "status.updating": "Aggiornamento in corso...",
         
-        # Tabs
         "tab.scan": "Scansione",
         "tab.update": "Aggiornamento",
         "tab.settings": "Impostazioni",
@@ -15,20 +14,29 @@ TRANSLATIONS = {
         
         # Menu items
         "menu.file": "&File",
-        "menu.file.exit": "&Esci",
+        "menu.tools": "&Strumenti",
         "menu.language": "&Lingua",
         "menu.help": "&Aiuto",
+        "menu.file.exit": "Es&ci",
         "menu.help.documentation": "&Documentazione",
         "menu.help.wiki": "&Wiki",
         "menu.help.about": "&Informazioni",
         "menu.help.sponsor": "&Supporta il Progetto",
         "menu.help.updates": "Cerca &Aggiornamenti...",
+        "E&xit": "Es&ci",
+        "Check for &Updates...": "Cerca &Aggiornamenti...",
+        "&Help": "&Aiuto",
+        "&About": "&Informazioni",
+        "&Sponsor": "&Supporta il Progetto",
+        "&Wiki": "&Wiki",
+        "&File": "&File",
+        "&Tools": "&Strumenti",
+        "&Language": "&Lingua",
         
         # Scan tab
         "scan.target": "Destinazione Scansione",
         "scan.browse": "Sfoglia...",
         "scan.start": "Avvia Scansione",
-        "scan.stop": "Ferma Scansione",
         "scan.output": "Risultati Scansione",
         "scan.select_file": "Seleziona file o cartella da scansionare",
         
@@ -58,8 +66,24 @@ TRANSLATIONS = {
         # About dialog
         "about.title": "Informazioni su ClamAV GUI",
         "about.version": "Versione: {}",
-        "about.description": "Un'interfaccia grafica per l'antivirus ClamAV.",
-        "about.copyright": "© 2025 Tuxxle. Tutti i diritti riservati.",
+        "about.description": "Un'interfaccia grafica per l'antivirus ClamAV.\n\nClamAV GUI fornisce un'interfaccia facile da usare per la scansione dei file, l'aggiornamento delle definizioni del virus e la gestione delle impostazioni di ClamAV.",
+        "about.copyright": "© 2025 Nsfr750 - Tutti i diritti riservati.",
+
+        # Sponsor dialog
+        "sponsor.message": "Se trovi questa applicazione utile, considera di supportare il suo sviluppo.\n\nIl tuo supporto aiuta a coprire i costi di hosting e incoraggia lo sviluppo ulteriore.",  
+        "sponsor.title": "Supporta il Progetto",
+        "sponsor.window_title": "Supporta il Progetto",
+        "sponsor.links.github_sponsors": "GitHub Sponsors",
+        "sponsor.links.paypal": "Dona con PayPal",
+        "sponsor.monero.label": "Monero:",
+        "sponsor.qr_tooltip": "Scansiona per donare XMR",
+        "sponsor.ways_to_support": "Modalità di supporto:", 
+        "sponsor.other_ways.title": "Altre modalità di supporto:",
+        "sponsor.other_ways.star": "Assegna una Stella al progetto su ",
+        "sponsor.other_ways.report": "Segnala errori e suggerisci funzionalità",
+        "sponsor.other_ways.share": "Condividi con altri che potrebbero trovarla utile",
+        "sponsor.buttons.donate_paypal": "Donazione con PayPal",
+        "sponsor.buttons.copy_monero": "Copia indirizzo Monero",
         
         # File dialogs
         "dialog.open": "Apri",
@@ -72,8 +96,6 @@ TRANSLATIONS = {
 
 # Available languages - solo quelle con traduzioni effettive
 AVAILABLE_LANGUAGES = {
-    "en": "English",
     "en_US": "English (United States)",
-    "it": "Italiano",
     "it_IT": "Italiano (Italia)",
 }

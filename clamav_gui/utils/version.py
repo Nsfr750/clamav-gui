@@ -12,6 +12,8 @@ __version__ = ".".join(map(str, VERSION))
 __status__ = "stable"
 __author__ = "Nsfr750"
 __maintainer__ = "Nsfr750"
+__organization__ = 'Tuxxle'
+__copyright__ = '© 2025 Nsfr750 - All Rights Reserved'
 __email__ = "nsfr750@yandex.com"
 __license__ = "GPL-3.0"
 
@@ -33,6 +35,9 @@ __requires__ = [
     "python-dotenv>=0.19.0",
     "tqdm>=4.64.0"
 ]
+
+# Version as a tuple for comparison
+version_info = tuple(map(int, __version__.split('.')))
 
 # Changelog
 __changelog__ = """

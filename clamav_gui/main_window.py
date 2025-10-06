@@ -1,62 +1,68 @@
-"""Main window for the ClamAV GUI application."""
+"""
+Main window for the ClamAV GUI application.
+
+This module provides the core functionality for the ClamAV GUI application.
+The UI components have been moved to clamav_gui.ui.UI.ClamAVMainWindow.
+"""
 import os
 import subprocess
 import logging
 from pathlib import Path
-from PySide6.QtWidgets import (QMainWindow, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QFormLayout,
-                             QStatusBar, QProgressBar, QSizePolicy, QMenuBar, QMenu, QPushButton,
-                             QDialog, QTextEdit, QPlainTextEdit, QComboBox, QLineEdit, QCheckBox, QGroupBox,
-                             QScrollArea, QFrame, QSplitter, QToolBar, QStyle, QInputDialog,
-                             QListWidget, QListWidgetItem, QTreeWidget, QTreeWidgetItem, QHeaderView,
-                             QAbstractItemView, QTableWidget, QTableWidgetItem, QToolButton, QStyleFactory,
-                             QMessageBox, QFileDialog)
-from PySide6.QtCore import (Qt, QThread, Signal, QObject, QUrl, QProcess, QTimer, QSettings, 
-                           QPoint, QByteArray, QBuffer, QIODevice, QProcessEnvironment, 
-                           QStandardPaths, Slot)
-from PySide6.QtGui import (QIcon, QPixmap, QFont, QColor, QTextCursor, QDesktopServices, 
-                        QAction, QKeySequence, QTextCharFormat, QTextDocument, QTextFormat, 
-                        QSyntaxHighlighter, QTextBlockUserData, QTextBlock, QPainter, QPalette, 
-                        QFontMetrics, QGuiApplication, QClipboard, QImage, QMovie, QRegion)
-from clamav_gui.ui.updates_ui import check_for_updates
-from clamav_gui.ui.settings import AppSettings
-from clamav_gui.ui.help import HelpDialog
-from clamav_gui.ui.menu import ClamAVMenuBar
-from clamav_gui.ui.about import AboutDialog
-from clamav_gui.ui.sponsor import SponsorDialog
-from clamav_gui.utils.virus_db import VirusDBUpdater
+from typing import Optional, Dict, Any
 
-# Import language manager
-from clamav_gui.lang.lang_manager import SimpleLanguageManager
+from PySide6.QtCore import QObject, Signal, Slot, QThread, QProcess, QTimer
+from PySide6.QtWidgets import QMainWindow, QMessageBox, QApplication, QVBoxLayout, QWidget, QTabWidget
+from PySide6.QtGui import QIcon
+
+from .ui.UI import ClamAVMainWindow as UI_ClamAVMainWindow
+from .ui.settings import AppSettings
+from .utils.virus_db import VirusDBUpdater
+from .lang.lang_manager import SimpleLanguageManager
 
 # Setup logger
 logger = logging.getLogger(__name__)
 
-class ClamAVGUI(QMainWindow):
-    """Main window for the ClamAV GUI application."""
+class ClamAVGUI(UI_ClamAVMainWindow):
+    """Main window for the ClamAV GUI application.
     
-    def __init__(self, lang_manager=None, parent=None):
+    This class extends UI_ClamAVMainWindow to provide the core functionality
+    while the UI is defined in the parent class.
+    """
+    
+    def __init__(self, lang_manager: Optional[SimpleLanguageManager] = None, parent: Optional[QMainWindow] = None):
         """Initialize the main window.
         
         Args:
             lang_manager: Instance of SimpleLanguageManager for translations
             parent: Parent widget
         """
-        super().__init__(parent)
-        self.settings = AppSettings()
+        super().__init__(lang_manager=lang_manager, parent=parent)
         self.process = None
         self.scan_thread = None
         self.virus_db_updater = VirusDBUpdater()
+        self.current_settings = {}
         
-        self.lang_manager = lang_manager or SimpleLanguageManager()
+        # Initialize core components
+        self.initialize_core_components()
         
-        # Connect language changed signal
-        if hasattr(self.lang_manager, 'language_changed'):
-            self.lang_manager.language_changed.connect(self.retranslate_ui)
         # Set up the main window
         self.setWindowTitle(self.tr("ClamAV GUI"))
         self.setMinimumSize(800, 600)
         
         # Set application icon
+        self.setup_icon()
+        
+        # Initialize UI
+        self.setup_ui()
+        
+        # Load settings
+        self.load_settings()
+        
+        # Connect signals
+        self.setup_connections()
+    
+    def setup_icon(self):
+        """Set up the application icon."""
         try:
             icon_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'icon.ico')
             if os.path.exists(icon_path):
@@ -65,22 +71,48 @@ class ClamAVGUI(QMainWindow):
                 logger.warning(f"Icon not found at: {icon_path}")
         except Exception as e:
             logger.warning(f"Failed to load application icon: {e}")
+    
+    def initialize_core_components(self):
+        """Initialize core components of the application."""
+        self.settings = AppSettings()
+        self.scan_in_progress = False
+    
+    def setup_ui(self):
+        """Set up the user interface."""
+        # Create central widget and main layout
+        self.central_widget = QWidget()
+        self.setCentralWidget(self.central_widget)
+        self.main_layout = QVBoxLayout(self.central_widget)
         
-        # Initialize menu attributes
-        self.file_menu = None
-        self.tools_menu = None
-        self.help_menu = None
-        self.language_menu = None
+        # Create tab widget
+        self.tabs = QTabWidget()
+        self.main_layout.addWidget(self.tabs)
         
-        # Initialize UI
-        self.init_ui()
-        
-        # Load settings
-        self.current_settings = self.settings.load_settings()
-        self.apply_settings()
-        
-        # Apply language
-        self.retranslate_ui()
+        # Initialize tabs (to be implemented in child classes)
+        self.setup_tabs()
+    
+    def setup_tabs(self):
+        """Set up the application tabs. To be overridden by child classes."""
+        pass
+    
+    def load_settings(self):
+        """Load application settings."""
+        try:
+            self.current_settings = self.settings.load_settings() or {}
+            self.apply_settings()
+        except Exception as e:
+            logger.error(f"Error loading settings: {e}")
+    
+    def apply_settings(self):
+        """Apply application settings."""
+        # Apply language if specified in settings
+        if 'language' in self.current_settings and hasattr(self, 'lang_manager'):
+            self.lang_manager.set_language(self.current_settings['language'])
+    
+    def setup_connections(self):
+        """Set up signal connections."""
+        if hasattr(self, 'lang_manager') and hasattr(self.lang_manager, 'language_changed'):
+            self.lang_manager.language_changed.connect(self.retranslate_ui)
     
     def init_ui(self):
         """Initialize the user interface."""
@@ -185,104 +217,222 @@ class ClamAVGUI(QMainWindow):
                               self.tr("Failed to open sponsor: {}".format(str(e))))
     
     def setup_language_menu(self):
-        """Set up the language selection menu with only available languages."""
+        """Set up the language selection menu with available languages."""
         if not hasattr(self, 'lang_manager') or not self.lang_manager:
+            logger.warning("Language manager not available")
             return
             
-        # Get the language menu from the menu bar if not already set
-        if not hasattr(self, 'language_menu') or self.language_menu is None:
-            if hasattr(self, 'menu_bar') and hasattr(self.menu_bar, 'language_menu'):
-                self.language_menu = self.menu_bar.language_menu
-            else:
+        # Make sure we have the menu bar and language menu
+        if not hasattr(self, 'menu_bar') or not hasattr(self.menu_bar, 'language_menu'):
+            logger.warning("Menu bar or language menu not available")
+            return
+            
+        language_menu = self.menu_bar.language_menu
+        
+        # Clear existing actions safely
+        try:
+            # Clear any existing connections
+            if hasattr(language_menu, 'aboutToShow'):
+                try:
+                    language_menu.aboutToShow.disconnect()
+                except (TypeError, RuntimeError):
+                    # No connections to disconnect or already disconnected
+                    pass
+            
+            # Clear existing actions
+            language_menu.clear()
+            
+            # Add language actions
+            available_languages = self.lang_manager.get_available_languages()
+            if not available_languages:
+                logger.warning("No available languages found")
                 return
                 
-        # Clear existing actions
-        if self.language_menu is not None:
-            self.language_menu.clear()
-            
-            # Make the menu exclusive (like a radio button group)
-            self.language_menu.setToolTipsVisible(True)
-            
-            # Add only available languages that have translations
-            for lang_code, lang_name in self.lang_manager.available_languages.items():
-                # Only add languages that have actual translations
-                if hasattr(self.lang_manager, 'is_language_available') and \
-                   self.lang_manager.is_language_available(lang_code):
-                    action = self.language_menu.addAction(lang_name, self.change_language)
+            for lang_code, lang_name in available_languages.items():
+                try:
+                    # Get the display name for the language
+                    display_name = lang_name
+                    if hasattr(self.lang_manager, 'tr'):
+                        display_name = self.lang_manager.tr(lang_name) or lang_name
+                    
+                    action = language_menu.addAction(display_name)
                     action.setCheckable(True)
+                    action.setChecked(lang_code == self.lang_manager.get_language())
                     action.setData(lang_code)
                     
-                    # Check current language
-                    if hasattr(self.lang_manager, 'current_lang') and \
-                       lang_code == self.lang_manager.current_lang:
-                        action.setChecked(True)
+                    # Connect the action to change the language
+                    action.triggered.connect(
+                        lambda checked, code=lang_code: self.change_language(code)
+                    )
+                except Exception as e:
+                    logger.error(f"Error adding language {lang_code}: {e}", exc_info=True)
+                    continue
+            
+            # Add a separator
+            language_menu.addSeparator()
+            
+            # Add a refresh action
+            refresh_text = "Refresh"
+            if hasattr(self.lang_manager, 'tr'):
+                refresh_text = self.lang_manager.tr("menu.help.refresh") or refresh_text
                 
-                # Check current language
-                if lang_code == self.lang_manager.current_lang:
-                    action.setChecked(True)
-    
-    def change_language(self):
-        """Change the application language."""
-        action = self.sender()
-        if not action or not hasattr(self, 'lang_manager'):
-            return
+            refresh_action = language_menu.addAction(refresh_text)
+            refresh_action.triggered.connect(self.retranslate_ui)
             
-        lang_code = action.data()
-        if lang_code and self.lang_manager.set_language(lang_code):
-            logger.info(f"Language changed to {lang_code}")
+            # Store a reference to the language menu
+            self.language_menu = language_menu
             
-            # Save language preference
-            if not hasattr(self, 'current_settings'):
-                self.current_settings = {}
-            self.current_settings['language'] = lang_code
-            self.settings.save_settings(self.current_settings)
+        except Exception as e:
+            logger.error(f"Error setting up language menu: {e}", exc_info=True)
+            # Try to recover by creating a basic menu
+            try:
+                language_menu.clear()
+                language_menu.addAction("Error loading languages").setEnabled(False)
+            except:
+                pass
     
-    def retranslate_ui(self):
-        """Retranslate the UI when language changes."""
-        if not hasattr(self, 'lang_manager') or not self.lang_manager:
+    def change_language(self, lang_code=None):
+        """Change the application language.
+        
+        Args:
+            lang_code: The language code to change to (e.g., 'en_US', 'it_IT')
+        """
+        # If called from an action, get the language code from the action
+        if lang_code is None and hasattr(self, 'sender'):
+            action = self.sender()
+            if action and hasattr(action, 'data'):
+                lang_code = action.data()
+        
+        if not lang_code or not hasattr(self, 'lang_manager') or not self.lang_manager:
+            logger.warning("Cannot change language: invalid language code or language manager not available")
             return
             
         try:
+            # Update the language in the language manager
+            if self.lang_manager.set_language(lang_code):
+                self.current_lang = lang_code
+                logger.info(f"Language changed to {lang_code}")
+                
+                # Save language preference
+                if not hasattr(self, 'current_settings'):
+                    self.current_settings = {}
+                self.current_settings['language'] = lang_code
+                self.settings.save_settings(self.current_settings)
+                
+                # Update the UI
+                self.retranslate_ui(lang_code)
+                
+                # Show a message to the user
+                if hasattr(self, 'status_bar'):
+                    lang_name = self.lang_manager.available_languages.get(lang_code, lang_code)
+                    self.status_bar.showMessage(
+                        f"{self.tr('Language changed to')} {lang_name}",
+                        3000  # Show for 3 seconds
+                    )
+            else:
+                logger.warning(f"Failed to change language to {lang_code}")
+        except Exception as e:
+            logger.error(f"Error changing language to {lang_code}: {e}", exc_info=True)
+    
+    def is_menu_valid(self, menu):
+        """Check if a menu is still valid (not deleted)."""
+        try:
+            # Try to access a property to see if the object is still valid
+            return menu is not None and hasattr(menu, 'isWidgetType') and menu.isWidgetType()
+        except RuntimeError:
+            return False
+
+    def retranslate_ui(self, language_code=None):
+        """Retranslate the UI when the language changes.
+        
+        Args:
+            language_code: The new language code (optional)
+        """
+        if not hasattr(self, 'lang_manager') or not self.lang_manager:
+            logger.warning("Cannot retranslate UI: Language manager not available")
+            return
+            
+        try:
+            logger.debug(f"Retranslating UI to language: {language_code or self.lang_manager.get_language()}")
+            
             # Update window title
-            self.setWindowTitle(self.tr("ClamAV GUI"))
+            self.setWindowTitle(self.lang_manager.tr("window.title") or "ClamAV GUI")
             
-            # Update menu bar if it exists
-            if hasattr(self, 'menu_bar'):
-                # Update menu titles if they exist
-                if hasattr(self, 'file_menu') and self.file_menu:
-                    self.file_menu.setTitle(self.tr("&File"))
-                if hasattr(self, 'tools_menu') and self.tools_menu:
-                    self.tools_menu.setTitle(self.tr("&Tools"))
-                if hasattr(self, 'help_menu') and self.help_menu:
-                    self.help_menu.setTitle(self.tr("&Help"))
-                if hasattr(self, 'language_menu') and self.language_menu:
-                    self.language_menu.setTitle(self.tr("&Language"))
-            
-            # Update menu actions if they exist
-            if hasattr(self, 'exit_action') and self.exit_action:
-                self.exit_action.setText(self.tr("E&xit"))
-            if hasattr(self, 'check_updates_action') and self.check_updates_action:
-                self.check_updates_action.setText(self.tr("Check for &Updates..."))
-            if hasattr(self, 'help_action') and self.help_action:
-                self.help_action.setText(self.tr("&Help"))
-            if hasattr(self, 'about_action') and self.about_action:
-                self.about_action.setText(self.tr("&About"))
-            if hasattr(self, 'sponsor_action') and self.sponsor_action:
-                self.sponsor_action.setText(self.tr("&Support the Project"))
+            # Update menu bar safely
+            if hasattr(self, 'menu_bar') and self.menu_bar and self.is_menu_valid(self.menu_bar):
+                try:
+                    # Update menu titles with safety checks
+                    if hasattr(self.menu_bar, 'file_menu') and self.is_menu_valid(self.menu_bar.file_menu):
+                        self.menu_bar.file_menu.setTitle(self.lang_manager.tr("menu.file") or "&File")
+                    
+                    if hasattr(self.menu_bar, 'tools_menu') and self.is_menu_valid(self.menu_bar.tools_menu):
+                        self.menu_bar.tools_menu.setTitle(self.lang_manager.tr("menu.tools") or "&Tools")
+                    
+                    if hasattr(self.menu_bar, 'help_menu') and self.is_menu_valid(self.menu_bar.help_menu):
+                        self.menu_bar.help_menu.setTitle(self.lang_manager.tr("menu.help") or "&Help")
+                    
+                    if hasattr(self.menu_bar, 'language_menu') and self.is_menu_valid(self.menu_bar.language_menu):
+                        self.menu_bar.language_menu.setTitle(self.lang_manager.tr("menu.language") or "&Language")
+                    
+                    # Update all menu actions safely
+                    for action in self.menu_bar.actions():
+                        try:
+                            if not hasattr(action, 'menu') or not action.menu():
+                                if hasattr(action, 'text') and action.text():
+                                    # Get the translation key by removing the '&' character
+                                    key = action.text().replace('&', '')
+                                    # Try to translate the key
+                                    translation = self.lang_manager.tr(f"menu.{key.lower()}")
+                                    if translation:
+                                        action.setText(translation)
+                        except RuntimeError:
+                            logger.warning("Skipping invalid menu action")
+                            continue
+                except RuntimeError as e:
+                    logger.error(f"Error updating menu bar: {e}")
             
             # Update tab names
-            if hasattr(self, 'tabs'):
-                self.tabs.setTabText(0, self.tr("Scan"))
-                self.tabs.setTabText(1, self.tr("Update"))
-                self.tabs.setTabText(2, self.tr("Settings"))
-                self.tabs.setTabText(3, self.tr("Config Editor"))
+            if hasattr(self, 'tabs') and self.tabs:
+                try:
+                    tab_keys = ["tab.scan", "tab.update", "tab.quarantine", "tab.settings"]
+                    for i in range(min(self.tabs.count(), len(tab_keys))):
+                        translated = self.lang_manager.tr(tab_keys[i])
+                        if translated:
+                            self.tabs.setTabText(i, translated)
+                except RuntimeError as e:
+                    logger.error(f"Error updating tabs: {e}")
             
             # Update status bar
-            if hasattr(self, 'status_bar'):
-                self.status_bar.showMessage(self.tr("Ready"))
+            if hasattr(self, 'status_bar') and self.status_bar:
+                try:
+                    self.status_bar.showMessage(self.lang_manager.tr("status.ready") or "Ready")
+                except RuntimeError as e:
+                    logger.error(f"Error updating status bar: {e}")
             
+            # Update the language menu items
+            if hasattr(self, 'language_menu') and self.language_menu and self.is_menu_valid(self.language_menu):
+                try:
+                    for action in self.language_menu.actions():
+                        if hasattr(action, 'data') and action.data():
+                            lang_code = action.data()
+                            lang_name = self.lang_manager.available_languages.get(lang_code, lang_code)
+                            action.setText(lang_name)
+                            action.setChecked(lang_code == self.lang_manager.get_language())
+                except RuntimeError as e:
+                    logger.error(f"Error updating language menu: {e}")
+            
+            # Force update the UI
+            try:
+                self.update()
+                if QApplication.instance():
+                    QApplication.instance().processEvents()
+            except RuntimeError as e:
+                logger.error(f"Error updating UI: {e}")
+            
+            logger.debug("UI retranslation completed")
+                
         except Exception as e:
-            logger.error(f"Error retranslating UI: {e}")
+            logger.error(f"Error in retranslate_ui: {e}", exc_info=True)
     
     def check_for_updates(self, force_check=False):
         """Check for application updates."""
@@ -615,14 +765,40 @@ class ClamAVGUI(QMainWindow):
     
     def save_config(self):
         """Save the current configuration to a file."""
-        file_name, _ = QFileDialog.getSaveFileName(self, self.tr("Save Config File"), "", "Config Files (*.conf);;All Files (*)")
-        if file_name:
-            try:
-                with open(file_name, 'w') as f:
-                    f.write(self.config_editor.toPlainText())
-                QMessageBox.information(self, self.tr("Success"), self.tr("Config file saved successfully"))
-            except Exception as e:
-                QMessageBox.critical(self, self.tr("Error"), self.tr(f"Failed to save config file: {str(e)}"))
+        try:
+            file_name, _ = QFileDialog.getSaveFileName(
+                self, 
+                self.tr("Save Config File"), 
+                "", 
+                "Config Files (*.conf);;All Files (*)"
+            )
+            if file_name:
+                try:
+                    with open(file_name, 'w', encoding='utf-8') as f:
+                        f.write(self.config_editor.toPlainText())
+                    QMessageBox.information(
+                        self, 
+                        self.tr("Success"), 
+                        self.tr("Config file saved successfully")
+                    )
+                except PermissionError:
+                    QMessageBox.critical(
+                        self,
+                        self.tr("Error"),
+                        self.tr("Permission denied. Cannot write to the specified file.")
+                    )
+                except OSError as e:
+                    QMessageBox.critical(
+                        self,
+                        self.tr("Error"),
+                        self.tr(f"Failed to save config file: {str(e)}")
+                    )
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                self.tr("Error"),
+                self.tr(f"An unexpected error occurred: {str(e)}")
+            )
     
     def apply_settings(self):
         """Apply the current settings to the UI."""
@@ -657,100 +833,19 @@ class ScanThread(QThread):
             self.process.start(self.command[0], self.command[1:])
             
             # Track progress
-            total_files = 0
-            processed_files = 0
-            
-            while not self.process.waitForFinished(100):  # Check every 100ms
-                # Parse output to get progress
-                output = self.process.readAllStandardOutput().data().decode()
-                if output:
-                    self.update_output.emit(output)
-                    # Look for progress in the output
-                    if 'Scanned file:' in output:
-                        processed_files += 1
-                        # Emit progress as a percentage (this is a simple approximation)
-                        # In a real implementation, you'd want to know the total files first
-                        if total_files > 0:
-                            progress = min(100, int((processed_files / total_files) * 100))
-                            self.update_progress.emit(progress)
-                    elif ' files, ' in output and 'infested files: ' in output:
-                        # Try to get total files from summary
-                        try:
-                            parts = output.split(' files, ')
-                            if len(parts) > 1:
-                                total_files = int(parts[0].split()[-1])
-                        except (ValueError, IndexError):
-                            pass
-            
-        except Exception as e:
-            self.update_output.emit(str(e))
-            self.finished.emit(1, 1)
-    
-    def handle_output(self):
-        """Handle standard output from the process."""
-        if self.process:
-            data = self.process.readAllStandardOutput().data().decode()
-            self.update_output.emit(data)
-    
-    def handle_error(self):
-        """Handle error output from the process."""
-        if self.process:
-            data = self.process.readAllStandardError().data().decode()
-            self.update_output.emit(data)
-    
-    def on_finished(self, exit_code, exit_status):
-        """Handle process completion."""
-        self.finished.emit(exit_code, exit_status)
-    
-    def terminate(self):
-        """Terminate the process."""
-        if self.process and self.process.state() == QProcess.Running:
-            self.process.terminate()
-
-
-class UpdateThread(QThread):
-    """Thread for updating the ClamAV database."""
-    update_output = Signal(str)
-    finished = Signal(int, int)
-    
-    def __init__(self, command):
-        super().__init__()
-        self.command = command
-        self.process = None
-    
-    def run(self):
-        """Run the update command."""
-        try:
-            self.process = QProcess()
-            self.process.readyReadStandardOutput.connect(self.handle_output)
-            self.process.readyReadStandardError.connect(self.handle_error)
-            self.process.finished.connect(self.on_finished)
-            
-            # Start the process
-            self.process.start(self.command[0], self.command[1:])
-            self.process.waitForFinished(-1)
-            
-        except Exception as e:
-            self.update_output.emit(str(e))
-            self.finished.emit(1, 1)
-    
-    def handle_output(self):
-        """Handle standard output from the process."""
-        if self.process:
-            data = self.process.readAllStandardOutput().data().decode()
-            self.update_output.emit(data)
-    
-    def handle_error(self):
-        """Handle error output from the process."""
-        if self.process:
-            data = self.process.readAllStandardError().data().decode()
-            self.update_output.emit(data)
-    
-    def on_finished(self, exit_code, exit_status):
-        """Handle process completion."""
-        self.finished.emit(exit_code, exit_status)
-    
-    def terminate(self):
-        """Terminate the process."""
-        if self.process and self.process.state() == QProcess.Running:
-            self.process.terminate()
+            try:
+                total_files = 0
+                processed_files = 0
+                
+                while not self.process.waitForFinished(100):  # Check every 100ms
+                    # Parse output to get progress
+                    output = self.process.readAllStandardOutput().data().decode()
+                    if output:
+                        self.update_output.emit(output)
+                        # Look for progress in the output
+                        if 'Scanned file:' in output:
+                            processed_files += 1
+                            self.update_progress.emit(processed_files)
+            except Exception as e:
+                logger.error(f"Error in scan process: {e}")
+                self.update_output.emit(f"ERROR: {str(e)}\n")

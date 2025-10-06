@@ -23,6 +23,16 @@ TRANSLATIONS = {
         "menu.help.about": "&About",
         "menu.help.sponsor": "&Sponsor",
         "menu.help.updates": "Check for &Updates...",
+        "file_menu": "&File",
+        "tools_menu": "&Tools", 
+        "exit_action": "&Exit",
+        "language_menu": "&Language",
+        "help_menu": "&Help",
+        "help_action": "&Documentation",
+        "wiki_action": "&Wiki",
+        "about_action": "&About",
+        "sponsor_action": "&Support",
+        "check_updates_action": "Ceck &Updates...",
         
         # Scan tab
         "scan.target": "Scan Target",
@@ -58,8 +68,24 @@ TRANSLATIONS = {
         # About dialog
         "about.title": "About ClamAV GUI",
         "about.version": "Version: {}",
-        "about.description": "A graphical user interface for ClamAV antivirus.",
-        "about.copyright": "© 2025 Tuxxle. All rights reserved.",
+        "about.description": "A graphical user interface for ClamAV antivirus.\n\nClamAV GUI provides an easy-to-use interface for scanning files, updating virus definitions, and managing ClamAV settings.",
+        "about.copyright": "© 2025 Nsfr750 - All rights reserved.",
+
+         # Sponsor dialog
+        "sponsor.message": "If you find this application useful, please consider supporting its development.\n\n Your support helps cover hosting costs and encourages further development.",
+        "sponsor.title": "Support the Project",
+        "sponsor.window_title": "Support the Project",
+        "sponsor.links.github_sponsors": "GitHub Sponsors",
+        "sponsor.links.paypal": "PayPal Donation",
+        "sponsor.monero.label": "Monero:",
+        "sponsor.qr_tooltip": "Scan to donate XMR",
+        "sponsor.ways_to_support": "Ways to Support:",
+        "sponsor.other_ways.title": "Other Ways to Help:",
+        "sponsor.other_ways.star": "Star the project on ",
+        "sponsor.other_ways.report": "Report bugs and suggest features",
+        "sponsor.other_ways.share": "Share with others who might find it useful",
+        "sponsor.buttons.donate_paypal": "Donate with PayPal",
+        "sponsor.buttons.copy_monero": "Copy Monero Address",
         
         # File dialogs
         "dialog.open": "Open",
@@ -72,8 +98,6 @@ TRANSLATIONS = {
 
 # Available languages - keep only those with actual translations
 AVAILABLE_LANGUAGES = {
-    "en": "English",
     "en_US": "English (United States)",
-    "it": "Italiano",
     "it_IT": "Italiano (Italia)",   
 }

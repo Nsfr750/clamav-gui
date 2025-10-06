@@ -30,11 +30,41 @@ UPDATES_FILE = CONFIG_DIR / 'updates.json'
 # Configure logger
 logger = logging.getLogger(__name__)
 
+class UpdateWorker(QObject):
+    """Worker class for running the update check in a separate thread."""
+    finished = Signal()
+    result = Signal(dict, bool)
+    error = Signal(str)
+    
+    def __init__(self, checker):
+        super().__init__()
+        self.checker = checker
+    
+    def run(self):
+        """Run the update check."""
+        try:
+            update_available, update_info = self.checker._check_for_updates()
+            self.result.emit(update_info, update_available)
+        except Exception as e:
+            self.error.emit(str(e))
+        finally:
+            self.finished.emit()
+
+
 class UpdateChecker(QObject):
     """Handles checking for application updates."""
     
     # Signal emitted when update check is complete
     update_check_complete = Signal(dict, bool)
+    
+    # Signal emitted when an update is available
+    update_available = Signal(dict)  # dict contains update information
+    
+    # Signal emitted when no update is available
+    no_update_available = Signal()
+    
+    # Signal emitted when an error occurs during update check
+    error_occurred = Signal(str)  # str contains error message
     
     def __init__(self, current_version: str, config_path: Optional[Path] = None):
         """Initialize the update checker.
@@ -70,6 +100,35 @@ class UpdateChecker(QObject):
                 json.dump(self.config, f, indent=2)
         except Exception as e:
             logger.error(f"Error saving update config: {e}")
+    
+    def start(self, force: bool = False):
+        """Start the update check in a separate thread."""
+        self.thread = QThread()
+        self.worker = UpdateWorker(self)
+        self.worker.moveToThread(self.thread)
+        
+        # Connect signals
+        self.thread.started.connect(self.worker.run)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.worker.result.connect(self._handle_result)
+        self.worker.error.connect(self.error_occurred.emit)
+        
+        # Start the thread
+        self.thread.start()
+    
+    def _handle_result(self, update_info, update_available):
+        """Handle the result of the update check."""
+        self.update_check_complete.emit(update_info, update_available)
+        if update_available:
+            self.update_available.emit(update_info)
+        else:
+            self.no_update_available.emit()
+    
+    def _check_for_updates(self) -> Tuple[bool, Optional[dict]]:
+        """Internal method to check for updates."""
+        return self.check_for_updates(force=True)
     
     def check_for_updates(self, force: bool = False) -> Tuple[bool, Optional[dict]]:
         """Check for updates.
