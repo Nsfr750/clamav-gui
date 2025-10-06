@@ -834,7 +834,6 @@ class ScanThread(QThread):
             
             # Track progress
             try:
-                total_files = 0
                 processed_files = 0
                 
                 while not self.process.waitForFinished(100):  # Check every 100ms
@@ -848,4 +847,8 @@ class ScanThread(QThread):
                             self.update_progress.emit(processed_files)
             except Exception as e:
                 logger.error(f"Error in scan process: {e}")
-                self.update_output.emit(f"ERROR: {str(e)}\n")
+        except Exception as e:
+            logger.error(f"Failed to start scan process: {e}")
+            self.update_output.emit(f"Error: {str(e)}")
+            self.finished.emit(-1, QProcess.CrashExit)
+            self.update_output.emit(f"ERROR: {str(e)}\n")
