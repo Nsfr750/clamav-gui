@@ -36,30 +36,46 @@ class ClamAVGUI(UI_ClamAVMainWindow):
             lang_manager: Instance of SimpleLanguageManager for translations
             parent: Parent widget
         """
-        super().__init__(lang_manager=lang_manager, parent=parent)
-        self.process = None
-        self.scan_thread = None
-        self.virus_db_updater = VirusDBUpdater()
-        self.current_settings = {}
-        
-        # Initialize core components
-        self.initialize_core_components()
-        
-        # Set up the main window
-        self.setWindowTitle(self.tr("ClamAV GUI"))
-        self.setMinimumSize(800, 600)
-        
-        # Set application icon
-        self.setup_icon()
-        
-        # Initialize UI
-        self.setup_ui()
-        
-        # Load settings
-        self.load_settings()
-        
-        # Connect signals
-        self.setup_connections()
+        try:
+            logger.info("Initializing ClamAVGUI...")
+            super().__init__(lang_manager=lang_manager, parent=parent)
+            
+            # Initialize instance variables
+            self.process = None
+            self.scan_thread = None
+            self.virus_db_updater = VirusDBUpdater()
+            self.current_settings = {}
+            self.lang_manager = lang_manager
+            
+            # Initialize path attributes
+            self.clamd_path = None
+            self.freshclam_path = None
+            self.clamscan_path = None
+            
+            # Set window properties
+            self.setWindowTitle(self.tr("ClamAV GUI"))
+            self.setMinimumSize(1024, 768)
+            
+            # Set application icon
+            self.setup_icon()
+            
+            # Initialize core components
+            self.initialize_core_components()
+            
+            # Initialize UI
+            self.setup_ui()
+            
+            # Load settings
+            self.load_settings()
+            
+            # Connect signals
+            self.setup_connections()
+            
+            logger.info("ClamAVGUI initialization completed")
+            
+        except Exception as e:
+            logger.error(f"Failed to initialize ClamAVGUI: {e}", exc_info=True)
+            raise
     
     def setup_icon(self):
         """Set up the application icon."""
@@ -79,17 +95,31 @@ class ClamAVGUI(UI_ClamAVMainWindow):
     
     def setup_ui(self):
         """Set up the user interface."""
-        # Create central widget and main layout
-        self.central_widget = QWidget()
-        self.setCentralWidget(self.central_widget)
-        self.main_layout = QVBoxLayout(self.central_widget)
-        
-        # Create tab widget
-        self.tabs = QTabWidget()
-        self.main_layout.addWidget(self.tabs)
-        
-        # Initialize tabs (to be implemented in child classes)
-        self.setup_tabs()
+        try:
+            logger.info("Setting up UI components...")
+            
+            # Create central widget and main layout
+            self.central_widget = QWidget()
+            self.setCentralWidget(self.central_widget)
+            self.main_layout = QVBoxLayout(self.central_widget)
+            
+            # Create tab widget
+            self.tabs = QTabWidget()
+            self.main_layout.addWidget(self.tabs)
+            
+            # Initialize tabs
+            logger.info("Setting up tabs...")
+            self.setup_tabs()
+            
+            # Set window properties
+            self.setWindowTitle(self.tr("ClamAV GUI"))
+            self.resize(1024, 768)
+            
+            logger.info("UI setup completed")
+            
+        except Exception as e:
+            logger.error(f"Error setting up UI: {e}", exc_info=True)
+            raise
     
     def setup_tabs(self):
         """Set up the application tabs. To be overridden by child classes."""
@@ -805,9 +835,13 @@ class ClamAVGUI(UI_ClamAVMainWindow):
         if not self.current_settings:
             return
         
-        self.clamd_path.setText(self.current_settings.get('clamd_path', ''))
-        self.freshclam_path.setText(self.current_settings.get('freshclam_path', ''))
-        self.clamscan_path.setText(self.current_settings.get('clamscan_path', ''))
+        # Safely set text for path fields if they exist
+        if hasattr(self, 'clamd_path') and self.clamd_path is not None:
+            self.clamd_path.setText(self.current_settings.get('clamd_path', ''))
+        if hasattr(self, 'freshclam_path') and self.freshclam_path is not None:
+            self.freshclam_path.setText(self.current_settings.get('freshclam_path', ''))
+        if hasattr(self, 'clamscan_path') and self.clamscan_path is not None:
+            self.clamscan_path.setText(self.current_settings.get('clamscan_path', ''))
 
 
 class ScanThread(QThread):
