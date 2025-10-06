@@ -100,20 +100,21 @@ class ClamAVMenuBar(QMenuBar):
         except ImportError as e:
             logger.warning(f"Could not import UpdatesDialog: {e}")
     
-    @Slot()
     def open_wiki(self):
         """Open the ClamAV GUI wiki in the default web browser."""
         wiki_url = QUrl("https://github.com/Nsfr750/clamav-gui/wiki")
         QDesktopServices.openUrl(wiki_url)
     
-    @Slot()    
+    @Slot()
     def check_for_updates(self):
+        """Check for application updates."""
         if self.UpdatesDialog:
             dialog = self.UpdatesDialog(self)
             dialog.exec_()
     
     def set_language_manager(self, lang_manager):
-        """Set the language manager for the menu bar.
+        """Set the language manager for the menu bar."""
+        self.lang_manager = lang_manager
         
         # Connect to the language change signal if manager is valid
         if (hasattr(self.lang_manager, 'language_changed') and 
@@ -251,8 +252,6 @@ class ClamAVMenuBar(QMenuBar):
         except Exception as e:
             logger.error(f"Error showing help dialog: {e}")
             QMessageBox.critical(self, "Error", f"Failed to open help: {str(e)}")
-        from .help import HelpDialog
-        dialog.exec_()
         
     def show_sponsor_dialog(self):
         """Show the sponsor dialog."""
