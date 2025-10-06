@@ -115,19 +115,26 @@ class SimpleLanguageManager(QObject):
         """
         return lang_code in self.translations
         
-    def set_language(self, lang_code: str) -> bool:
+    def set_language(self, lang_code) -> bool:
         """Set the current language.
 
         Args:
-            lang_code: The language code to set (e.g., 'en', 'it')
+            lang_code: The language code to set (e.g., 'en', 'it') or a QAction with language data
 
         Returns:
             bool: True if the language was changed successfully, False otherwise
         """
+        # Handle case where lang_code is a QAction
+        if hasattr(lang_code, 'data') and callable(lang_code.data):
+            lang_code = lang_code.data()
+            
         if not lang_code:
             logger.warning("No language code provided")
             return False
             
+        # Convert to string in case it's not already
+        lang_code = str(lang_code)
+        
         # If the exact language is available, use it
         if lang_code in self.translations:
             if lang_code != self.current_lang:
@@ -139,16 +146,21 @@ class SimpleLanguageManager(QObject):
             return True  # Already set to this language
             
         # Try language code without region (e.g., 'en' from 'en_US')
-        base_lang = lang_code.split('_')[0]
-        if base_lang in self.translations and base_lang != lang_code:
-            if base_lang != self.current_lang:
-                old_lang = self.current_lang
-                self.current_lang = base_lang
-                logger.info(f"Language {lang_code} not found, using {base_lang} instead")
-                logger.info(f"Language changed from {old_lang} to {base_lang}")
-                self.language_changed.emit(base_lang)
-                return True
-            return True  # Already set to base language
+        try:
+            if '_' in lang_code:
+                base_lang = lang_code.split('_')[0]
+                if base_lang in self.translations and base_lang != lang_code:
+                    if base_lang != self.current_lang:
+                        old_lang = self.current_lang
+                        self.current_lang = base_lang
+                        logger.info(f"Language {lang_code} not found, using {base_lang} instead")
+                        logger.info(f"Language changed from {old_lang} to {base_lang}")
+                        self.language_changed.emit(base_lang)
+                        return True
+                    return True  # Already set to base language
+        except Exception as e:
+            logger.error(f"Error processing language code {lang_code}: {e}")
+            return False
             
         logger.warning(f"Language {lang_code} not found in available languages")
         return False

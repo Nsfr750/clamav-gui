@@ -49,10 +49,6 @@ class ClamAVMenuBar(QMenuBar):
         self.exit_action.triggered.connect(self.parent().close)  # Close the parent window
         self.file_menu.addAction(self.exit_action)
         
-        # Create language menu (will be populated later)
-        self.language_menu = QMenu(self.tr("&Language"), self)
-        self.addMenu(self.language_menu)
-        
         # Tools menu
         self.tools_menu = self.addMenu(self.tr("&Tools"))
         
@@ -114,21 +110,47 @@ class ClamAVMenuBar(QMenuBar):
     
     def set_language_manager(self, lang_manager):
         """Set the language manager for the menu bar."""
+        # Disconnect from previous language manager if it exists
+        if hasattr(self, 'lang_manager') and self.lang_manager is not None:
+            try:
+                if (hasattr(self.lang_manager, 'language_changed') and 
+                    hasattr(self.lang_manager.language_changed, 'disconnect')):
+                    try:
+                        self.lang_manager.language_changed.disconnect(self.retranslate_ui)
+                    except (TypeError, RuntimeError, AttributeError) as e:
+                        # Signal was not connected or other error occurred
+                        logger.debug(f"Could not disconnect signal: {e}")
+            except Exception as e:
+                logger.warning(f"Error disconnecting from previous language manager: {e}")
+        
+        # Set the new language manager
         self.lang_manager = lang_manager
         
         # Connect to the language change signal if manager is valid
-        if (hasattr(self.lang_manager, 'language_changed') and 
+        if (self.lang_manager is not None and 
+            hasattr(self.lang_manager, 'language_changed') and 
             hasattr(self.lang_manager.language_changed, 'connect')):
             try:
-                # Make sure we're not connecting multiple times
-                try:
-                    self.lang_manager.language_changed.disconnect(self.retranslate_ui)
-                except (TypeError, RuntimeError) as e:
-                    # Signal was not connected
-                    logger.debug(f"Signal not connected, will connect: {e}")
-                
                 self.lang_manager.language_changed.connect(self.retranslate_ui)
                 logger.debug("Connected to language change signal")
+                
+                # Setup the language menu after setting the language manager
+                self.setup_language_menu()
+                
+                # Connect the language menu's triggered signal
+                if hasattr(self, 'language_menu') and self.language_menu:
+                    try:
+                        # Disconnect any existing connections to avoid duplicates
+                        try:
+                            self.language_menu.triggered.disconnect()
+                        except (TypeError, RuntimeError):
+                            pass  # No connections to disconnect
+                        # Connect the signal
+                        self.language_menu.triggered.connect(self.change_language)
+                        logger.debug("Connected language menu triggered signal")
+                    except Exception as e:
+                        logger.error(f"Failed to connect language menu signal: {e}")
+                
             except Exception as e:
                 logger.error(f"Failed to connect to language change signal: {e}", exc_info=True)
         else:
@@ -150,10 +172,10 @@ class ClamAVMenuBar(QMenuBar):
         Args:
             language_code: The new language code (optional, will use current language if not provided)
         """
-        if (not self._initialized or 
-                not hasattr(self, 'lang_manager') or 
-                self.lang_manager is None):
-            logger.warning("Cannot retranslate UI: Not initialized or language manager not set")
+        # Skip if the widget is being destroyed or not visible
+        if (not hasattr(self, '_initialized') or not self._initialized or 
+                not hasattr(self, 'lang_manager') or self.lang_manager is None or
+                not hasattr(self, 'isVisible') or not self.isVisible()):
             return
             
         # Don't proceed if the widget is being destroyed
@@ -341,129 +363,126 @@ class ClamAVMenuBar(QMenuBar):
                 self.language_menu.blockSignals(False)
     
     @Slot()
-    def change_language(self, lang_code=None):
+    def change_language(self, action=None):
         """Change the application language.
         
         Args:
-            lang_code: The language code to change to. If None, will try to get it from the sender.
-        """
-        # If lang_code is not provided, try to get it from the sender
-        if lang_code is None:
-            action = self.sender()
-            if not action or not hasattr(action, 'data'):
-                logger.warning("No language code provided and could not get it from sender")
-                return
-            lang_code = action.data()
+            action: The action that triggered the language change, or the language code as a string.
             
-        if not lang_code or not hasattr(self, 'lang_manager') or not self.lang_manager:
-            logger.warning(f"Invalid language code or language manager: {lang_code}")
-            return
+        Returns:
+            bool: True if the language was changed successfully, False otherwise
+        """
+        if not hasattr(self, 'lang_manager') or not self.lang_manager:
+            logger.warning("Language manager not available")
+            return False
+            
+        # Get the language code from the action if it's a QAction
+        lang_code = None
+        if action is not None:
+            if hasattr(action, 'data') and callable(action.data):
+                lang_code = action.data()
+            elif hasattr(action, 'data') and isinstance(action.data(), str):
+                lang_code = action.data()
+            elif isinstance(action, str):
+                lang_code = action
+        
+        if not lang_code:
+            logger.warning("No language code provided")
+            return False
             
         try:
             logger.debug(f"Attempting to change language to: {lang_code}")
             
             # Set the language using the language manager
             if hasattr(self.lang_manager, 'set_language'):
-                # Block signals to prevent multiple change events
-                if hasattr(self.lang_manager, 'blockSignals'):
-                    self.lang_manager.blockSignals(True)
-                    
-                # Change the language
-                if self.lang_manager.set_language(lang_code):
-                    logger.info(f"Language successfully changed to {lang_code}")
-                    
-                    # Save language preference
-                    if not hasattr(self, 'current_settings'):
-                        self.current_settings = {}
-                    self.current_settings['language'] = lang_code
-                    
-                    # Save settings if available
-                    if self.settings and hasattr(self.settings, 'save_settings'):
-                        try:
-                            self.settings.save_settings(self.current_settings)
-                            logger.debug("Language preference saved to settings")
-                        except Exception as e:
-                            logger.error(f"Failed to save language preference: {e}")
-                    
-                    # Emit language changed signal
-                    if hasattr(self, 'language_changed'):
-                        try:
-                            self.language_changed.emit(lang_code)
-                            logger.debug("Language change signal emitted")
-                        except Exception as e:
-                            logger.error(f"Failed to emit language_changed signal: {e}")
-                else:
-                    logger.warning(f"Failed to change language to {lang_code}")
-            
-            # Update the checked state of language actions
-            if hasattr(self, 'language_menu') and self.language_menu:
+                # Block signals to prevent multiple updates
+                if hasattr(self, 'language_menu') and hasattr(self.language_menu, 'blockSignals'):
+                    self.language_menu.blockSignals(True)
+                
                 try:
-                    for action in self.language_menu.actions():
-                        if hasattr(action, 'data') and action.data() == lang_code:
-                            action.setChecked(True)
-                        else:
-                            action.setChecked(False)
-                except Exception as e:
-                    logger.error(f"Error updating language menu check state: {e}")
-                    
+                    # Change the language
+                    if self.lang_manager.set_language(lang_code):
+                        logger.info(f"Language successfully changed to {lang_code}")
+                        
+                        # Save language preference
+                        if not hasattr(self, 'current_settings'):
+                            self.current_settings = {}
+                        self.current_settings['language'] = lang_code
+                        
+                        # Save settings if available
+                        if hasattr(self, 'settings') and self.settings is not None and hasattr(self.settings, 'save_settings'):
+                            try:
+                                self.settings.save_settings(self.current_settings)
+                                logger.debug("Language preference saved to settings")
+                            except Exception as e:
+                                logger.error(f"Failed to save language preference: {e}")
+                        
+                        # Update the language menu checkmarks
+                        if hasattr(self, 'language_menu') and self.language_menu:
+                            for act in self.language_menu.actions():
+                                if hasattr(act, 'data') and callable(act.data):
+                                    act.setChecked(act.data() == lang_code)
+                                elif hasattr(act, 'data') and isinstance(act.data(), str):
+                                    act.setChecked(act.data() == lang_code)
+                        
+                        # Emit signal to notify other components
+                        self.language_changed.emit(lang_code)
+                        
+                        # Force UI update
+                        from PySide6.QtWidgets import QApplication
+                        QApplication.processEvents()
+                        
+                        # Update the UI to reflect the new language
+                        self.retranslate_ui(lang_code)
+                        
+                        return True
+                    else:
+                        logger.warning(f"Failed to change language to {lang_code}")
+                        return False
+                        
+                finally:
+                    # Always unblock signals when done
+                    if hasattr(self, 'language_menu') and hasattr(self.language_menu, 'blockSignals'):
+                        self.language_menu.blockSignals(False)
+            else:
+                logger.warning("Language manager does not have set_language method")
+                return False
+                
         except Exception as e:
-            logger.error(f"Error setting up language menu: {e}", exc_info=True)
-        finally:
-            # Always unblock signals when done
-            if hasattr(self, 'language_menu') and hasattr(self.language_menu, 'blockSignals'):
-                self.language_menu.blockSignals(False)
-                
-            # Ensure the menu is added to the menu bar
-            if (hasattr(self, 'language_menu') and self.language_menu and 
-                self.language_menu not in self.menuBar().actions()):
-                self.menuBar().addAction(self.language_menu)
-    
-    def retranslate_ui(self):
-        """Retranslate the UI when language changes."""
-        if not hasattr(self, 'lang_manager') or not self.lang_manager:
-            return
+            logger.error(f"Error changing language to {lang_code}: {e}", exc_info=True)
+            return False
             
-        try:
-            # Skip if the widget is being destroyed
-            if not hasattr(self, 'isVisible') or not self.isVisible():
-                return
-                
-            # Update window title if this is the main window
-            if hasattr(self, 'setWindowTitle'):
-                self.setWindowTitle(self.tr("ClamAV GUI"))
-            
-            # Update menu bar items if they exist
-            if hasattr(self, 'file_menu') and self.file_menu:
-                self.file_menu.setTitle(self.tr("&File"))
-                
-            if hasattr(self, 'tools_menu') and self.tools_menu:
-                self.tools_menu.setTitle(self.tr("&Tools"))
-                
-            if hasattr(self, 'help_menu') and self.help_menu:
-                self.help_menu.setTitle(self.tr("&Help"))
-                
-            if hasattr(self, 'language_menu') and self.language_menu:
-                self.language_menu.setTitle(self.tr("&Language"))
-                # Rebuild the language menu to update translations
-                self.setup_language_menu()
-            
-            # Update menu actions
+        # Rebuild the language menu to update translations
+        self.setup_language_menu()
+        
+        # Update menu actions
+        if hasattr(self, 'exit_action'):
             self.exit_action.setText(self.tr("E&xit"))
+        if hasattr(self, 'check_updates_action'):
             self.check_updates_action.setText(self.tr("Check for &Updates..."))
+        if hasattr(self, 'help_action'):
             self.help_action.setText(self.tr("&Help"))
+        if hasattr(self, 'about_action'):
             self.about_action.setText(self.tr("&About"))
+        if hasattr(self, 'sponsor_action'):
             self.sponsor_action.setText(self.tr("&Support the Project"))
-            
-            # Update tab names
-            if hasattr(self, 'tabs'):
-                self.tabs.setTabText(0, self.tr("Scan"))
-                self.tabs.setTabText(1, self.tr("Update"))
-                self.tabs.setTabText(2, self.tr("Settings"))
-                self.tabs.setTabText(3, self.tr("Config Editor"))
-            
-            # Update status bar
-            if hasattr(self, 'status_bar'):
-                self.status_bar.showMessage(self.tr("Ready"))
-            
-        except Exception as e:
-            logger.error(f"Error retranslating UI: {e}")
+        
+        # Update tab names
+        if hasattr(self, 'tabs'):
+            self.tabs.setTabText(0, self.tr("Scan"))
+            self.tabs.setTabText(1, self.tr("Update"))
+            self.tabs.setTabText(2, self.tr("Settings"))
+            self.tabs.setTabText(3, self.tr("Config Editor"))
+        
+        # Update status bar
+        if hasattr(self, 'status_bar'):
+            self.status_bar.showMessage(self.tr("Ready"))
+
+    def __del__(self):
+        """Cleanup resources when the object is being destroyed."""
+        # Disconnect all signals to prevent memory leaks
+        if hasattr(self, 'language_menu') and hasattr(self.language_menu, 'blockSignals'):
+            try:
+                self.language_menu.blockSignals(True)
+            except RuntimeError:
+                pass

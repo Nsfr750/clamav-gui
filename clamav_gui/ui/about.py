@@ -52,12 +52,12 @@ class AboutDialog(QDialog):
             except Exception as e:
                 logger.warning(f"Error setting window title: {e}")
                 self.setWindowTitle("About ClamAV GUI")
+                self.resize(400, 350)
                 
-            self.setMinimumSize(600, 600)
         except Exception as e:
             logger.error(f"Error initializing AboutDialog: {e}")
             self.setWindowTitle("About")
-            self.setMinimumSize(600, 400)
+            self.resize(600, 780)
         
         layout = QVBoxLayout(self)
         

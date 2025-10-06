@@ -1,5 +1,0 @@
-"""
-PDF Duplicate Finder
-
-"""
-

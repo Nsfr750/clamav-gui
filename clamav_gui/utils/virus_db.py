@@ -15,18 +15,19 @@ class UpdateSignals(QObject):
     
     def disconnect_all(self):
         """Safely disconnect all slots from all signals."""
-        # Check if the signal has any connected slots before disconnecting
-        if self.output.signal is not None and self.output.signal.is_connected():
-            try:
-                self.output.disconnect()
-            except RuntimeError:
-                pass
-                
-        if self.finished.signal is not None and self.finished.signal.is_connected():
-            try:
-                self.finished.disconnect()
-            except RuntimeError:
-                pass
+        # Disconnect all slots from the output signal
+        try:
+            self.output.disconnect()
+        except (RuntimeError, TypeError):
+            # Signal was not connected or already disconnected
+            pass
+            
+        # Disconnect all slots from the finished signal
+        try:
+            self.finished.disconnect()
+        except (RuntimeError, TypeError):
+            # Signal was not connected or already disconnected
+            pass
 
 class VirusDBUpdater:
     """Handles virus database update operations."""

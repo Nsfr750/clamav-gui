@@ -59,7 +59,7 @@ class HelpDialog(QDialog):
         super().__init__(parent)
         self.current_lang = current_lang
         self.language_manager = SimpleLanguageManager()
-        self.setMinimumSize(900, 700)
+        self.resize(500, 400)
         self.setWindowTitle(self.tr("help.window_title", "ClamAV GUI Help"))
         
         # Set window icon if available
@@ -104,7 +104,7 @@ class HelpDialog(QDialog):
             QFrame {
                 border-radius: 4px;
                 padding: 20px;
-                background-color: #f5f5f5;
+                background-color: #dbd3ae;
             }
         """)
         
@@ -115,10 +115,10 @@ class HelpDialog(QDialog):
         
         # Create two horizontal layouts for the two rows
         first_row_layout = QHBoxLayout()
-        first_row_layout.setSpacing(20)  # More space between buttons
+        first_row_layout.setSpacing(5)  # More space between buttons
         
         second_row_layout = QHBoxLayout()
-        second_row_layout.setSpacing(20)  # More space between buttons
+        second_row_layout.setSpacing(5)  # More space between buttons
         
         # Style for language buttons
         button_style = """
