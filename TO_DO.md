@@ -23,6 +23,14 @@
 - [x] Database updates
 - [x] Progress tracking
 - [x] Multi-language support
+- [x] Fix runtime warnings and signal handling issues
+
+## Completed in v1.1.0
+
+- [x] Fixed 'change_language' method not found error
+- [x] Fixed signal disconnect warnings in virus database operations
+- [x] Fixed malformed freshclam.conf configuration file
+- [x] Fixed 'time' module not imported error during scans
 
 ## Future Ideas
 

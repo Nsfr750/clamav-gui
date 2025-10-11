@@ -3,7 +3,7 @@ Version information for ClamAV GUI.
 """
 
 # Version as a tuple (major, minor, patch)
-VERSION = (1, 0, 0)
+VERSION = (1, 1, 0)
 
 # String version
 __version__ = ".".join(map(str, VERSION))
@@ -22,7 +22,7 @@ __build__ = ""
 __date__ = "2025-09-25"
 
 # Version description
-__description__ = "A tool to find and manage duplicate PDF files on your computer."
+__description__ = "A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows."
 
 # Dependencies
 __requires__ = [
@@ -41,6 +41,19 @@ version_info = tuple(map(int, __version__.split('.')))
 
 # Changelog
 __changelog__ = """
+## [1.1.0] - 2025-10-12
+### Added
+- Fixed runtime warnings and errors
+- Improved signal handling in menu and virus database components
+- Fixed ClamAV configuration file parsing issues
+- Added proper time module import for scan operations
+
+### Fixed
+- Fixed 'change_language' method not found error
+- Fixed signal disconnect warnings in virus database operations
+- Fixed malformed freshclam.conf configuration file
+- Fixed 'time' module not imported error during scans
+
 ## [1.0.0] - 2025-09-25
 ### Added
 - Initial release
@@ -57,6 +70,20 @@ def get_version_info():
 def get_version_history():
     """Return the version history."""
     return [
+        {
+            "version": "1.1.0",
+            "date": "2025-10-12",
+            "changes": [
+                "Fixed runtime warnings and errors",
+                "Improved signal handling in menu and virus database components",
+                "Fixed ClamAV configuration file parsing issues",
+                "Added proper time module import for scan operations",
+                "Fixed 'change_language' method not found error",
+                "Fixed signal disconnect warnings in virus database operations",
+                "Fixed malformed freshclam.conf configuration file",
+                "Fixed 'time' module not imported error during scans"
+            ]
+        },
         {
             "version": "1.0.0",
             "date": "2025-09-25",

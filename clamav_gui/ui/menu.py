@@ -146,7 +146,7 @@ class ClamAVMenuBar(QMenuBar):
                         except (TypeError, RuntimeError):
                             pass  # No connections to disconnect
                         # Connect the signal
-                        self.language_menu.triggered.connect(self.change_language)
+                        self.language_menu.triggered.connect(self.on_language_selected)
                         logger.debug("Connected language menu triggered signal")
                     except Exception as e:
                         logger.error(f"Failed to connect language menu signal: {e}")
@@ -380,7 +380,7 @@ class ClamAVMenuBar(QMenuBar):
                     action.setCheckable(True)
                     action.setData(lang_code)
                     action.setChecked(lang_code == current_lang)
-                    action.triggered.connect(lambda checked, code=lang_code: self.change_language(code))
+                    action.triggered.connect(lambda checked, code=lang_code: self.on_language_selected(checked))
                     
                 except Exception as e:
                     logger.error(f"Error adding language {lang_code}: {e}", exc_info=True)

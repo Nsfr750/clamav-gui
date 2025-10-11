@@ -17,15 +17,17 @@ class UpdateSignals(QObject):
         """Safely disconnect all slots from all signals."""
         # Disconnect all slots from the output signal
         try:
-            self.output.disconnect()
-        except (RuntimeError, TypeError):
+            if hasattr(self.output, 'receivers') and self.output.receivers() > 0:
+                self.output.disconnect()
+        except (RuntimeError, TypeError, AttributeError):
             # Signal was not connected or already disconnected
             pass
             
         # Disconnect all slots from the finished signal
         try:
-            self.finished.disconnect()
-        except (RuntimeError, TypeError):
+            if hasattr(self.finished, 'receivers') and self.finished.receivers() > 0:
+                self.finished.disconnect()
+        except (RuntimeError, TypeError, AttributeError):
             # Signal was not connected or already disconnected
             pass
 

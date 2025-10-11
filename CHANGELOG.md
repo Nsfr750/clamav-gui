@@ -2,31 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [1.1.0] - 2025-10-12
 
 ### Added
 
-- Initial project structure
-- Basic GUI with PySide6
-- Virus scanning functionality
-- Database update functionality
-- Multi-language support (English, Italian)
-- Configuration management
-- Automatic update checking
-
-### Changed
-
-- Improved error handling for scan operations
-- Enhanced progress tracking during scans
-- Updated translation files with more complete coverage
-- Refactored code for better maintainability
+- Fixed runtime warnings and errors
+- Improved signal handling in menu and virus database components
+- Fixed ClamAV configuration file parsing issues
+- Added proper time module import for scan operations
 
 ### Fixed
 
-- Fixed progress bar not updating during scans
-- Fixed database update permissions on Windows
-- Fixed language selection persistence
-- Fixed various UI layout issues
+- Fixed 'change_language' method not found error
+- Fixed signal disconnect warnings in virus database operations
+- Fixed malformed freshclam.conf configuration file
+- Fixed 'time' module not imported error during scans
 
 ## [1.0.0] - 2025-10-05
 

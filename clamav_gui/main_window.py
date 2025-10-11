@@ -2,6 +2,8 @@
 import os
 import subprocess
 import logging
+import time
+from pathlib import Path
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QFormLayout,
@@ -28,6 +30,9 @@ from clamav_gui.utils.virus_db import VirusDBUpdater
 
 # Import language manager
 from clamav_gui.lang.lang_manager import SimpleLanguageManager
+
+# Import ClamAV validator
+from clamav_gui.utils.clamav_validator import ClamAVValidator
 
 # Setup logger
 logger = logging.getLogger(__name__)
