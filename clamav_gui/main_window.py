@@ -34,6 +34,12 @@ from clamav_gui.lang.lang_manager import SimpleLanguageManager
 # Import ClamAV validator
 from clamav_gui.utils.clamav_validator import ClamAVValidator
 
+# Import scan report generator
+from clamav_gui.utils.scan_report import ScanReportGenerator
+
+# Import quarantine manager
+from clamav_gui.utils.quarantine_manager import QuarantineManager
+
 # Setup logger
 logger = logging.getLogger(__name__)
 
@@ -54,6 +60,9 @@ class ClamAVGUI(ClamAVMainWindow):
         self.process = None
         self.scan_thread = None
         self.virus_db_updater = VirusDBUpdater()
+        self.clamav_validator = ClamAVValidator()
+        self.scan_report_generator = ScanReportGenerator()
+        self.quarantine_manager = QuarantineManager()
         
         self.lang_manager = lang_manager or SimpleLanguageManager()
         
@@ -110,11 +119,13 @@ class ClamAVGUI(ClamAVMainWindow):
         self.scan_tab = self.create_scan_tab()
         self.update_tab = self.create_update_tab()
         self.settings_tab = self.create_settings_tab()
+        self.quarantine_tab = self.create_quarantine_tab()
         self.config_editor_tab = self.create_config_editor_tab()
         
         self.tabs.addTab(self.scan_tab, self.tr("Scan"))
         self.tabs.addTab(self.update_tab, self.tr("Update"))
         self.tabs.addTab(self.settings_tab, self.tr("Settings"))
+        self.tabs.addTab(self.quarantine_tab, self.tr("Quarantine"))
         self.tabs.addTab(self.config_editor_tab, self.tr("Config Editor"))
         
         # Status bar
@@ -289,7 +300,8 @@ class ClamAVGUI(ClamAVMainWindow):
                 self.tabs.setTabText(0, self.tr("Scan"))
                 self.tabs.setTabText(1, self.tr("Update"))
                 self.tabs.setTabText(2, self.tr("Settings"))
-                self.tabs.setTabText(3, self.tr("Config Editor"))
+                self.tabs.setTabText(3, self.tr("Quarantine"))
+                self.tabs.setTabText(4, self.tr("Config Editor"))
             
             # Update status bar
             if hasattr(self, 'status_bar'):
@@ -337,6 +349,22 @@ class ClamAVGUI(ClamAVMainWindow):
         self.heuristic_scan.setChecked(True)
         options_layout.addWidget(self.heuristic_scan)
         
+        # Quarantine options
+        self.enable_quarantine = QCheckBox(self.tr("Auto-quarantine infected files"))
+        self.enable_quarantine.setChecked(True)
+        self.enable_quarantine.setToolTip(self.tr("Automatically move infected files to quarantine"))
+        options_layout.addWidget(self.enable_quarantine)
+        
+        # Advanced scan options
+        self.scan_archives = QCheckBox(self.tr("Scan archives (zip, rar, etc.)"))
+        self.scan_archives.setChecked(True)
+        options_layout.addWidget(self.scan_archives)
+        
+        self.scan_pua = QCheckBox(self.tr("Scan potentially unwanted applications (PUA)"))
+        self.scan_pua.setChecked(False)
+        self.scan_pua.setToolTip(self.tr("Enable scanning for potentially unwanted applications"))
+        options_layout.addWidget(self.scan_pua)
+        
         options_group.setLayout(options_layout)
         
         # Output
@@ -363,6 +391,16 @@ class ClamAVGUI(ClamAVMainWindow):
         self.stop_btn.setEnabled(False)
         self.stop_btn.clicked.connect(self.stop_scan)
         button_layout.addWidget(self.stop_btn)
+        
+        # Report buttons
+        self.save_report_btn = QPushButton(self.tr("Save Report"))
+        self.save_report_btn.setEnabled(False)
+        self.save_report_btn.clicked.connect(self.save_scan_report)
+        button_layout.addWidget(self.save_report_btn)
+        
+        self.view_quarantine_btn = QPushButton(self.tr("View Quarantine"))
+        self.view_quarantine_btn.clicked.connect(self.show_quarantine_dialog)
+        button_layout.addWidget(self.view_quarantine_btn)
         
         # Add all to main layout
         layout.addWidget(target_group)
@@ -429,8 +467,187 @@ class ClamAVGUI(ClamAVMainWindow):
         
         return tab
     
+    def create_quarantine_tab(self):
+        """Create the quarantine management tab."""
+        tab = QWidget()
+        layout = QVBoxLayout(tab)
+        
+        # Quarantine statistics
+        stats_group = QGroupBox(self.tr("Quarantine Statistics"))
+        stats_layout = QVBoxLayout()
+        
+        self.quarantine_stats_text = QTextEdit()
+        self.quarantine_stats_text.setReadOnly(True)
+        self.quarantine_stats_text.setMaximumHeight(150)
+        stats_layout.addWidget(self.quarantine_stats_text)
+        
+        refresh_btn = QPushButton(self.tr("Refresh Stats"))
+        refresh_btn.clicked.connect(self.refresh_quarantine_stats)
+        stats_layout.addWidget(refresh_btn)
+        
+        stats_group.setLayout(stats_layout)
+        
+        # Quarantine file list
+        files_group = QGroupBox(self.tr("Quarantined Files"))
+        files_layout = QVBoxLayout()
+        
+        self.quarantine_files_list = QListWidget()
+        self.quarantine_files_list.setSelectionMode(QAbstractItemView.SingleSelection)
+        files_layout.addWidget(self.quarantine_files_list)
+        
+        # File management buttons
+        file_btn_layout = QHBoxLayout()
+        
+        restore_btn = QPushButton(self.tr("Restore Selected"))
+        restore_btn.clicked.connect(self.restore_selected_file)
+        file_btn_layout.addWidget(restore_btn)
+        
+        delete_btn = QPushButton(self.tr("Delete Selected"))
+        delete_btn.clicked.connect(self.delete_selected_file)
+        file_btn_layout.addWidget(delete_btn)
+        
+        export_btn = QPushButton(self.tr("Export List"))
+        export_btn.clicked.connect(self.export_quarantine_list)
+        file_btn_layout.addWidget(export_btn)
+        
+        files_layout.addLayout(file_btn_layout)
+        files_group.setLayout(files_layout)
+        
+        # Add to main layout
+        layout.addWidget(stats_group)
+        layout.addWidget(files_group)
+        
+        # Initial refresh
+        self.refresh_quarantine_stats()
+        self.refresh_quarantine_files()
+        
+        return tab
+    
+    def refresh_quarantine_stats(self):
+        """Refresh the quarantine statistics display."""
+        try:
+            stats = self.quarantine_manager.get_quarantine_stats()
+            
+            stats_text = f"""
+Quarantine Statistics:
+====================
+
+Total quarantined files: {stats['total_quarantined']}
+Total size: {stats['total_size_mb']:.2f} MB
+
+Threat types found:
+{chr(10).join(f"  • {threat}" for threat in stats['threat_types']) if stats['threat_types'] else "  None"}
+
+Last activity:
+  Newest file: {stats['newest_file'] or 'N/A'}
+  Oldest file: {stats['oldest_file'] or 'N/A'}
+"""
+            self.quarantine_stats_text.setPlainText(stats_text.strip())
+            
+        except Exception as e:
+            self.quarantine_stats_text.setPlainText(f"Error loading quarantine statistics: {str(e)}")
+    
+    def refresh_quarantine_files(self):
+        """Refresh the list of quarantined files."""
+        try:
+            self.quarantine_files_list.clear()
+            quarantined_files = self.quarantine_manager.list_quarantined_files()
+            
+            for file_info in quarantined_files:
+                item_text = f"{file_info['original_filename']} - {file_info['threat_name']} ({file_info['file_size']} bytes)"
+                item = QListWidgetItem(item_text)
+                item.setData(Qt.UserRole, file_info)
+                self.quarantine_files_list.addItem(item)
+                
+        except Exception as e:
+            self.quarantine_files_list.clear()
+            self.quarantine_files_list.addItem(f"Error loading quarantined files: {str(e)}")
+    
+    def restore_selected_file(self):
+        """Restore the selected quarantined file."""
+        current_item = self.quarantine_files_list.currentItem()
+        if not current_item:
+            QMessageBox.warning(self, self.tr("No Selection"), self.tr("Please select a file to restore"))
+            return
+        
+        file_info = current_item.data(Qt.UserRole)
+        if not file_info:
+            return
+        
+        # Find the file ID (this would need to be stored in file_info)
+        # For now, we'll use a simple approach
+        reply = QMessageBox.question(
+            self, self.tr("Restore File"),
+            self.tr(f"Are you sure you want to restore '{file_info['original_filename']}'?\n\n"
+                   "Warning: This file was detected as infected and may be dangerous."),
+            QMessageBox.Yes | QMessageBox.No
+        )
+        
+        if reply == QMessageBox.Yes:
+            # This is a simplified approach - in a real implementation,
+            # we'd need to store the file ID to identify which file to restore
+            QMessageBox.information(
+                self, self.tr("Restore"),
+                self.tr("File restoration is not yet fully implemented.\n"
+                       "This feature will be available in a future update.")
+            )
+    
+    def delete_selected_file(self):
+        """Delete the selected quarantined file."""
+        current_item = self.quarantine_files_list.currentItem()
+        if not current_item:
+            QMessageBox.warning(self, self.tr("No Selection"), self.tr("Please select a file to delete"))
+            return
+        
+        file_info = current_item.data(Qt.UserRole)
+        if not file_info:
+            return
+        
+        reply = QMessageBox.question(
+            self, self.tr("Delete File"),
+            self.tr(f"Are you sure you want to permanently delete '{file_info['original_filename']}'?\n\n"
+                   "This action cannot be undone."),
+            QMessageBox.Yes | QMessageBox.No
+        )
+        
+        if reply == QMessageBox.Yes:
+            # This is a simplified approach - in a real implementation,
+            # we'd need to store the file ID to identify which file to delete
+            QMessageBox.information(
+                self, self.tr("Delete"),
+                self.tr("File deletion is not yet fully implemented.\n"
+                       "This feature will be available in a future update.")
+            )
+    
+    def export_quarantine_list(self):
+        """Export the quarantine list to a file."""
+        file_name, _ = QFileDialog.getSaveFileName(
+            self,
+            self.tr("Export Quarantine List"),
+            "",
+            "JSON Files (*.json);;All Files (*)"
+        )
+        
+        if not file_name:
+            return
+        
+        if not file_name.lower().endswith('.json'):
+            file_name += '.json'
+        
+        success = self.quarantine_manager.export_quarantine_list(file_name)
+        
+        if success:
+            QMessageBox.information(
+                self, self.tr("Export Complete"),
+                self.tr(f"Quarantine list exported successfully:\n{file_name}")
+            )
+        else:
+            QMessageBox.critical(
+                self, self.tr("Export Failed"),
+                self.tr("Failed to export quarantine list")
+            )
+    
     def create_config_editor_tab(self):
-        """Create the config editor tab."""
         tab = QWidget()
         layout = QVBoxLayout(tab)
         
@@ -473,6 +690,31 @@ class ClamAVGUI(ClamAVMainWindow):
         if not target:
             QMessageBox.warning(self, self.tr("Error"), self.tr("Please select a target to scan"))
             return
+        
+        # Validate ClamAV installation first
+        is_installed, status_msg, version_info = self.clamav_validator.check_clamav_installation()
+        
+        if not is_installed:
+            # Show detailed error message with installation guidance
+            error_msg = f"{status_msg}\n\n{self.clamav_validator.get_installation_guidance()}"
+            QMessageBox.critical(self, self.tr("ClamAV Not Found"), error_msg)
+            
+            # Also try to suggest auto-detection of clamscan path
+            suggested_path = self.clamav_validator.find_clamscan()
+            if suggested_path and suggested_path != self.clamscan_path.text().strip():
+                reply = QMessageBox.question(
+                    self, self.tr("Auto-detect ClamAV?"),
+                    self.tr(f"Would you like to use the detected path: {suggested_path}?"),
+                    QMessageBox.Yes | QMessageBox.No
+                )
+                if reply == QMessageBox.Yes:
+                    self.clamscan_path.setText(suggested_path)
+                    return  # Return to let user try again
+            
+            return
+        
+        # ClamAV is installed, proceed with scan
+        logger.info(f"Starting scan with ClamAV at: {status_msg}")
         
         # Get the path to clamscan from settings or use default
         clamscan_path = self.clamscan_path.text().strip()
@@ -578,10 +820,20 @@ class ClamAVGUI(ClamAVMainWindow):
         # Update UI
         self.scan_btn.setEnabled(True)
         self.stop_btn.setEnabled(False)
+        self.save_report_btn.setEnabled(True)
         
         # Update progress to 100% when done
         if hasattr(self, 'progress'):
             self.progress.setValue(100)
+        
+        # Process scan results and generate report
+        if hasattr(self, 'scan_report_generator'):
+            current_output = self.output.toPlainText()
+            self.scan_report_generator.process_scan_output(current_output)
+            
+            # Auto-quarantine infected files if enabled
+            if self.enable_quarantine.isChecked():
+                self._auto_quarantine_infected_files()
         
         # Show appropriate message based on exit code
         if exit_code == 0:
@@ -589,9 +841,10 @@ class ClamAVGUI(ClamAVMainWindow):
             QMessageBox.information(self, self.tr("Scan Complete"), 
                                  self.tr("The scan completed successfully. No threats were found."))
         elif exit_code == 1:
-            self.status_bar.showMessage(self.tr("Scan completed - Viruses found!"))
+            infected_count = len([r for r in self.scan_report_generator.scan_results if r.status == 'infected'])
+            self.status_bar.showMessage(self.tr(f"Scan completed - {infected_count} threats found!"))
             QMessageBox.warning(self, self.tr("Threats Detected"), 
-                             self.tr("The scan completed and found potential threats. Check the scan results for details."))
+                             self.tr(f"The scan completed and found {infected_count} potential threats. Check the scan results for details."))
         else:
             self.status_bar.showMessage(self.tr("Scan failed with errors"))
             QMessageBox.critical(self, self.tr("Scan Failed"), 
@@ -707,6 +960,117 @@ class ClamAVGUI(ClamAVMainWindow):
         self.clamd_path.setText(self.current_settings.get('clamd_path', ''))
         self.freshclam_path.setText(self.current_settings.get('freshclam_path', ''))
         self.clamscan_path.setText(self.current_settings.get('clamscan_path', ''))
+        
+        # Apply scan settings
+        scan_settings = self.current_settings
+        if 'scan_archives' in scan_settings:
+            self.scan_archives.setChecked(scan_settings['scan_archives'])
+        if 'scan_heuristics' in scan_settings:
+            self.heuristic_scan.setChecked(scan_settings['scan_heuristics'])
+        if 'scan_pua' in scan_settings:
+            self.scan_pua.setChecked(scan_settings['scan_pua'])
+        if 'auto_quarantine' in scan_settings:
+            self.enable_quarantine.setChecked(scan_settings.get('auto_quarantine', True))
+        
+    def _auto_quarantine_infected_files(self):
+        """Automatically quarantine infected files found during scan."""
+        if not hasattr(self, 'scan_report_generator'):
+            return
+
+        infected_files = [r for r in self.scan_report_generator.scan_results if r.status == 'infected']
+        quarantined_count = 0
+
+        for result in infected_files:
+            success, message = self.quarantine_manager.quarantine_file(
+                result.file_path,
+                result.threat_name,
+                result.timestamp
+            )
+            if success:
+                quarantined_count += 1
+                logger.info(f"Auto-quarantined: {result.file_path}")
+            else:
+                logger.warning(f"Failed to quarantine {result.file_path}: {message}")
+
+        if quarantined_count > 0:
+            self.status_bar.showMessage(self.tr(f"Quarantined {quarantined_count} infected files"))
+            QMessageBox.information(
+                self, self.tr("Files Quarantined"),
+                self.tr(f"Successfully quarantined {quarantined_count} infected files.\n\n"
+                       "Use 'View Quarantine' to manage quarantined files.")
+            )
+
+    def save_scan_report(self):
+        """Save the current scan report to a file."""
+        if not hasattr(self, 'scan_report_generator'):
+            QMessageBox.warning(self, self.tr("Error"), self.tr("No scan report available"))
+            return
+
+        file_name, selected_filter = QFileDialog.getSaveFileName(
+            self,
+            self.tr("Save Scan Report"),
+            "",
+            "HTML Report (*.html);;Text Report (*.txt);;All Files (*)"
+        )
+
+        if not file_name:
+            return
+
+        # Determine format from file extension
+        if file_name.lower().endswith('.html'):
+            format_type = 'html'
+        elif file_name.lower().endswith('.txt'):
+            format_type = 'text'
+        else:
+            # Default to HTML
+            format_type = 'html'
+            if not file_name.lower().endswith('.html'):
+                file_name += '.html'
+
+        success = self.scan_report_generator.save_report(file_name, format_type)
+
+        if success:
+            QMessageBox.information(
+                self, self.tr("Report Saved"),
+                self.tr(f"Scan report saved successfully:\n{file_name}")
+            )
+        else:
+            QMessageBox.critical(
+                self, self.tr("Save Failed"),
+                self.tr("Failed to save scan report")
+            )
+
+    def show_quarantine_dialog(self):
+        """Show the quarantine management dialog."""
+        try:
+            from clamav_gui.ui.quarantine_dialog import QuarantineDialog
+            dialog = QuarantineDialog(self.quarantine_manager, self)
+            dialog.exec()
+        except ImportError:
+            # Fallback if dialog doesn't exist yet
+            self._show_simple_quarantine_info()
+
+    def _show_simple_quarantine_info(self):
+        """Show basic quarantine information if dialog is not available."""
+        stats = self.quarantine_manager.get_quarantine_stats()
+        quarantined_files = self.quarantine_manager.list_quarantined_files()
+
+        info_text = f"""
+Quarantine Information:
+=====================
+
+Total quarantined files: {stats['total_quarantined']}
+Total size: {stats['total_size_mb']} MB
+
+Threat types found:
+{chr(10).join(f"  • {threat}" for threat in stats['threat_types']) if stats['threat_types'] else "  None"}
+
+Recent files:
+"""
+        for file_info in quarantined_files[:5]:  # Show first 5 files
+            info_text += f"  • {file_info['original_filename']} ({file_info['threat_name']})\n"
+
+        QMessageBox.information(self, self.tr("Quarantine Status"), info_text.strip())
 
 
 class ScanThread(QThread):

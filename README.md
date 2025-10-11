@@ -1,5 +1,12 @@
 # ClamAV GUI
 
+![Version](https://img.shields.io/badge/Version-1.1.0-blue)
+![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-blue)
+![GUI](https://img.shields.io/badge/GUI-PyQt6.6-blue)
+![License](https://img.shields.io/badge/License-GPLv3-blue)
+[![Issues](https://img.shields.io/github/issues/Nsfr750/clamav-gui)](https://github.com/Nsfr750/clamav-gui/issues)
+[![Code Coverage](https://codecov.io/gh/Nsfr750/clamav-gui/branch/main/graph/badge.svg)](https://codecov.io/gh/Nsfr750/clamav-gui)
+
 A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows.
 
 ## Features

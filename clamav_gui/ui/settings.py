@@ -64,6 +64,10 @@ class AppSettings:
         settings['scan_archives'] = self.settings.value('scan_archives', True, type=bool)
         settings['scan_heuristics'] = self.settings.value('scan_heuristics', True, type=bool)
         settings['scan_pua'] = self.settings.value('scan_pua', False, type=bool)
+        settings['max_file_size'] = self.settings.value('max_file_size', 100)  # MB
+        settings['max_scan_time'] = self.settings.value('max_scan_time', 300)  # seconds
+        settings['exclude_patterns'] = self.settings.value('exclude_patterns', '*.log,*.tmp')
+        settings['include_patterns'] = self.settings.value('include_patterns', '*')
         
         return settings
     
@@ -98,6 +102,14 @@ class AppSettings:
                 self.settings.setValue('scan_heuristics', settings['scan_heuristics'])
             if 'scan_pua' in settings:
                 self.settings.setValue('scan_pua', settings['scan_pua'])
+            if 'max_file_size' in settings:
+                self.settings.setValue('max_file_size', settings['max_file_size'])
+            if 'max_scan_time' in settings:
+                self.settings.setValue('max_scan_time', settings['max_scan_time'])
+            if 'exclude_patterns' in settings:
+                self.settings.setValue('exclude_patterns', settings['exclude_patterns'])
+            if 'include_patterns' in settings:
+                self.settings.setValue('include_patterns', settings['include_patterns'])
             
             # Sync settings - on Windows, sync() doesn't return a value
             self.settings.sync()
