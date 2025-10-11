@@ -596,15 +596,15 @@ class ClamAVGUI(ClamAVMainWindow):
 Quarantine Statistics:
 ====================
 
-Total quarantined files: {stats['total_quarantined']}
-Total size: {stats['total_size_mb']:.2f} MB
+Total quarantined files: {stats.get('total_quarantined', 0)}
+Total size: {stats.get('total_size_mb', 0):.2f} MB
 
 Threat types found:
-{chr(10).join(f"  • {threat}" for threat in stats['threat_types']) if stats['threat_types'] else "  None"}
+{chr(10).join(f"  • {threat}" for threat in stats.get('threat_types', [])) or "  None"}
 
 Last activity:
-  Newest file: {stats['newest_file'] or 'N/A'}
-  Oldest file: {stats['oldest_file'] or 'N/A'}
+  Newest file: {stats.get('newest_file') or 'N/A'}
+  Oldest file: {stats.get('oldest_file') or 'N/A'}
 """
             self.quarantine_stats_text.setPlainText(stats_text.strip())
             
@@ -618,7 +618,10 @@ Last activity:
             quarantined_files = self.quarantine_manager.list_quarantined_files()
             
             for file_info in quarantined_files:
-                item_text = f"{file_info['original_filename']} - {file_info['threat_name']} ({file_info['file_size']} bytes)"
+                filename = file_info.get('original_filename', 'Unknown')
+                threat = file_info.get('threat_name', 'Unknown')
+                size = file_info.get('file_size', 0)
+                item_text = f"{filename} - {threat} ({size} bytes)"
                 item = QListWidgetItem(item_text)
                 item.setData(Qt.UserRole, file_info)
                 self.quarantine_files_list.addItem(item)
@@ -638,18 +641,16 @@ Last activity:
         if not file_info:
             return
         
-        # Find the file ID (this would need to be stored in file_info)
-        # For now, we'll use a simple approach
+        filename = file_info.get('original_filename', 'Unknown')
+        
         reply = QMessageBox.question(
             self, self.tr("Restore File"),
-            self.tr(f"Are you sure you want to restore '{file_info['original_filename']}'?\n\n"
+            self.tr(f"Are you sure you want to restore '{filename}'?\n\n"
                    "Warning: This file was detected as infected and may be dangerous."),
             QMessageBox.Yes | QMessageBox.No
         )
         
         if reply == QMessageBox.Yes:
-            # This is a simplified approach - in a real implementation,
-            # we'd need to store the file ID to identify which file to restore
             QMessageBox.information(
                 self, self.tr("Restore"),
                 self.tr("File restoration is not yet fully implemented.\n"
@@ -667,16 +668,16 @@ Last activity:
         if not file_info:
             return
         
+        filename = file_info.get('original_filename', 'Unknown')
+        
         reply = QMessageBox.question(
             self, self.tr("Delete File"),
-            self.tr(f"Are you sure you want to permanently delete '{file_info['original_filename']}'?\n\n"
+            self.tr(f"Are you sure you want to permanently delete '{filename}'?\n\n"
                    "This action cannot be undone."),
             QMessageBox.Yes | QMessageBox.No
         )
         
         if reply == QMessageBox.Yes:
-            # This is a simplified approach - in a real implementation,
-            # we'd need to store the file ID to identify which file to delete
             QMessageBox.information(
                 self, self.tr("Delete"),
                 self.tr("File deletion is not yet fully implemented.\n"

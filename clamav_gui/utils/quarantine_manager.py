@@ -228,16 +228,38 @@ class QuarantineManager:
                 "threat_types": []
             }
 
-        # Calculate total size
-        total_size = sum(file_info.get("file_size", 0) for file_info in quarantined_files.values())
+        # Calculate total size - handle files that might not have file_size field
+        total_size = 0
+        for file_info in quarantined_files.values():
+            file_size = file_info.get("file_size", 0)
+            # If file_size is not available, try to get it from the actual file if it exists
+            if file_size == 0:
+                quarantined_path = file_info.get("quarantined_path", "")
+                if quarantined_path and os.path.exists(quarantined_path):
+                    try:
+                        file_size = os.path.getsize(quarantined_path)
+                    except (OSError, IOError):
+                        file_size = 0
+            total_size += file_size
 
-        # Find oldest and newest files
-        quarantine_times = [file_info["quarantine_time"] for file_info in quarantined_files.values()]
+        # Find oldest and newest files - handle files that might not have quarantine_time field
+        quarantine_times = []
+        for file_info in quarantined_files.values():
+            quarantine_time_str = file_info.get("quarantine_time")
+            if quarantine_time_str:
+                try:
+                    quarantine_times.append(quarantine_time_str)
+                except (ValueError, TypeError):
+                    pass  # Skip invalid timestamps
         oldest_time = min(quarantine_times) if quarantine_times else None
         newest_time = max(quarantine_times) if quarantine_times else None
 
-        # Get unique threat types
-        threat_types = list(set(file_info["threat_name"] for file_info in quarantined_files.values()))
+        # Get unique threat types - handle files that might not have threat_name field
+        threat_types = []
+        for file_info in quarantined_files.values():
+            threat_name = file_info.get("threat_name", "Unknown")
+            if threat_name not in threat_types:
+                threat_types.append(threat_name)
 
         return {
             "total_quarantined": len(quarantined_files),

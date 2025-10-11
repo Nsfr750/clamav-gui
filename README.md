@@ -4,7 +4,6 @@
 ![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-blue)
 ![GUI](https://img.shields.io/badge/GUI-PyQt6.6-blue)
 ![License](https://img.shields.io/badge/License-GPLv3-blue)
-[![Issues](https://img.shields.io/github/issues/Nsfr750/clamav-gui)](https://github.com/Nsfr750/clamav-gui/issues)
 
 A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows.
 
@@ -169,7 +168,6 @@ For support, please open an issue on GitHub or contact me: [Nsfr750](mailto:nsfr
 If you find this project useful, consider supporting its development:
 
 - **PayPal**: [https://paypal.me/3dmega](https://paypal.me/3dmega)
-- **Patreon**: [https://www.patreon.com/Nsfr750](https://www.patreon.com/Nsfr750)
 - **Monero**: `47Jc6MC47WJVFhiQFYwHyBNQP5BEsjUPG6tc8R37FwcTY8K5Y3LvFzveSXoGiaDQSxDrnCUBJ5WBj6Fgmsfix8VPD4w3gXF`
 
 ---
