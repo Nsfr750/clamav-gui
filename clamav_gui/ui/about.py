@@ -27,9 +27,15 @@ import sys
 import platform
 from pathlib import Path
 import logging
-import os
-import sys
-import psutil
+
+# Try to import psutil, but handle gracefully if not available
+try:
+    import psutil
+    HAS_PSUTIL = True
+except ImportError:
+    psutil = None
+    HAS_PSUTIL = False
+    logging.debug("psutil not available - some system info may be limited")
 
 try:
     from wand.image import Image as WandImage
@@ -235,7 +241,7 @@ class AboutDialog(QDialog):
         # GitHub button
         github_btn = QPushButton("GitHub")
         github_btn.clicked.connect(lambda: QDesktopServices.openUrl(
-            QUrl("https://github.com/Nsfr750/PDF_Finder")))
+            QUrl("https://github.com/Nsfr750/ClamAV-GUI")))
         # Style GitHub button with blue background and white text
         github_btn.setStyleSheet("""
             QPushButton {

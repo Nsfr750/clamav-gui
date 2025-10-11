@@ -6,11 +6,28 @@ from PySide6.QtGui import QPixmap, QDesktopServices, QImage, QIcon
 import webbrowser
 import os
 import io
-import qrcode
 import logging
-from wand.image import Image as WandImage
-from wand.drawing import Drawing
-from wand.color import Color
+
+# Try to import qrcode for QR code generation
+try:
+    import qrcode
+    HAS_QRCODE = True
+except ImportError:
+    qrcode = None
+    HAS_QRCODE = False
+    logging.debug("qrcode not available - QR code generation will be disabled")
+
+try:
+    from wand.image import Image as WandImage
+    from wand.drawing import Drawing
+    from wand.color import Color
+    HAS_WAND = True
+except ImportError:
+    WandImage = None
+    Drawing = None
+    Color = None
+    HAS_WAND = False
+    logging.debug("wand not available - QR code generation will be disabled")
 
 # Import language manager
 from clamav_gui.lang.lang_manager import SimpleLanguageManager
@@ -73,61 +90,75 @@ class SponsorDialog(QDialog):
             }
         """)
         
-        # Generate QR Code
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr.add_data(f'monero:{monero_address}')
-        qr.make(fit=True)
-        
-        # Draw QR code with Wand (avoid PIL)
-        matrix = qr.get_matrix()
-        box_size = 10
-        border = 4
-        width = (len(matrix[0]) + border * 2) * box_size
-        height = (len(matrix) + border * 2) * box_size
+        # Generate QR Code (only if dependencies are available)
+        if HAS_QRCODE and HAS_WAND and WandImage and Drawing and Color:
+            qr = qrcode.QRCode(
+                version=1,
+                error_correction=qrcode.constants.ERROR_CORRECT_L,
+                box_size=10,
+                border=4,
+            )
+            qr.add_data(f'monero:{monero_address}')
+            qr.make(fit=True)
+            
+            # Draw QR code with Wand (avoid PIL)
+            matrix = qr.get_matrix()
+            box_size = 10
+            border = 4
+            width = (len(matrix[0]) + border * 2) * box_size
+            height = (len(matrix) + border * 2) * box_size
 
-        with WandImage(width=width, height=height, background=Color('white')) as img:
-            with Drawing() as draw:
-                draw.fill_color = Color('black')
-                # Draw black squares where matrix cell is True
-                for r, row in enumerate(matrix):
-                    for c, cell in enumerate(row):
-                        if cell:
-                            x0 = (c + border) * box_size
-                            y0 = (r + border) * box_size
-                            x1 = x0 + box_size - 1
-                            y1 = y0 + box_size - 1
-                            draw.rectangle(left=x0, top=y0, right=x1, bottom=y1)
-                draw(img)
-            img.format = 'png'
-            buffer = io.BytesIO()
-            img.save(file=buffer)
-            data = buffer.getvalue()
+            with WandImage(width=width, height=height, background=Color('white')) as img:
+                with Drawing() as draw:
+                    draw.fill_color = Color('black')
+                    # Draw black squares where matrix cell is True
+                    for r, row in enumerate(matrix):
+                        for c, cell in enumerate(row):
+                            if cell:
+                                x0 = (c + border) * box_size
+                                y0 = (r + border) * box_size
+                                x1 = x0 + box_size - 1
+                                y1 = y0 + box_size - 1
+                                draw.rectangle(left=x0, top=y0, right=x1, bottom=y1)
+                    draw(img)
+                img.format = 'png'
+                buffer = io.BytesIO()
+                img.save(file=buffer)
+                data = buffer.getvalue()
 
-        # Load into QPixmap
-        pixmap = QPixmap()
-        pixmap.loadFromData(data, "PNG")
-        
-        # Scale the pixmap to a reasonable size
-        pixmap = pixmap.scaled(200, 200, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
-        
-        # Create a label to display the QR code
-        qr_label = QLabel()
-        qr_label.setPixmap(pixmap)
-        qr_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        qr_label.setToolTip(self.tr("sponsor.qr_tooltip", "Scan to donate XMR"))
-        
-        # Add widgets to grid
-        grid.addWidget(QLabel(f"<h3>{self.tr('sponsor.ways_to_support', 'Ways to Support:')}</h3>"), 0, 0, 1, 2)
-        grid.addWidget(github_label, 1, 0, 1, 2)
-        grid.addWidget(paypal_label, 2, 0, 1, 2)
-        grid.addWidget(monero_label, 3, 0, 1, 2)
-        grid.addWidget(monero_address_label, 4, 0, 1, 2)
-        grid.addWidget(qr_label, 1, 2, 4, 1)  # Span 4 rows
+            # Load into QPixmap
+            pixmap = QPixmap()
+            pixmap.loadFromData(data, "PNG")
+            
+            # Scale the pixmap to a reasonable size
+            pixmap = pixmap.scaled(200, 200, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+            
+            # Create a label to display the QR code
+            qr_label = QLabel()
+            qr_label.setPixmap(pixmap)
+            qr_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            qr_label.setToolTip(self.tr("sponsor.qr_tooltip", "Scan to donate XMR"))
+            
+            # Add widgets to grid
+            grid.addWidget(QLabel(f"<h3>{self.tr('sponsor.ways_to_support', 'Ways to Support:')}</h3>"), 0, 0, 1, 2)
+            grid.addWidget(github_label, 1, 0, 1, 2)
+            grid.addWidget(paypal_label, 2, 0, 1, 2)
+            grid.addWidget(monero_label, 3, 0, 1, 2)
+            grid.addWidget(monero_address_label, 4, 0, 1, 2)
+            grid.addWidget(qr_label, 1, 2, 4, 1)  # Span 4 rows
+        else:
+            # QR code not available, adjust layout
+            grid.addWidget(QLabel(f"<h3>{self.tr('sponsor.ways_to_support', 'Ways to Support:')}</h3>"), 0, 0, 1, 2)
+            grid.addWidget(github_label, 1, 0, 1, 2)
+            grid.addWidget(paypal_label, 2, 0, 1, 2)
+            grid.addWidget(monero_label, 3, 0, 1, 2)
+            grid.addWidget(monero_address_label, 4, 0, 1, 2)
+            
+            # Add a placeholder for QR code
+            qr_placeholder = QLabel(self.tr("sponsor.qr_unavailable", "QR Code not available\n(requires qrcode and wand libraries)"))
+            qr_placeholder.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            qr_placeholder.setStyleSheet("color: #666; font-size: 12px; padding: 20px;")
+            grid.addWidget(qr_placeholder, 1, 2, 4, 1)  # Span 4 rows
         
         # Add some spacing
         grid.setSpacing(10)

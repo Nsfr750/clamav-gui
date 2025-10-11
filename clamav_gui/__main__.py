@@ -111,6 +111,15 @@ def main():
         # Start the application
         sys.exit(app.exec())
         
+    except ImportError as e:
+        logger.critical(f"Failed to import required modules: {e}")
+        logger.critical("Please make sure all dependencies are installed with: pip install -r requirements.txt")
+        QMessageBox.critical(
+            None,
+            "Missing Dependencies",
+            f"Failed to import required modules:\n\n{e}\n\nPlease install dependencies with:\npip install -r requirements.txt"
+        )
+        sys.exit(1)
     except Exception as e:
         logger.critical(f"Critical error: {e}", exc_info=True)
         QMessageBox.critical(

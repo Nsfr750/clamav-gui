@@ -600,7 +600,7 @@ Total quarantined files: {stats.get('total_quarantined', 0)}
 Total size: {stats.get('total_size_mb', 0):.2f} MB
 
 Threat types found:
-{chr(10).join(f"  • {threat}" for threat in stats.get('threat_types', [])) or "  None"}
+{chr(10).join(f"  • {threat}" for threat in stats.get('threat_types', [])) if stats.get('threat_types') else "  None"}
 
 Last activity:
   Newest file: {stats.get('newest_file') or 'N/A'}
@@ -617,6 +617,10 @@ Last activity:
             self.quarantine_files_list.clear()
             quarantined_files = self.quarantine_manager.list_quarantined_files()
             
+            if not quarantined_files:
+                self.quarantine_files_list.addItem(self.tr("No quarantined files"))
+                return
+                
             for file_info in quarantined_files:
                 filename = file_info.get('original_filename', 'Unknown')
                 threat = file_info.get('threat_name', 'Unknown')
@@ -1159,35 +1163,39 @@ Last activity:
 
     def show_quarantine_dialog(self):
         """Show the quarantine management dialog."""
-        try:
-            from clamav_gui.ui.quarantine_dialog import QuarantineDialog
-            dialog = QuarantineDialog(self.quarantine_manager, self)
-            dialog.exec()
-        except ImportError:
-            # Fallback if dialog doesn't exist yet
-            self._show_simple_quarantine_info()
+        # For now, just show simple quarantine info since we don't have a full dialog yet
+        self._show_simple_quarantine_info()
 
     def _show_simple_quarantine_info(self):
         """Show basic quarantine information if dialog is not available."""
-        stats = self.quarantine_manager.get_quarantine_stats()
-        quarantined_files = self.quarantine_manager.list_quarantined_files()
+        try:
+            stats = self.quarantine_manager.get_quarantine_stats()
+            quarantined_files = self.quarantine_manager.list_quarantined_files()
 
-        info_text = f"""
+            info_text = f"""
 Quarantine Information:
 =====================
 
-Total quarantined files: {stats['total_quarantined']}
-Total size: {stats['total_size_mb']} MB
+Total quarantined files: {stats.get('total_quarantined', 0)}
+Total size: {stats.get('total_size_mb', 0):.2f} MB
 
 Threat types found:
-{chr(10).join(f"  • {threat}" for threat in stats['threat_types']) if stats['threat_types'] else "  None"}
+{chr(10).join(f"  • {threat}" for threat in stats.get('threat_types', [])) if stats.get('threat_types') else "  None"}
 
 Recent files:
 """
-        for file_info in quarantined_files[:5]:  # Show first 5 files
-            info_text += f"  • {file_info['original_filename']} ({file_info['threat_name']})\n"
+            for file_info in quarantined_files[:5]:  # Show first 5 files
+                filename = file_info.get('original_filename', 'Unknown')
+                threat = file_info.get('threat_name', 'Unknown')
+                info_text += f"  • {filename} ({threat})\n"
 
-        QMessageBox.information(self, self.tr("Quarantine Status"), info_text.strip())
+            QMessageBox.information(self, self.tr("Quarantine Status"), info_text.strip())
+
+        except Exception as e:
+            QMessageBox.information(
+                self, self.tr("Quarantine Status"),
+                f"Error loading quarantine information: {str(e)}\n\nThe quarantine system may need to be initialized."
+            )
 
 
 class ScanThread(QThread):
