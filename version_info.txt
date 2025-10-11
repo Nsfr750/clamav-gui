@@ -1,7 +1,7 @@
 VSVersionInfo(
     ffi=FixedFileInfo(
-        filevers=(1, 0, 0, 0),
-        prodvers=(1, 0, 0, 0),
+        filevers=(1, 1, 0, 0),
+        prodvers=(1, 1, 0, 0),
         mask=0x3f,
         flags=0x0,
         OS=0x40004,
@@ -16,11 +16,13 @@ VSVersionInfo(
                     '040904B0',
                     [
                         StringStruct('CompanyName', 'Tuxxle'),
-                        StringStruct('FileDescription', 'ClamAV GUI - Antivirus Interface'),
+                        StringStruct('FileDescription', 'ClamAV GUI - Antivirus Interface with Enhanced Scanning and Quarantine Management'),
+                        StringStruct('FileVersion', '1.1.0'),
                         StringStruct('InternalName', 'ClamAV-GUI'),
                         StringStruct('LegalCopyright', '© 2025 Nsfr750 - All Rights Reserved'),
                         StringStruct('OriginalFilename', 'ClamAV-GUI.exe'),
                         StringStruct('ProductName', 'ClamAV GUI'),
+                        StringStruct('ProductVersion', '1.1.0'),
                     ]
                 )
             ]

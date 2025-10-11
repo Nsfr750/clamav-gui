@@ -6,19 +6,20 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Fixed runtime warnings and errors
-- Improved signal handling in menu and virus database components
-- Fixed ClamAV configuration file parsing issues
-- Added proper time module import for scan operations
+- **Enhanced Error Handling**: Improved detection and handling of missing ClamAV installations with automatic path detection and installation guidance
+- **Comprehensive Scan Reports**: Advanced scan report generation with HTML and text formats, including detailed statistics and threat analysis
+- **Quarantine Management System**: Complete quarantine functionality for infected files with metadata tracking, restore/delete operations, and export capabilities
+- **Extended Configuration Options**: Added performance settings (max file size, scan time limits), file pattern filtering (include/exclude), and advanced scan options
+- **Real-time Statistics**: Enhanced progress tracking and scan statistics display throughout the application
 
-### Fixed
+### Improved
 
-- Fixed 'change_language' method not found error
-- Fixed signal disconnect warnings in virus database operations
-- Fixed malformed freshclam.conf configuration file
-- Fixed 'time' module not imported error during scans
+- **User Experience**: Better error messages, user feedback, and status reporting throughout the application
+- **Robustness**: Enhanced handling of corrupted or incomplete metadata files
+- **Performance**: Improved scan progress visualization and file filtering controls
+- **Code Quality**: Better error handling and defensive programming practices
 
-## [1.0.0] - 2025-10-05
+## [1.0.0] - 2025-09-25
 
 ### Added (1.0.0)
 

@@ -3,29 +3,34 @@
 ## High Priority
 
 - [ ] Implement scheduled scans
-- [ ] Add more detailed scan reports
-- [ ] Improve error handling for missing ClamAV installation
-- [ ] Implement quarantine management
+- [ ] Add support for custom scan profiles
+- [ ] Implement scan history and logging
 
 ## Medium Priority
 
-- [ ] Add support for custom scan profiles
-- [ ] Implement scan history and logging
-- [ ] Add more configuration options
+- [ ] Add more detailed statistics
 
 ## Low Priority
 
-- [ ] Add more detailed statistics
+- [ ] Integration with cloud storage providers
+- [ ] Email scanning
+- [ ] Network drive scanning
 
 ## In Progress
 
-- [x] Basic scan functionality
-- [x] Database updates
-- [x] Progress tracking
-- [x] Multi-language support
-- [x] Fix runtime warnings and signal handling issues
+- [ ] Basic scan functionality
+- [ ] Database updates
+- [ ] Progress tracking
+- [ ] Multi-language support
 
 ## Completed in v1.1.0
+
+- [x] **Enhanced error handling for missing ClamAV installation** - Added ClamAVValidator utility with auto-detection and installation guidance
+- [x] **More detailed scan reports** - Implemented ScanReportGenerator with HTML/text formats and comprehensive statistics
+- [x] **Quarantine management** - Complete quarantine system with metadata tracking, restore/delete operations, and export capabilities
+- [x] **More configuration options** - Extended settings with performance controls, file patterns, and advanced scan options
+
+## Completed in Previous Versions
 
 - [x] Fixed 'change_language' method not found error
 - [x] Fixed signal disconnect warnings in virus database operations
@@ -34,8 +39,5 @@
 
 ## Future Ideas
 
-- Integration with cloud storage providers
-- Email scanning
-- Network drive scanning
 - Custom scan exclusions
 - Automatic actions for infected files

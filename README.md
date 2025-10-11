@@ -11,30 +11,44 @@ A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows.
 
 - **Virus Scanning**
 
-  - Scan files and directories
-  - Real-time scan progress tracking
-  - Detailed scan reports
-  - Quarantine management
+  - Scan files and directories with advanced options
+  - Real-time scan progress tracking with detailed statistics
+  - Comprehensive scan reports in HTML and text formats
+  - Advanced file pattern filtering (include/exclude patterns)
+  - Performance controls (max file size, scan time limits)
+  - Automatic quarantine of infected files
+  - Support for archives, heuristics, and PUA detection
+
+- **Quarantine Management**
+
+  - Automatic isolation of infected files during scans
+  - Complete quarantine management interface
+  - File restoration and permanent deletion options
+  - Quarantine statistics and metadata tracking
+  - Export quarantine lists for analysis
 
 - **Database Management**
 
   - One-click virus database updates
   - Automatic update scheduling
   - Database integrity verification
+  - Support for custom ClamAV paths
 
 - **Configuration**
 
   - Easy access to ClamAV configuration
   - Built-in configuration file editor
-  - Custom scan options
+  - Custom scan options and profiles
   - Path management for ClamAV executables
+  - Advanced performance and filtering settings
 
 - **User Interface**
 
   - Intuitive tab-based navigation
   - Dark/Light theme support
-  - Real-time status updates
-  - Comprehensive help system
+  - Real-time status updates and notifications
+  - Comprehensive help system and error handling
+  - Multi-language support (English, Italian)
 
 ## Installation
 

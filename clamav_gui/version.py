@@ -19,10 +19,10 @@ __license__ = "GPL-3.0"
 
 # Build information
 __build__ = ""
-__date__ = "2025-09-25"
+__date__ = "2025-10-12"
 
 # Version description
-__description__ = "A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows."
+__description__ = "A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows with enhanced scanning, reporting, and quarantine management."
 
 # Dependencies
 __requires__ = [
@@ -43,16 +43,18 @@ version_info = tuple(map(int, __version__.split('.')))
 __changelog__ = """
 ## [1.1.0] - 2025-10-12
 ### Added
-- Fixed runtime warnings and errors
-- Improved signal handling in menu and virus database components
-- Fixed ClamAV configuration file parsing issues
-- Added proper time module import for scan operations
+- Enhanced error handling for missing ClamAV installation with auto-detection and installation guidance
+- Comprehensive scan report generation with HTML and text formats
+- Advanced quarantine management system for infected files
+- Extended configuration options including performance settings and file patterns
+- Real-time scan statistics and progress tracking
+- Automatic infected file quarantine during scans
 
-### Fixed
-- Fixed 'change_language' method not found error
-- Fixed signal disconnect warnings in virus database operations
-- Fixed malformed freshclam.conf configuration file
-- Fixed 'time' module not imported error during scans
+### Improved
+- Better user feedback and error messages throughout the application
+- Enhanced scan progress visualization and reporting
+- More robust handling of corrupted or incomplete metadata
+- Improved file pattern filtering and performance controls
 
 ## [1.0.0] - 2025-09-25
 ### Added
@@ -74,14 +76,16 @@ def get_version_history():
             "version": "1.1.0",
             "date": "2025-10-12",
             "changes": [
-                "Fixed runtime warnings and errors",
-                "Improved signal handling in menu and virus database components",
-                "Fixed ClamAV configuration file parsing issues",
-                "Added proper time module import for scan operations",
-                "Fixed 'change_language' method not found error",
-                "Fixed signal disconnect warnings in virus database operations",
-                "Fixed malformed freshclam.conf configuration file",
-                "Fixed 'time' module not imported error during scans"
+                "Enhanced error handling for missing ClamAV installation with auto-detection and installation guidance",
+                "Comprehensive scan report generation with HTML and text formats",
+                "Advanced quarantine management system for infected files",
+                "Extended configuration options including performance settings and file patterns",
+                "Real-time scan statistics and progress tracking",
+                "Automatic infected file quarantine during scans",
+                "Better user feedback and error messages throughout the application",
+                "Enhanced scan progress visualization and reporting",
+                "More robust handling of corrupted or incomplete metadata",
+                "Improved file pattern filtering and performance controls"
             ]
         },
         {
