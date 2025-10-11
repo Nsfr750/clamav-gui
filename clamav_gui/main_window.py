@@ -456,12 +456,76 @@ class ClamAVGUI(ClamAVMainWindow):
         
         path_group.setLayout(path_layout)
         
+        # Scan settings
+        scan_group = QGroupBox(self.tr("Scan Settings"))
+        scan_layout = QVBoxLayout()
+        
+        # Basic scan options
+        basic_options = QGroupBox(self.tr("Basic Options"))
+        basic_layout = QVBoxLayout()
+        
+        self.scan_archives = QCheckBox(self.tr("Scan archives (zip, rar, etc.)"))
+        self.scan_archives.setChecked(True)
+        basic_layout.addWidget(self.scan_archives)
+        
+        self.scan_heuristics = QCheckBox(self.tr("Enable heuristic analysis"))
+        self.scan_heuristics.setChecked(True)
+        basic_layout.addWidget(self.scan_heuristics)
+        
+        self.scan_pua = QCheckBox(self.tr("Scan potentially unwanted applications"))
+        self.scan_pua.setChecked(False)
+        basic_layout.addWidget(self.scan_pua)
+        
+        self.enable_quarantine = QCheckBox(self.tr("Auto-quarantine infected files"))
+        self.enable_quarantine.setChecked(True)
+        basic_layout.addWidget(self.enable_quarantine)
+        
+        basic_options.setLayout(basic_layout)
+        scan_layout.addWidget(basic_options)
+        
+        # Performance settings
+        perf_options = QGroupBox(self.tr("Performance Settings"))
+        perf_layout = QFormLayout()
+        
+        self.max_file_size = QLineEdit()
+        self.max_file_size.setText("100")
+        self.max_file_size.setToolTip(self.tr("Maximum file size to scan (MB)"))
+        perf_layout.addRow(self.tr("Max file size (MB):"), self.max_file_size)
+        
+        self.max_scan_time = QLineEdit()
+        self.max_scan_time.setText("300")
+        self.max_scan_time.setToolTip(self.tr("Maximum scan time per file (seconds)"))
+        perf_layout.addRow(self.tr("Max scan time (sec):"), self.max_scan_time)
+        
+        perf_options.setLayout(perf_layout)
+        scan_layout.addWidget(perf_options)
+        
+        # File patterns
+        pattern_group = QGroupBox(self.tr("File Patterns"))
+        pattern_layout = QFormLayout()
+        
+        self.exclude_patterns = QLineEdit()
+        self.exclude_patterns.setText("*.log,*.tmp,*.cache")
+        self.exclude_patterns.setToolTip(self.tr("Comma-separated patterns to exclude (e.g., *.log,*.tmp)"))
+        pattern_layout.addRow(self.tr("Exclude patterns:"), self.exclude_patterns)
+        
+        self.include_patterns = QLineEdit()
+        self.include_patterns.setText("*")
+        self.include_patterns.setToolTip(self.tr("Comma-separated patterns to include (default: *)"))
+        pattern_layout.addRow(self.tr("Include patterns:"), self.include_patterns)
+        
+        pattern_group.setLayout(pattern_layout)
+        scan_layout.addWidget(pattern_group)
+        
+        scan_group.setLayout(scan_layout)
+        
         # Save button
         save_btn = QPushButton(self.tr("Save Settings"))
         save_btn.clicked.connect(self.save_settings)
         
         # Add to main layout
         layout.addWidget(path_group)
+        layout.addWidget(scan_group)
         layout.addStretch()
         layout.addWidget(save_btn)
         
@@ -743,10 +807,46 @@ Last activity:
         if self.recursive_scan.isChecked():
             cmd.append("-r")
             
-        # Add heuristic scan if enabled (use --heuristic-alerts for newer versions)
-        if self.heuristic_scan.isChecked():
+        # Add scan options based on settings
+        if self.scan_archives.isChecked():
+            cmd.append("-a")  # Scan archives
+        
+        if self.scan_heuristics.isChecked():
             cmd.append("--heuristic-alerts")
             
+        if self.scan_pua.isChecked():
+            cmd.append("--detect-pua")
+            
+        # Add performance settings
+        try:
+            max_file_size_mb = int(self.max_file_size.text())
+            if max_file_size_mb > 0:
+                cmd.extend(['--max-filesize', f'{max_file_size_mb}M'])
+        except (ValueError, AttributeError):
+            pass
+            
+        try:
+            max_scan_time = int(self.max_scan_time.text())
+            if max_scan_time > 0:
+                cmd.extend(['--max-scantime', str(max_scan_time)])
+        except (ValueError, AttributeError):
+            pass
+            
+        # Add file pattern options
+        exclude_patterns = self.exclude_patterns.text().strip()
+        if exclude_patterns and exclude_patterns != "*":
+            for pattern in exclude_patterns.split(','):
+                pattern = pattern.strip()
+                if pattern:
+                    cmd.extend(['--exclude', pattern])
+                    
+        include_patterns = self.include_patterns.text().strip()
+        if include_patterns and include_patterns != "*":
+            for pattern in include_patterns.split(','):
+                pattern = pattern.strip()
+                if pattern:
+                    cmd.extend(['--include', pattern])
+        
         # Add target and output options
         cmd.extend([target, "--verbose", "--stdout"])
         
@@ -923,7 +1023,15 @@ Last activity:
         settings = {
             'clamd_path': self.clamd_path.text(),
             'freshclam_path': self.freshclam_path.text(),
-            'clamscan_path': self.clamscan_path.text()
+            'clamscan_path': self.clamscan_path.text(),
+            'scan_archives': self.scan_archives.isChecked(),
+            'scan_heuristics': self.scan_heuristics.isChecked(),
+            'scan_pua': self.scan_pua.isChecked(),
+            'auto_quarantine': self.enable_quarantine.isChecked(),
+            'max_file_size': self.max_file_size.text(),
+            'max_scan_time': self.max_scan_time.text(),
+            'exclude_patterns': self.exclude_patterns.text(),
+            'include_patterns': self.include_patterns.text()
         }
         
         if self.settings.save_settings(settings):
@@ -966,11 +1074,19 @@ Last activity:
         if 'scan_archives' in scan_settings:
             self.scan_archives.setChecked(scan_settings['scan_archives'])
         if 'scan_heuristics' in scan_settings:
-            self.heuristic_scan.setChecked(scan_settings['scan_heuristics'])
+            self.scan_heuristics.setChecked(scan_settings['scan_heuristics'])
         if 'scan_pua' in scan_settings:
             self.scan_pua.setChecked(scan_settings['scan_pua'])
         if 'auto_quarantine' in scan_settings:
             self.enable_quarantine.setChecked(scan_settings.get('auto_quarantine', True))
+        if 'max_file_size' in scan_settings:
+            self.max_file_size.setText(str(scan_settings['max_file_size']))
+        if 'max_scan_time' in scan_settings:
+            self.max_scan_time.setText(str(scan_settings['max_scan_time']))
+        if 'exclude_patterns' in scan_settings:
+            self.exclude_patterns.setText(scan_settings['exclude_patterns'])
+        if 'include_patterns' in scan_settings:
+            self.include_patterns.setText(scan_settings['include_patterns'])
         
     def _auto_quarantine_infected_files(self):
         """Automatically quarantine infected files found during scan."""
