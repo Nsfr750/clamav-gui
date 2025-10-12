@@ -13,6 +13,10 @@ TRANSLATIONS = {
         "tab.settings": "Impostazioni",
         "tab.config_editor": "Editor Configurazione",
         "tab.quarantine": "Quarantena",
+        "tab.email_scan": "Scansione Email",
+        "tab.home": "Home",
+        "tab.status": "Stato",
+        "tab.virus_db": "Database Virus",
         
         # Scan tab
         "scan.target": "Destinazione Scansione",
@@ -41,6 +45,7 @@ TRANSLATIONS = {
         "settings.clamd_path": "Percorso ClamD",
         "settings.freshclam_path": "Percorso FreshClam",
         "settings.clamscan_path": "Percorso ClamScan",
+        "settings.virus_db_dir": "Directory Database Virus",
         "settings.scan_options": "Impostazioni Scansione",
         "settings.auto_update": "Controlla aggiornamenti automaticamente",
         "settings.scan_archives": "Scansiona dentro archivi",
@@ -110,6 +115,31 @@ TRANSLATIONS = {
         "msg.auto_detect": "Rileva automaticamente ClamAV?",
         "msg.use_detected_path": "Vuoi utilizzare il percorso rilevato: {}?",
         "msg.language_changed": "Lingua cambiata in {}",
+        "logs.open_failed": "Impossibile aprire la cartella dei log",
+        "logs.opened": "Aperta cartella log: {}",
+
+        # Home tab
+        "home.title": "ClamAV GUI",
+        "home.welcome": "Benvenuto! Usa le schede in alto per scansionare, aggiornare e gestire la quarantena.",
+        "home.quick_scan": "Scansione Veloce...",
+        "home.check_updates": "Controlla Aggiornamenti",
+        "home.open_logs": "Apri Cartella Log",
+
+        # Status tab
+        "status.env": "Ambiente",
+        "status.tools": "Strumenti",
+        "status.app_version": "Versione App:",
+        "status.python": "Python:",
+        "status.os": "OS:",
+        "status.open_settings": "Apri Impostazioni",
+        "status.view_logs": "Visualizza Log",
+
+        # Virus DB tab
+        "virus_db.info": "Aggiorna le definizioni dei virus di ClamAV con freshclam",
+        "virus_db.update": "Aggiorna Database Virus",
+        "virus_db.stopped": "Aggiornamento del database virus interrotto.",
+        "virus_db.finished": "Aggiornamento del database virus terminato con codice {}.",
+        "virus_db.process_error": "Errore del processo di aggiornamento del database virus.",
         
         # Status messages
         "status.ready": "Pronto",

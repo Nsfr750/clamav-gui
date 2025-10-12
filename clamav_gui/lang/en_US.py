@@ -13,6 +13,10 @@ TRANSLATIONS = {
         "tab.settings": "Settings",
         "tab.config_editor": "Config Editor",
         "tab.quarantine": "Quarantine",
+        "tab.email_scan": "Email Scan",
+        "tab.home": "Home",
+        "tab.status": "Status",
+        "tab.virus_db": "Virus DB",
         
         # Scan tab
         "scan.target": "Scan Target",
@@ -41,6 +45,7 @@ TRANSLATIONS = {
         "settings.clamd_path": "ClamD Path",
         "settings.freshclam_path": "FreshClam Path",
         "settings.clamscan_path": "ClamScan Path",
+        "settings.virus_db_dir": "Virus DB Directory",
         "settings.scan_options": "Scan Settings",
         "settings.auto_update": "Check for updates automatically",
         "settings.scan_archives": "Scan inside archives",
@@ -110,11 +115,31 @@ TRANSLATIONS = {
         "msg.auto_detect": "Auto-detect ClamAV?",
         "msg.use_detected_path": "Would you like to use the detected path: {}?",
         "msg.language_changed": "Language changed to {}",
+        "logs.open_failed": "Could not open logs folder",
+        "logs.opened": "Opened logs: {}",
         
-        # Status messages
-        "status.ready": "Ready",
-        "status.scanning": "Scanning...",
-        "status.updating": "Updating...",
+        # Home tab
+        "home.title": "ClamAV GUI",
+        "home.welcome": "Welcome! Use the tabs above to scan, update, and manage quarantine.",
+        "home.quick_scan": "Quick Scan...",
+        "home.check_updates": "Check for Updates",
+        "home.open_logs": "Open Logs Folder",
+        
+        # Status tab
+        "status.env": "Environment",
+        "status.tools": "Tools",
+        "status.app_version": "App Version:",
+        "status.python": "Python:",
+        "status.os": "OS:",
+        "status.open_settings": "Open Settings",
+        "status.view_logs": "View Logs",
+        
+        # Virus DB tab
+        "virus_db.info": "Update ClamAV virus definitions using freshclam",
+        "virus_db.update": "Update Virus DB",
+        "virus_db.stopped": "Virus DB update stopped.",
+        "virus_db.finished": "Virus DB update finished with code {}.",
+        "virus_db.process_error": "Virus DB update process error occurred.",
     }
 }    
 
