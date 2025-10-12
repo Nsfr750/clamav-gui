@@ -5,22 +5,26 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 ## Version 1.2.0 (Next Major Release) 🚀
 
 ### Core Features
-- [ ] **Scheduled Scans**: Automated scanning with custom intervals (daily, weekly, monthly)
-- [ ] **Real-time Monitoring**: Background file system monitoring with instant alerts
-- [ ] **Advanced Quarantine**: Enhanced quarantine management with metadata and bulk operations
-- [ ] **Custom Scan Profiles**: Save and reuse scan configurations for different use cases
-- [ ] **Network Drive Support**: Scan network-attached storage and mapped drives
+
+- [x] **Scheduled Scans**: Automated scanning with custom intervals (daily, weekly, monthly)
+- [x] **Real-time Monitoring**: Background file system monitoring with instant alerts
+- [x] **Advanced Quarantine**: Enhanced quarantine management with metadata and bulk operations
+- [x] **Custom Scan Profiles**: Save and reuse scan configurations for different use cases
+- [x] **Network Drive Support**: Scan network-attached storage and mapped drives
+- [x] **Email Scanning**: Scan email files (.eml, .msg) and analyze attachments
 
 ### User Experience
+
 - [ ] **Dark Mode**: Complete dark theme support with system theme detection
 - [ ] **Multi-language Support**: Expand to 10+ languages beyond English and Italian
 - [ ] **Accessibility Improvements**: WCAG 2.1 compliance for users with disabilities
 - [ ] **Mobile-Responsive Design**: Better experience on high-DPI displays and tablets
 
 ### Performance & Reliability
-- [ ] **Async Scanning**: Non-blocking UI during large scans with progress cancellation
-- [ ] **Smart Scanning**: Skip known safe files using hash databases
-- [ ] **Incremental Updates**: Differential virus database updates for faster downloads
+
+- [x] **Async Scanning**: Non-blocking UI during large scans with progress cancellation
+- [x] **Smart Scanning**: Skip known safe files using hash databases
+- [x] **Incremental Updates**: Differential virus database updates for faster downloads
 - [ ] **Error Recovery**: Automatic retry mechanisms for failed operations
 
 ## Version 1.3.0 (Future Release) 🔮

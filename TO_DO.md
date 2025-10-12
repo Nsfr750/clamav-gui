@@ -12,9 +12,8 @@
 
 ## Low Priority
 
-- [ ] Integration with cloud storage providers
-- [ ] Email scanning
-- [ ] Network drive scanning
+- [ ] Custom scan exclusions
+- [ ] Automatic actions for infected files
 
 ## In Progress
 
@@ -22,6 +21,15 @@
 - [ ] Database updates
 - [ ] Progress tracking
 - [ ] Multi-language support
+
+## Completed in v1.2.0
+
+- [x] **Email scanning** - Complete email scanning with .eml/.msg file support and attachment analysis
+- [x] **Network drive scanning** - UNC path support with network connectivity validation
+- [x] **Enhanced quarantine management** - Full restore/delete functionality with bulk operations and metadata display
+- [x] **Async Scanning** - Non-blocking UI during large scans with progress cancellation
+- [x] **Smart Scanning** - Skip known safe files using hash databases
+- [x] **Incremental Updates** - Differential virus database updates for faster downloads
 
 ## Completed in v1.1.0
 

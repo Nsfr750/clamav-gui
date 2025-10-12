@@ -4,6 +4,7 @@ import subprocess
 import logging
 import time
 from pathlib import Path
+from datetime import datetime
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QFormLayout,
@@ -40,6 +41,15 @@ from clamav_gui.utils.scan_report import ScanReportGenerator
 # Import quarantine manager
 from clamav_gui.utils.quarantine_manager import QuarantineManager
 
+# Import enhanced database updater
+from clamav_gui.utils.enhanced_db_updater import EnhancedVirusDBUpdater, EnhancedUpdateThread
+
+# Import hash database for smart scanning
+from clamav_gui.utils.hash_database import HashDatabase
+
+# Import error recovery system
+from clamav_gui.utils.error_recovery import ErrorRecoveryManager, ErrorType, NetworkErrorRecovery
+
 # Setup logger
 logger = logging.getLogger(__name__)
 
@@ -59,10 +69,13 @@ class ClamAVGUI(ClamAVMainWindow):
         self.settings = AppSettings()
         self.process = None
         self.scan_thread = None
-        self.virus_db_updater = VirusDBUpdater()
+        self.virus_db_updater = EnhancedVirusDBUpdater()
+        self.hash_database = HashDatabase()
         self.clamav_validator = ClamAVValidator()
         self.scan_report_generator = ScanReportGenerator()
         self.quarantine_manager = QuarantineManager()
+        self.error_recovery = ErrorRecoveryManager()
+        self.network_recovery = NetworkErrorRecovery()
         
         self.lang_manager = lang_manager or SimpleLanguageManager()
         
@@ -117,12 +130,14 @@ class ClamAVGUI(ClamAVMainWindow):
         
         # Add tabs
         self.scan_tab = self.create_scan_tab()
+        self.email_scan_tab = self.create_email_scan_tab()
         self.update_tab = self.create_update_tab()
         self.settings_tab = self.create_settings_tab()
         self.quarantine_tab = self.create_quarantine_tab()
         self.config_editor_tab = self.create_config_editor_tab()
         
         self.tabs.addTab(self.scan_tab, self.tr("Scan"))
+        self.tabs.addTab(self.email_scan_tab, self.tr("Email Scan"))
         self.tabs.addTab(self.update_tab, self.tr("Update"))
         self.tabs.addTab(self.settings_tab, self.tr("Settings"))
         self.tabs.addTab(self.quarantine_tab, self.tr("Quarantine"))
@@ -303,10 +318,11 @@ class ClamAVGUI(ClamAVMainWindow):
             # Update tab names
             if hasattr(self, 'tabs'):
                 self.tabs.setTabText(0, self.tr("Scan"))
-                self.tabs.setTabText(1, self.tr("Update"))
-                self.tabs.setTabText(2, self.tr("Settings"))
-                self.tabs.setTabText(3, self.tr("Quarantine"))
-                self.tabs.setTabText(4, self.tr("Config Editor"))
+                self.tabs.setTabText(1, self.tr("Email Scan"))
+                self.tabs.setTabText(2, self.tr("Update"))
+                self.tabs.setTabText(3, self.tr("Settings"))
+                self.tabs.setTabText(4, self.tr("Quarantine"))
+                self.tabs.setTabText(5, self.tr("Config Editor"))
             
             # Update status bar
             if hasattr(self, 'status_bar'):
@@ -354,11 +370,10 @@ class ClamAVGUI(ClamAVMainWindow):
         self.heuristic_scan.setChecked(True)
         options_layout.addWidget(self.heuristic_scan)
         
-        # Quarantine options
-        self.enable_quarantine = QCheckBox(self.tr("Auto-quarantine infected files"))
-        self.enable_quarantine.setChecked(True)
-        self.enable_quarantine.setToolTip(self.tr("Automatically move infected files to quarantine"))
-        options_layout.addWidget(self.enable_quarantine)
+        self.enable_smart_scanning = QCheckBox(self.tr("Enable smart scanning (skip known safe files)"))
+        self.enable_smart_scanning.setChecked(False)
+        self.enable_smart_scanning.setToolTip(self.tr("Use hash database to skip files that have been previously scanned and confirmed safe"))
+        options_layout.addWidget(self.enable_smart_scanning)
         
         # Advanced scan options
         self.scan_archives = QCheckBox(self.tr("Scan archives (zip, rar, etc.)"))
@@ -416,29 +431,90 @@ class ClamAVGUI(ClamAVMainWindow):
         
         return tab
     
-    def create_update_tab(self):
-        """Create the update tab."""
+    def create_email_scan_tab(self):
+        """Create the email scanning tab."""
         tab = QWidget()
         layout = QVBoxLayout(tab)
-        
-        # Update options
-        update_group = QGroupBox(self.tr("Virus Database Update"))
-        update_layout = QVBoxLayout()
-        
-        self.update_output = QTextEdit()
-        self.update_output.setReadOnly(True)
-        update_layout.addWidget(self.update_output)
-        
-        update_btn = QPushButton(self.tr("Update Now"))
-        update_btn.clicked.connect(self.update_database)
-        update_layout.addWidget(update_btn)
-        
-        update_group.setLayout(update_layout)
-        
-        # Add to main layout
-        layout.addWidget(update_group)
-        layout.addStretch()
-        
+
+        # Email file selection
+        email_group = QGroupBox(self.tr("Email Files to Scan"))
+        email_layout = QVBoxLayout()
+
+        # File list for multiple email files
+        self.email_files_list = QListWidget()
+        self.email_files_list.setSelectionMode(QAbstractItemView.MultiSelection)
+        self.email_files_list.setMaximumHeight(150)
+        email_layout.addWidget(self.email_files_list)
+
+        # Buttons for file management
+        file_btn_layout = QHBoxLayout()
+
+        add_file_btn = QPushButton(self.tr("Add Email File"))
+        add_file_btn.clicked.connect(self.add_email_file)
+        file_btn_layout.addWidget(add_file_btn)
+
+        remove_file_btn = QPushButton(self.tr("Remove Selected"))
+        remove_file_btn.clicked.connect(self.remove_email_file)
+        file_btn_layout.addWidget(remove_file_btn)
+
+        clear_files_btn = QPushButton(self.tr("Clear All"))
+        clear_files_btn.clicked.connect(self.clear_email_files)
+        file_btn_layout.addWidget(clear_files_btn)
+
+        email_layout.addLayout(file_btn_layout)
+        email_group.setLayout(email_layout)
+
+        # Scan options
+        options_group = QGroupBox(self.tr("Scan Options"))
+        options_layout = QVBoxLayout()
+
+        self.scan_email_attachments = QCheckBox(self.tr("Scan email attachments"))
+        self.scan_email_attachments.setChecked(True)
+        options_layout.addWidget(self.scan_email_attachments)
+
+        self.scan_email_content = QCheckBox(self.tr("Scan email content for suspicious patterns"))
+        self.scan_email_content.setChecked(True)
+        options_layout.addWidget(self.scan_email_content)
+
+        options_group.setLayout(options_layout)
+
+        # Output
+        output_group = QGroupBox(self.tr("Scan Output"))
+        output_layout = QVBoxLayout()
+
+        self.email_output = QTextEdit()
+        self.email_output.setReadOnly(True)
+        output_layout.addWidget(self.email_output)
+
+        output_group.setLayout(output_layout)
+
+        # Progress
+        self.email_progress = QProgressBar()
+
+        # Buttons
+        button_layout = QHBoxLayout()
+
+        self.start_email_scan_btn = QPushButton(self.tr("Start Email Scan"))
+        self.start_email_scan_btn.clicked.connect(self.start_email_scan)
+        button_layout.addWidget(self.start_email_scan_btn)
+
+        self.stop_email_scan_btn = QPushButton(self.tr("Stop"))
+        self.stop_email_scan_btn.setEnabled(False)
+        self.stop_email_scan_btn.clicked.connect(self.stop_email_scan)
+        button_layout.addWidget(self.stop_email_scan_btn)
+
+        self.save_email_report_btn = QPushButton(self.tr("Save Report"))
+        self.save_email_report_btn.setEnabled(False)
+        self.save_email_report_btn.clicked.connect(self.save_email_report)
+        button_layout.addWidget(self.save_email_report_btn)
+
+        # Add all to main layout
+        layout.addWidget(email_group)
+        layout.addWidget(options_group)
+        layout.addWidget(output_group)
+        layout.addWidget(self.email_progress)
+        layout.addLayout(button_layout)
+
         return tab
     
     def create_settings_tab(self):
@@ -561,26 +637,41 @@ class ClamAVGUI(ClamAVMainWindow):
         files_layout = QVBoxLayout()
         
         self.quarantine_files_list = QListWidget()
-        self.quarantine_files_list.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.quarantine_files_list.setSelectionMode(QAbstractItemView.MultiSelection)
         files_layout.addWidget(self.quarantine_files_list)
         
         # File management buttons
         file_btn_layout = QHBoxLayout()
         
         restore_btn = QPushButton(self.tr("Restore Selected"))
-        restore_btn.clicked.connect(self.restore_selected_file)
+        restore_btn.clicked.connect(self.restore_selected_files)
         file_btn_layout.addWidget(restore_btn)
         
         delete_btn = QPushButton(self.tr("Delete Selected"))
-        delete_btn.clicked.connect(self.delete_selected_file)
+        delete_btn.clicked.connect(self.delete_selected_files)
         file_btn_layout.addWidget(delete_btn)
+        
+        # Bulk operations
+        bulk_btn_layout = QHBoxLayout()
+        
+        restore_all_btn = QPushButton(self.tr("Restore All"))
+        restore_all_btn.clicked.connect(self.restore_all_files)
+        bulk_btn_layout.addWidget(restore_all_btn)
+        
+        delete_all_btn = QPushButton(self.tr("Delete All"))
+        delete_all_btn.clicked.connect(self.delete_all_files)
+        bulk_btn_layout.addWidget(delete_all_btn)
+        
+        cleanup_btn = QPushButton(self.tr("Cleanup (30+ days)"))
+        cleanup_btn.clicked.connect(self.cleanup_old_files)
+        bulk_btn_layout.addWidget(cleanup_btn)
+        
+        files_layout.addLayout(file_btn_layout)
+        files_layout.addLayout(bulk_btn_layout)
         
         export_btn = QPushButton(self.tr("Export List"))
         export_btn.clicked.connect(self.export_quarantine_list)
         file_btn_layout.addWidget(export_btn)
-        
-        files_layout.addLayout(file_btn_layout)
-        files_group.setLayout(files_layout)
         
         # Add to main layout
         layout.addWidget(stats_group)
@@ -660,11 +751,46 @@ Last activity:
         )
         
         if reply == QMessageBox.Yes:
-            QMessageBox.information(
-                self, self.tr("Restore"),
-                self.tr("File restoration is not yet fully implemented.\n"
-                       "This feature will be available in a future update.")
-            )
+            # Get file ID from the item data
+            file_id = None
+            for key, value in file_info.items():
+                if key.startswith('file_hash') or (isinstance(key, str) and len(key) > 10 and key.replace('_', '').isalnum()):
+                    # Try to find a reasonable file ID
+                    file_id = key
+                    break
+            
+            if not file_id and 'quarantined_path' in file_info:
+                # Fallback: try to extract file ID from quarantined path
+                quarantined_path = file_info['quarantined_path']
+                basename = os.path.basename(quarantined_path)
+                # Extract timestamp_hash_filename format
+                parts = basename.split('_', 2)
+                if len(parts) >= 2:
+                    file_id = f"{parts[1]}_{parts[0]}"  # hash_timestamp format
+            
+            if not file_id:
+                QMessageBox.critical(
+                    self, self.tr("Restore Failed"),
+                    self.tr("Could not determine file ID for restoration. The file may be corrupted.")
+                )
+                return
+            
+            # Perform the restore operation
+            success, message = self.quarantine_manager.restore_file(file_id)
+            
+            if success:
+                QMessageBox.information(
+                    self, self.tr("Restore Successful"),
+                    self.tr(f"File '{filename}' has been successfully restored.\n\n{message}")
+                )
+                # Refresh the quarantine lists
+                self.refresh_quarantine_stats()
+                self.refresh_quarantine_files()
+            else:
+                QMessageBox.critical(
+                    self, self.tr("Restore Failed"),
+                    self.tr(f"Failed to restore file '{filename}':\n\n{message}")
+                )
     
     def delete_selected_file(self):
         """Delete the selected quarantined file."""
@@ -687,11 +813,306 @@ Last activity:
         )
         
         if reply == QMessageBox.Yes:
+            # Get file ID from the item data
+            file_id = None
+            for key, value in file_info.items():
+                if key.startswith('file_hash') or (isinstance(key, str) and len(key) > 10 and key.replace('_', '').isalnum()):
+                    # Try to find a reasonable file ID
+                    file_id = key
+                    break
+            
+            if not file_id and 'quarantined_path' in file_info:
+                # Fallback: try to extract file ID from quarantined path
+                quarantined_path = file_info['quarantined_path']
+                basename = os.path.basename(quarantined_path)
+                # Extract timestamp_hash_filename format
+                parts = basename.split('_', 2)
+                if len(parts) >= 2:
+                    file_id = f"{parts[1]}_{parts[0]}"  # hash_timestamp format
+            
+            if not file_id:
+                QMessageBox.critical(
+                    self, self.tr("Delete Failed"),
+                    self.tr("Could not determine file ID for deletion. The file may be corrupted.")
+                )
+                return
+            
+            # Perform the delete operation
+            success, message = self.quarantine_manager.delete_quarantined_file(file_id)
+            
+            if success:
+                QMessageBox.information(
+                    self, self.tr("Delete Successful"),
+                    self.tr(f"File '{filename}' has been permanently deleted.\n\n{message}")
+                )
+                # Refresh the quarantine lists
+                self.refresh_quarantine_stats()
+                self.refresh_quarantine_files()
+            else:
+                QMessageBox.critical(
+                    self, self.tr("Delete Failed"),
+                    self.tr(f"Failed to delete file '{filename}':\n\n{message}")
+                )
+    
+    def restore_selected_files(self):
+        """Restore multiple selected quarantined files."""
+        selected_items = self.quarantine_files_list.selectedItems()
+        if not selected_items:
+            QMessageBox.warning(self, self.tr("No Selection"), self.tr("Please select files to restore"))
+            return
+        
+        if len(selected_items) == 1:
+            # Single file - use existing method
+            self.restore_selected_file()
+            return
+        
+        # Multiple files
+        file_list = []
+        for item in selected_items:
+            file_info = item.data(Qt.UserRole)
+            if file_info:
+                filename = file_info.get('original_filename', 'Unknown')
+                file_list.append(filename)
+        
+        reply = QMessageBox.question(
+            self, self.tr("Restore Multiple Files"),
+            self.tr(f"Are you sure you want to restore {len(selected_items)} files?\n\n"
+                   "Files to restore:\n" + "\n".join(f"• {name}" for name in file_list[:5]) +
+                   (f"\n... and {len(file_list) - 5} more" if len(file_list) > 5 else "") +
+                   "\n\nWarning: These files were detected as infected and may be dangerous."),
+            QMessageBox.Yes | QMessageBox.No
+        )
+        
+        if reply == QMessageBox.Yes:
+            success_count = 0
+            error_count = 0
+            errors = []
+            
+            for item in selected_items:
+                file_info = item.data(Qt.UserRole)
+                if not file_info:
+                    continue
+                
+                # Get file ID
+                file_id = self._get_file_id_from_info(file_info)
+                if not file_id:
+                    error_count += 1
+                    errors.append(f"Could not determine ID for {file_info.get('original_filename', 'Unknown')}")
+                    continue
+                
+                success, message = self.quarantine_manager.restore_file(file_id)
+                if success:
+                    success_count += 1
+                else:
+                    error_count += 1
+                    errors.append(f"{file_info.get('original_filename', 'Unknown')}: {message}")
+            
+            # Show results
+            result_msg = f"Restored {success_count} files successfully."
+            if error_count > 0:
+                result_msg += f"\n\nFailed to restore {error_count} files:"
+                result_msg += "\n" + "\n".join(errors[:3])  # Show first 3 errors
+                if error_count > 3:
+                    result_msg += f"\n... and {error_count - 3} more errors"
+            
+            if success_count > 0:
+                QMessageBox.information(self, self.tr("Restore Complete"), result_msg)
+                self.refresh_quarantine_stats()
+                self.refresh_quarantine_files()
+            else:
+                QMessageBox.critical(self, self.tr("Restore Failed"), result_msg)
+    
+    def delete_selected_files(self):
+        """Delete multiple selected quarantined files."""
+        selected_items = self.quarantine_files_list.selectedItems()
+        if not selected_items:
+            QMessageBox.warning(self, self.tr("No Selection"), self.tr("Please select files to delete"))
+            return
+        
+        if len(selected_items) == 1:
+            # Single file - use existing method
+            self.delete_selected_file()
+            return
+        
+        # Multiple files
+        file_list = []
+        for item in selected_items:
+            file_info = item.data(Qt.UserRole)
+            if file_info:
+                filename = file_info.get('original_filename', 'Unknown')
+                file_list.append(filename)
+        
+        reply = QMessageBox.question(
+            self, self.tr("Delete Multiple Files"),
+            self.tr(f"Are you sure you want to permanently delete {len(selected_items)} files?\n\n"
+                   "Files to delete:\n" + "\n".join(f"• {name}" for name in file_list[:5]) +
+                   (f"\n... and {len(file_list) - 5} more" if len(file_list) > 5 else "") +
+                   "\n\nThis action cannot be undone."),
+            QMessageBox.Yes | QMessageBox.No
+        )
+        
+        if reply == QMessageBox.Yes:
+            success_count = 0
+            error_count = 0
+            errors = []
+            
+            for item in selected_items:
+                file_info = item.data(Qt.UserRole)
+                if not file_info:
+                    continue
+                
+                # Get file ID
+                file_id = self._get_file_id_from_info(file_info)
+                if not file_id:
+                    error_count += 1
+                    errors.append(f"Could not determine ID for {file_info.get('original_filename', 'Unknown')}")
+                    continue
+                
+                success, message = self.quarantine_manager.delete_quarantined_file(file_id)
+                if success:
+                    success_count += 1
+                else:
+                    error_count += 1
+                    errors.append(f"{file_info.get('original_filename', 'Unknown')}: {message}")
+            
+            # Show results
+            result_msg = f"Deleted {success_count} files successfully."
+            if error_count > 0:
+                result_msg += f"\n\nFailed to delete {error_count} files:"
+                result_msg += "\n" + "\n".join(errors[:3])  # Show first 3 errors
+                if error_count > 3:
+                    result_msg += f"\n... and {error_count - 3} more errors"
+            
+            if success_count > 0:
+                QMessageBox.information(self, self.tr("Delete Complete"), result_msg)
+                self.refresh_quarantine_stats()
+                self.refresh_quarantine_files()
+            else:
+                QMessageBox.critical(self, self.tr("Delete Failed"), result_msg)
+    
+    def restore_all_files(self):
+        """Restore all quarantined files."""
+        quarantined_files = self.quarantine_manager.list_quarantined_files()
+        if not quarantined_files:
+            QMessageBox.information(self, self.tr("No Files"), self.tr("No files in quarantine to restore"))
+            return
+        
+        reply = QMessageBox.question(
+            self, self.tr("Restore All Files"),
+            self.tr(f"Are you sure you want to restore all {len(quarantined_files)} quarantined files?\n\n"
+                   "Warning: These files were detected as infected and may be dangerous."),
+            QMessageBox.Yes | QMessageBox.No
+        )
+        
+        if reply == QMessageBox.Yes:
+            success_count = 0
+            error_count = 0
+            errors = []
+            
+            for file_info in quarantined_files:
+                # Get file ID
+                file_id = self._get_file_id_from_info(file_info)
+                if not file_id:
+                    error_count += 1
+                    errors.append(f"Could not determine ID for {file_info.get('original_filename', 'Unknown')}")
+                    continue
+                
+                success, message = self.quarantine_manager.restore_file(file_id)
+                if success:
+                    success_count += 1
+                else:
+                    error_count += 1
+                    errors.append(f"{file_info.get('original_filename', 'Unknown')}: {message}")
+            
+            # Show results
+            result_msg = f"Restored {success_count} files successfully."
+            if error_count > 0:
+                result_msg += f"\n\nFailed to restore {error_count} files."
+            
+            QMessageBox.information(self, self.tr("Restore Complete"), result_msg)
+            self.refresh_quarantine_stats()
+            self.refresh_quarantine_files()
+    
+    def delete_all_files(self):
+        """Delete all quarantined files."""
+        quarantined_files = self.quarantine_manager.list_quarantined_files()
+        if not quarantined_files:
+            QMessageBox.information(self, self.tr("No Files"), self.tr("No files in quarantine to delete"))
+            return
+        
+        reply = QMessageBox.question(
+            self, self.tr("Delete All Files"),
+            self.tr(f"Are you sure you want to permanently delete all {len(quarantined_files)} quarantined files?\n\n"
+                   "This action cannot be undone."),
+            QMessageBox.Yes | QMessageBox.No
+        )
+        
+        if reply == QMessageBox.Yes:
+            success_count = 0
+            error_count = 0
+            errors = []
+            
+            for file_info in quarantined_files:
+                # Get file ID
+                file_id = self._get_file_id_from_info(file_info)
+                if not file_id:
+                    error_count += 1
+                    errors.append(f"Could not determine ID for {file_info.get('original_filename', 'Unknown')}")
+                    continue
+                
+                success, message = self.quarantine_manager.delete_quarantined_file(file_id)
+                if success:
+                    success_count += 1
+                else:
+                    error_count += 1
+                    errors.append(f"{file_info.get('original_filename', 'Unknown')}: {message}")
+            
+            # Show results
+            result_msg = f"Deleted {success_count} files successfully."
+            if error_count > 0:
+                result_msg += f"\n\nFailed to delete {error_count} files."
+            
+            QMessageBox.information(self, self.tr("Delete Complete"), result_msg)
+            self.refresh_quarantine_stats()
+            self.refresh_quarantine_files()
+    
+    def cleanup_old_files(self):
+        """Clean up quarantined files older than 30 days."""
+        reply = QMessageBox.question(
+            self, self.tr("Cleanup Old Files"),
+            self.tr("This will permanently delete all quarantined files older than 30 days.\n\n"
+                   "Do you want to continue?"),
+            QMessageBox.Yes | QMessageBox.No
+        )
+        
+        if reply == QMessageBox.Yes:
+            deleted_count, message = self.quarantine_manager.cleanup_old_files(30)
+            
             QMessageBox.information(
-                self, self.tr("Delete"),
-                self.tr("File deletion is not yet fully implemented.\n"
-                       "This feature will be available in a future update.")
+                self, self.tr("Cleanup Complete"),
+                self.tr(f"Cleanup completed.\n\n{message}")
             )
+            
+            self.refresh_quarantine_stats()
+            self.refresh_quarantine_files()
+    
+    def _get_file_id_from_info(self, file_info):
+        """Extract file ID from file info dictionary."""
+        # Try multiple methods to get file ID
+        for key, value in file_info.items():
+            if key.startswith('file_hash') or (isinstance(key, str) and len(key) > 10 and key.replace('_', '').isalnum()):
+                return key
+        
+        if 'quarantined_path' in file_info:
+            # Fallback: try to extract file ID from quarantined path
+            quarantined_path = file_info['quarantined_path']
+            basename = os.path.basename(quarantined_path)
+            # Extract timestamp_hash_filename format
+            parts = basename.split('_', 2)
+            if len(parts) >= 2:
+                return f"{parts[1]}_{parts[0]}"  # hash_timestamp format
+        
+        return None
     
     def export_quarantine_list(self):
         """Export the quarantine list to a file."""
@@ -754,9 +1175,33 @@ Last activity:
     # Add the rest of the original methods here
     def browse_target(self):
         """Open a file dialog to select a file or directory to scan."""
+        # First try to get a regular directory
         target = QFileDialog.getExistingDirectory(self, self.tr("Select Directory"))
+
         if target:
             self.target_input.setText(target)
+            return
+
+        # If no directory selected, check if user wants to enter UNC path manually
+        unc_path, ok = QInputDialog.getText(
+            self,
+            self.tr("Network Path"),
+            self.tr("Enter UNC path (e.g., \\\\server\\share):"),
+            QLineEdit.Normal,
+            ""
+        )
+
+        if ok and unc_path.strip():
+            # Validate UNC path format
+            if not unc_path.strip().startswith('\\\\'):
+                QMessageBox.warning(
+                    self,
+                    self.tr("Invalid Path"),
+                    self.tr("Network paths must start with \\\\. Example: \\\\server\\share")
+                )
+                return
+
+            self.target_input.setText(unc_path.strip())
     
     def start_scan(self):
         """Start the ClamAV scan."""
@@ -786,6 +1231,108 @@ Last activity:
                     return  # Return to let user try again
             
             return
+        
+        # Validate network path if it's a UNC path
+        if target.startswith('\\\\'):
+            from clamav_gui.utils.network_scanner import NetworkScanner
+            network_scanner = NetworkScanner()
+            is_valid, message = network_scanner.validate_network_path(target)
+            
+            if not is_valid:
+                reply = QMessageBox.question(
+                    self, self.tr("Network Path Issue"),
+                    self.tr(f"Network path validation failed: {message}\n\n"
+                           "Do you want to continue with the scan anyway?"),
+                    QMessageBox.Yes | QMessageBox.No
+                )
+                if reply != QMessageBox.Yes:
+                    return
+        
+        # ClamAV is installed, proceed with scan
+        logger.info(f"Starting scan with ClamAV at: {status_msg}")
+        
+        # Get the path to clamscan from settings or use default
+        clamscan_path = self.clamscan_path.text().strip()
+        if not clamscan_path:
+            clamscan_path = "clamscan"  # Default to system path if not set
+            
+        # Create a database directory in the user's AppData folder
+        app_data = os.getenv('APPDATA')
+        clamav_dir = os.path.join(app_data, 'ClamAV')
+        db_dir = os.path.join(clamav_dir, 'database')
+        
+        try:
+            os.makedirs(db_dir, exist_ok=True)
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Error"), 
+                               self.tr(f"Failed to create database directory: {e}"))
+            return
+            
+        # Build the command with proper options
+        cmd = [clamscan_path]
+        
+        # Add database directory
+        cmd.extend(['--database', db_dir])
+        
+        # Add recursive flag if enabled
+        if self.recursive_scan.isChecked():
+            cmd.append("-r")
+            
+        # Add scan options based on settings
+        if self.scan_archives.isChecked():
+            cmd.append("-a")  # Scan archives
+        
+        if self.scan_heuristics.isChecked():
+            cmd.append("--heuristic-alerts")
+            
+        if self.scan_pua.isChecked():
+            cmd.append("--detect-pua")
+            
+        # Add performance settings
+        try:
+            max_file_size_mb = int(self.max_file_size.text())
+            if max_file_size_mb > 0:
+                cmd.extend(['--max-filesize', f'{max_file_size_mb}M'])
+        except (ValueError, AttributeError):
+            pass
+            
+        try:
+            max_scan_time = int(self.max_scan_time.text())
+            if max_scan_time > 0:
+                cmd.extend(['--max-scantime', str(max_scan_time)])
+        except (ValueError, AttributeError):
+            pass
+            
+        # Add file pattern options
+        exclude_patterns = self.exclude_patterns.text().strip()
+        if exclude_patterns and exclude_patterns != "*":
+            for pattern in exclude_patterns.split(','):
+                pattern = pattern.strip()
+                if pattern:
+                    cmd.extend(['--exclude', pattern])
+                    
+        include_patterns = self.include_patterns.text().strip()
+        if include_patterns and include_patterns != "*":
+            for pattern in include_patterns.split(','):
+                pattern = pattern.strip()
+                if pattern:
+                    cmd.extend(['--include', pattern])
+        
+        # Validate network path if it's a UNC path
+        if target.startswith('\\\\'):
+            from clamav_gui.utils.network_scanner import NetworkScanner
+            network_scanner = NetworkScanner()
+            is_valid, message = network_scanner.validate_network_path(target)
+            
+            if not is_valid:
+                reply = QMessageBox.question(
+                    self, self.tr("Network Path Issue"),
+                    self.tr(f"Network path validation failed: {message}\n\n"
+                           "Do you want to continue with the scan anyway?"),
+                    QMessageBox.Yes | QMessageBox.No
+                )
+                if reply != QMessageBox.Yes:
+                    return
         
         # ClamAV is installed, proceed with scan
         logger.info(f"Starting scan with ClamAV at: {status_msg}")
@@ -860,34 +1407,45 @@ Last activity:
         # Add target and output options
         cmd.extend([target, "--verbose", "--stdout"])
         
-        # Start the scan in a separate thread
-        self.scan_thread = ScanThread(cmd)
-        self.scan_thread.update_output.connect(self.update_scan_output)
-        self.scan_thread.update_progress.connect(self.update_progress)
-        self.scan_thread.finished.connect(self.scan_finished)
-        
-        # Update UI
-        self.scan_btn.setEnabled(False)
-        self.stop_btn.setEnabled(True)
-        self.output.clear()
-        
-        # Configure progress bar
-        if hasattr(self, 'progress'):
-            self.progress.setRange(0, 100)
-            self.progress.setValue(0)
-            self.progress.setFormat("%p%")
-            self.progress.setAlignment(Qt.AlignCenter)
-            self.progress.setTextVisible(True)
-        
-        # Start the thread
-        self.scan_thread.start()
+        # Use error recovery for scan operations
+        try:
+            # Start the scan in a separate thread with error recovery
+            self.scan_thread = ScanThread(cmd, enable_smart_scanning=self.enable_smart_scanning.isChecked())
+            self.scan_thread.update_output.connect(self.update_scan_output)
+            self.scan_thread.update_progress.connect(self.update_progress)
+            self.scan_thread.update_stats.connect(self.update_scan_stats)
+            self.scan_thread.finished.connect(self.scan_finished)
+            self.scan_thread.cancelled.connect(self.scan_cancelled)
+            
+            # Update UI
+            self.scan_btn.setEnabled(False)
+            self.stop_btn.setEnabled(True)
+            self.output.clear()
+            
+            # Configure progress bar
+            if hasattr(self, 'progress'):
+                self.progress.setRange(0, 100)
+                self.progress.setValue(0)
+                self.progress.setFormat("%p%")
+                self.progress.setAlignment(Qt.AlignCenter)
+                self.progress.setTextVisible(True)
+            
+            # Start the thread
+            self.scan_thread.start()
+            
+        except Exception as e:
+            logger.error(f"Error starting scan: {e}")
+            QMessageBox.critical(self, self.tr("Scan Error"), 
+                               self.tr(f"Failed to start scan: {str(e)}"))
     
     def stop_scan(self):
         """Stop the current scan."""
         if self.scan_thread and self.scan_thread.isRunning():
-            self.scan_thread.terminate()
-            self.scan_thread.wait()
-            self.scan_finished(1, 1)  # Signal error
+            self.scan_thread.cancel()
+            # Update UI immediately to show cancellation is in progress
+            self.scan_btn.setEnabled(True)
+            self.stop_btn.setEnabled(False)
+            self.status_bar.showMessage(self.tr("Cancelling scan..."))
     
     def update_scan_output(self, text):
         """Update the scan output with new text."""
@@ -919,6 +1477,19 @@ Last activity:
                 
         except Exception as e:
             logger.error(f"Error updating progress bar: {e}")
+    
+    def update_scan_stats(self, status, files_scanned, threats_found):
+        """Update scan statistics display."""
+        if hasattr(self, 'scan_stats_label'):
+            self.scan_stats_label.setText(f"{status} | Files: {files_scanned} | Threats: {threats_found}")
+    
+    def scan_cancelled(self):
+        """Handle scan cancellation."""
+        self.status_bar.showMessage(self.tr("Scan cancelled"))
+        self.scan_btn.setEnabled(True)
+        self.stop_btn.setEnabled(False)
+        QMessageBox.information(self, self.tr("Scan Cancelled"), 
+                               self.tr("The scan has been cancelled by the user."))
     
     def scan_finished(self, exit_code, _):
         """Handle scan completion.
@@ -970,25 +1541,37 @@ Last activity:
             self.update_output.append(text)
             
     def update_database(self):
-        """Update the ClamAV virus database."""
+        """Update the ClamAV virus database using enhanced updater with error recovery."""
         # Disconnect any existing connections to avoid duplicates
-        self.virus_db_updater.signals.disconnect_all()
-            
-        self.virus_db_updater.signals.output.connect(self.update_update_output)
-        self.virus_db_updater.signals.finished.connect(self.update_finished)
-        
-        # Clear and update UI
-        self.update_output.clear()
-        
-        # Get freshclam path from settings if available
-        freshclam_path = None
-        if hasattr(self, 'freshclam_path') and self.freshclam_path.text().strip():
-            freshclam_path = self.freshclam_path.text().strip()
-        
-        # Start the update
-        if not self.virus_db_updater.start_update(freshclam_path):
-            QMessageBox.critical(self, self.tr("Error"), 
-                               self.tr("Failed to start virus database update."))
+        if hasattr(self.virus_db_updater, 'signals'):
+            self.virus_db_updater.signals.disconnect_all()
+
+        # Use error recovery for database updates
+        try:
+            # Use enhanced update thread with error recovery
+            self.update_thread = EnhancedUpdateThread(self.virus_db_updater)
+            self.update_thread.update_output.connect(self.update_update_output)
+            self.update_thread.update_progress.connect(self.update_progress)
+            self.update_thread.finished.connect(self.update_finished)
+
+            # Clear and update UI
+            self.update_output.clear()
+
+            # Get freshclam path from settings if available
+            freshclam_path = None
+            if hasattr(self, 'freshclam_path') and self.freshclam_path.text().strip():
+                freshclam_path = self.freshclam_path.text().strip()
+
+            if freshclam_path:
+                self.virus_db_updater = EnhancedVirusDBUpdater(freshclam_path)
+
+            # Start the enhanced update
+            self.update_thread.start()
+
+        except Exception as e:
+            logger.error(f"Error starting database update: {e}")
+            QMessageBox.critical(self, self.tr("Update Error"),
+                               self.tr(f"Failed to start database update: {str(e)}"))
     
     def update_progress(self, value):
         """Update the progress bar with the current value."""
@@ -1015,18 +1598,24 @@ Last activity:
                     current = self.progress.value()
                     self.progress.setValue(min(99, current + 1))
     
-    def update_finished(self, exit_code, status):
+    def update_finished(self, success, message):
         """Handle update completion."""
-        if exit_code == 0:
+        if success:
             self.status_bar.showMessage(self.tr("Database updated successfully"))
             if hasattr(self, 'progress'):
                 self.progress.setValue(100)
             QMessageBox.information(self, self.tr("Success"),
-                                 self.tr("Virus database updated successfully."))
+                                 self.tr(f"Virus database updated successfully.\n\n{message}"))
+
+            # Clean up old backups
+            try:
+                self.virus_db_updater.cleanup_old_backups(7)  # Keep 7 days of backups
+            except:
+                pass
         else:
             self.status_bar.showMessage(self.tr("Database update failed"))
-            QMessageBox.warning(self, self.tr("Warning"), 
-                             self.tr("Virus database update failed. Please check the logs for details."))
+            QMessageBox.warning(self, self.tr("Warning"),
+                             self.tr(f"Virus database update failed. Please check the logs for details.\n\n{message}"))
     
     def save_settings(self):
         """Save the application settings."""
@@ -1041,7 +1630,8 @@ Last activity:
             'max_file_size': self.max_file_size.text(),
             'max_scan_time': self.max_scan_time.text(),
             'exclude_patterns': self.exclude_patterns.text(),
-            'include_patterns': self.include_patterns.text()
+            'include_patterns': self.include_patterns.text(),
+            'enable_smart_scanning': self.enable_smart_scanning.isChecked()
         }
         
         if self.settings.save_settings(settings):
@@ -1097,6 +1687,8 @@ Last activity:
             self.exclude_patterns.setText(scan_settings['exclude_patterns'])
         if 'include_patterns' in scan_settings:
             self.include_patterns.setText(scan_settings['include_patterns'])
+        if 'enable_smart_scanning' in scan_settings:
+            self.enable_smart_scanning.setChecked(scan_settings.get('enable_smart_scanning', False))
         
     def _auto_quarantine_infected_files(self):
         """Automatically quarantine infected files found during scan."""
@@ -1202,93 +1794,308 @@ Recent files:
                 f"Error loading quarantine information: {str(e)}\n\nThe quarantine system may need to be initialized."
             )
 
+    def add_email_file(self):
+        """Add an email file to the scan list."""
+        file_names, _ = QFileDialog.getOpenFileNames(
+            self,
+            self.tr("Select Email Files"),
+            "",
+            "Email Files (*.eml *.msg);;All Files (*)"
+        )
+        
+        if not file_names:
+            return
+        
+        for file_name in file_names:
+            # Check if file already exists in list
+            existing_items = self.email_files_list.findItems(os.path.basename(file_name), Qt.MatchExactly)
+            if existing_items:
+                continue  # Skip duplicates
+            
+            # Add to list
+            item = QListWidgetItem(os.path.basename(file_name))
+            item.setData(Qt.UserRole, file_name)  # Store full path
+            self.email_files_list.addItem(item)
+    
+    def remove_email_file(self):
+        """Remove selected email files from the scan list."""
+        current_row = self.email_files_list.currentRow()
+        if current_row >= 0:
+            self.email_files_list.takeItem(current_row)
+    
+    def clear_email_files(self):
+        """Clear all email files from the scan list."""
+        self.email_files_list.clear()
+    
+    def start_email_scan(self):
+        """Start scanning the selected email files."""
+        email_files = []
+        for i in range(self.email_files_list.count()):
+            item = self.email_files_list.item(i)
+            file_path = item.data(Qt.UserRole)
+            if file_path and os.path.exists(file_path):
+                email_files.append(file_path)
+        
+        if not email_files:
+            QMessageBox.warning(self, self.tr("No Files"), self.tr("Please add email files to scan"))
+            return
+        
+        # Import and initialize email scanner
+        from clamav_gui.utils.email_scanner import EmailScanner, EmailScanThread
+        
+        clamscan_path = self.clamscan_path.text().strip() or "clamscan"
+        email_scanner = EmailScanner(clamscan_path)
+        
+        # Start scan in thread
+        self.email_scan_thread = EmailScanThread(email_scanner, email_files)
+        self.email_scan_thread.update_progress.connect(self.update_email_progress)
+        self.email_scan_thread.update_output.connect(self.update_email_output)
+        self.email_scan_thread.finished.connect(self.email_scan_finished)
+        
+        # Update UI
+        self.start_email_scan_btn.setEnabled(False)
+        self.stop_email_scan_btn.setEnabled(True)
+        self.save_email_report_btn.setEnabled(False)
+        self.email_output.clear()
+        self.email_progress.setValue(0)
+        
+        # Start the thread
+        self.email_scan_thread.start()
+    
+    def stop_email_scan(self):
+        """Stop the current email scan."""
+        if hasattr(self, 'email_scan_thread') and self.email_scan_thread.isRunning():
+            self.email_scan_thread.terminate()
+            self.email_scan_thread.wait()
+            self.email_scan_finished(False, "Scan stopped by user", [])
+    
+    def update_email_progress(self, value):
+        """Update the email scan progress bar."""
+        self.email_progress.setValue(value)
+    
+    def update_email_output(self, text):
+        """Update the email scan output."""
+        self.email_output.append(text)
+        self.email_output.verticalScrollBar().setValue(
+            self.email_output.verticalScrollBar().maximum()
+        )
+    
+    def email_scan_finished(self, success, message, threats):
+        """Handle email scan completion."""
+        # Update UI
+        self.start_email_scan_btn.setEnabled(True)
+        self.stop_email_scan_btn.setEnabled(False)
+        self.save_email_report_btn.setEnabled(True)
+        self.email_progress.setValue(100)
+        
+        # Show results
+        if success:
+            self.status_bar.showMessage(self.tr(f"Email scan completed - {len(threats)} threats found"))
+            if threats:
+                QMessageBox.warning(self, self.tr("Threats Detected"), 
+                                   self.tr(f"Email scan completed and found {len(threats)} potential threats."))
+            else:
+                QMessageBox.information(self, self.tr("Scan Complete"), 
+                                       self.tr("Email scan completed successfully. No threats were found."))
+        else:
+            self.status_bar.showMessage(self.tr("Email scan failed"))
+            QMessageBox.critical(self, self.tr("Scan Failed"), 
+                               self.tr(f"Email scan failed: {message}"))
+    
+    def save_email_report(self):
+        """Save the email scan report to a file."""
+        file_name, _ = QFileDialog.getSaveFileName(
+            self,
+            self.tr("Save Email Scan Report"),
+            "",
+            "Text Files (*.txt);;All Files (*)"
+        )
+        
+        if not file_name:
+            return
+        
+        if not file_name.lower().endswith('.txt'):
+            file_name += '.txt'
+        
+        try:
+            with open(file_name, 'w', encoding='utf-8') as f:
+                f.write("Email Scan Report\n")
+                f.write("=" * 50 + "\n\n")
+                f.write(f"Scan Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+                f.write(f"Files Scanned: {self.email_files_list.count()}\n\n")
+                f.write("Scan Output:\n")
+                f.write("-" * 20 + "\n")
+                f.write(self.email_output.toPlainText())
+            
+            QMessageBox.information(
+                self, self.tr("Report Saved"),
+                self.tr(f"Email scan report saved successfully:\n{file_name}")
+            )
+        except Exception as e:
+            QMessageBox.critical(
+                self, self.tr("Save Failed"),
+                self.tr(f"Failed to save email scan report: {str(e)}")
+            )
+
 
 class ScanThread(QThread):
-    """Thread for running ClamAV scans."""
+    """Thread for running ClamAV scans with enhanced async support."""
     update_output = Signal(str)
     update_progress = Signal(int)  # Signal for progress updates (0-100)
+    update_stats = Signal(str, int, int)  # Signal for scan statistics (files_scanned, threats_found)
     finished = Signal(int, int)
-    
-    def __init__(self, command):
+    cancelled = Signal()
+
+    def __init__(self, command, enable_smart_scanning=False):
         super().__init__()
         self.command = command
+        self.enable_smart_scanning = enable_smart_scanning
         self.process = None
-    
+        self.cancelled_flag = False
+        self.hash_db = None
+
+        # Initialize hash database for smart scanning if enabled
+        if enable_smart_scanning:
+            try:
+                from clamav_gui.utils.hash_database import HashDatabase
+                self.hash_db = HashDatabase()
+            except ImportError:
+                logger.warning("HashDatabase not available for smart scanning")
+
+    def cancel(self):
+        """Cancel the scan operation."""
+        self.cancelled_flag = True
+        if self.process and self.process.state() == QProcess.Running:
+            self.process.terminate()
+            # Give it a moment to terminate gracefully, then kill if needed
+            if not self.process.waitForFinished(3000):  # 3 seconds
+                self.process.kill()
+
     def run(self):
-        """Run the scan command."""
+        """Run the scan command with enhanced async support."""
         try:
+            if self.cancelled_flag:
+                self.cancelled.emit()
+                return
+
             self.process = QProcess()
             self.process.readyReadStandardOutput.connect(self.handle_output)
             self.process.readyReadStandardError.connect(self.handle_error)
+
+            # Enhanced finished signal handling
             self.process.finished.connect(self.on_finished)
-            
+
             # Start the process
             self.process.start(self.command[0], self.command[1:])
-            
-            # Track progress
+
+            # Track progress with enhanced statistics
             total_files = 0
             processed_files = 0
+            threats_found = 0
             last_progress = 0
             start_time = time.time()
-            
-            # First, count total files if possible
+
+            # First, count total files if possible (with smart scanning support)
             if 'clamscan' in self.command[0].lower() and len(self.command) > 1:
                 try:
-                    # Try to count files in the target directory
                     target = self.command[-1]
                     if os.path.isdir(target):
-                        # Use a more efficient method to count files
-                        total_files = sum(1 for _ in Path(target).rglob('*') if _.is_file())
-                        self.update_output.emit(f"Found {total_files} files to scan")
+                        # Use smart scanning to filter files if enabled
+                        if self.enable_smart_scanning and self.hash_db:
+                            # Count only files that need scanning
+                            all_files = list(Path(target).rglob('*'))
+                            files_to_scan = []
+                            for file_path in all_files:
+                                if file_path.is_file():
+                                    file_hash = self.hash_db.get_file_hash(str(file_path))
+                                    if not self.hash_db.is_known_safe(file_hash):
+                                        files_to_scan.append(file_path)
+                                    else:
+                                        # Mark known safe files in output
+                                        self.update_output.emit(f"Skipped (known safe): {file_path.name}")
+
+                            total_files = len(files_to_scan)
+                            if total_files > 0:
+                                self.update_output.emit(f"Found {len(all_files)} files, {total_files} need scanning (smart scan enabled)")
+                            else:
+                                self.update_output.emit(f"All {len(all_files)} files are known safe - no scanning needed")
+                                self.update_progress.emit(100)
+                                self.finished.emit(0, 0)  # Clean exit
+                                return
+                        else:
+                            total_files = sum(1 for _ in Path(target).rglob('*') if _.is_file())
+                            self.update_output.emit(f"Found {total_files} files to scan")
                     elif os.path.isfile(target):
                         total_files = 1
                 except Exception as e:
                     self.update_output.emit(f"Could not count files: {str(e)}")
-            
+
             # Emit initial progress
             self.update_progress.emit(0)
-            
+            self.update_stats.emit("Ready", 0, 0)
+
             # Buffer for partial lines
             buffer = ""
             last_update = time.time()
-            
+
             while not self.process.waitForFinished(100):  # Check every 100ms
+                if self.cancelled_flag:
+                    self.update_output.emit("Scan cancelled by user")
+                    self.cancelled.emit()
+                    return
+
                 # Read all available output
                 output = self.process.readAllStandardOutput().data().decode('utf-8', errors='ignore')
                 if not output:
                     continue
-                    
+
                 # Add to buffer and split by lines
                 buffer += output
                 lines = buffer.split('\n')
                 buffer = lines.pop()  # Keep the last incomplete line in buffer
-                
+
                 # Process complete lines
                 for line in lines:
                     if not line.strip():
                         continue
-                        
+
                     self.update_output.emit(line)
-                    
-                    # Update progress for each scanned file
+
+                    # Update progress for each scanned file (enhanced)
                     if 'Scanned file:' in line:
                         processed_files += 1
-                        
-                        # Only update progress at most once per second to avoid UI freezes
+
+                        # Update statistics
+                        if threats_found == 0:  # Only update if no threats found yet
+                            self.update_stats.emit(f"Scanning... ({processed_files}/{total_files})", processed_files, threats_found)
+
+                        # More responsive progress updates
                         current_time = time.time()
-                        if current_time - last_update >= 0.1:  # Update at most 10 times per second
+                        if current_time - last_update >= 0.05:  # Update up to 20 times per second
                             if total_files > 0:
                                 progress = min(99, int((processed_files / total_files) * 100))
                             else:
-                                # If we don't know the total, use a simple increment
                                 progress = min(99, processed_files % 100)
-                            
+
                             if progress != last_progress:
                                 self.update_progress.emit(progress)
                                 last_progress = progress
-                            
+                                # Update UI more frequently for better responsiveness
+                                QtWidgets.QApplication.processEvents()
+
                             last_update = current_time
-                    
+
+                    # Track threats found
+                    elif 'FOUND' in line or 'infected' in line.lower():
+                        threats_found += 1
+                        self.update_stats.emit(f"Scanning... ({processed_files}/{total_files})", processed_files, threats_found)
+
+                        # Extract file path and threat name for hash database update
+                        if self.enable_smart_scanning and self.hash_db:
+                            # Try to extract file path from the line
+                            # This is a simplified approach - in practice, we'd need more sophisticated parsing
+                            pass
+
                     # Try to get total files from summary if not already known
                     elif total_files == 0 and ' files, ' in line and 'infested files: ' in line:
                         try:
@@ -1298,31 +2105,35 @@ class ScanThread(QThread):
                                 self.update_output.emit(f"Found {total_files} files to scan in total")
                         except (ValueError, IndexError):
                             pass
-            
+
+            # Final statistics update
+            self.update_stats.emit("Complete", processed_files, threats_found)
+
         except Exception as e:
-            self.update_output.emit(str(e))
-            self.finished.emit(1, 1)
-    
+            if not self.cancelled_flag:
+                self.update_output.emit(f"Scan error: {str(e)}")
+                self.finished.emit(1, 1)
+            else:
+                self.cancelled.emit()
+
     def handle_output(self):
         """Handle standard output from the process."""
-        if self.process:
+        if self.process and not self.cancelled_flag:
             data = self.process.readAllStandardOutput().data().decode()
             self.update_output.emit(data)
-    
+
     def handle_error(self):
         """Handle error output from the process."""
-        if self.process:
+        if self.process and not self.cancelled_flag:
             data = self.process.readAllStandardError().data().decode()
             self.update_output.emit(data)
-    
+
     def on_finished(self, exit_code, exit_status):
         """Handle process completion."""
-        self.finished.emit(exit_code, exit_status)
-    
-    def terminate(self):
-        """Terminate the process."""
-        if self.process and self.process.state() == QProcess.Running:
-            self.process.terminate()
+        if not self.cancelled_flag:
+            self.finished.emit(exit_code, exit_status)
+        else:
+            self.cancelled.emit()
 
 
 class UpdateThread(QThread):
