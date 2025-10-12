@@ -1,0 +1,31 @@
+# Coverage configuration for ClamAV GUI
+
+[run]
+source = clamav_gui
+omit =
+    */tests/*
+    */test_*
+    */__pycache__/*
+    */venv/*
+    */.venv/*
+    */build/*
+    */dist/*
+    */.tox/*
+    */.pytest_cache/*
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self.debug:
+    if settings.DEBUG
+    raise AssertionError
+    raise NotImplementedError
+    if 0:
+    if __name__ == .__main__.:
+
+[html]
+directory = htmlcov
+
+[xml]
+output = coverage.xml

@@ -45,3 +45,7 @@ This Code of Conduct is adapted from the [Contributor Covenant][homepage], versi
 [homepage]: https://www.contributor-covenant.org
 
 For answers to common questions about this code of conduct, see [https://www.contributor-covenant.org/faq](https://www.contributor-covenant.org/faq)
+
+---
+
+*For ClamAV GUI specific questions, please contact the maintainers at [Nsfr750](mailto:nsfr750@yandex.com)*
