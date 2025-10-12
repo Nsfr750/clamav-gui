@@ -7,7 +7,7 @@ import logging
 from pathlib import Path
 from datetime import datetime
 
-from clamav_gui.utils.logger import configure_logging, get_logger
+from clamav_gui.utils.logger import configure_logging, get_logger, ensure_logs_dir
 configure_logging(logging.INFO)
 logger = get_logger("ClamAV-GUI")
 
@@ -22,6 +22,12 @@ try:
     from clamav_gui import __version__
     from clamav_gui.ui.updates_ui import check_for_updates
     
+    # Ensure logs directory exists and log its path
+    try:
+        logs_dir = ensure_logs_dir()
+        logger.info(f"Logs directory: {logs_dir}")
+    except Exception:
+        pass
     logger.info("Application starting...")
     
 except ImportError as e:

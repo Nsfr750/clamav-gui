@@ -15,14 +15,36 @@ _LOG_CONFIGURED = False
 
 
 def _project_root() -> Path:
-    """Best-effort project root directory (parent of package directory)."""
+    """Best-effort project root directory (the clamav-gui repo root).
+
+    Expected path layout: <repo>/clamav_gui/utils/logger.py
+    So repo root is typically `here.parents[2]`.
+    We also probe upwards for a marker ('.git' or 'README.md') as a sanity check.
+    Fallback to current working directory on failure.
+    """
     here = Path(__file__).resolve()
-    # .../clamav_gui/utils/logger.py -> project root is parents[3]
-    # [0]=logger.py, [1]=utils, [2]=clamav_gui, [3]=repo root
+    # Prefer the directory two levels up: .../clamav-gui
+    candidates = []
     try:
-        return here.parents[3]
+        candidates.append(here.parents[2])  # repo root
     except Exception:
-        return here.parent.parent
+        pass
+    # Probe additional parents just in case
+    candidates.extend(list(here.parents[3:6]))
+    for cand in candidates:
+        if not isinstance(cand, Path):
+            continue
+        try:
+            if (cand / '.git').exists() or (cand / 'README.md').exists() or (cand / 'clamav_gui').exists():
+                return cand
+        except Exception:
+            continue
+    # Fallback to two levels up if available
+    try:
+        return here.parents[2]
+    except Exception:
+        # Last resort: current working directory
+        return Path.cwd()
 
 
 def ensure_logs_dir() -> Path:

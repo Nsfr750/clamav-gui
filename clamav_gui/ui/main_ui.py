@@ -4,6 +4,7 @@ A minimal, reliable main UI window that ensures the menu bar and UI are visible.
 from __future__ import annotations
 
 import logging
+import os
 from PySide6.QtWidgets import (
     QMainWindow,
     QWidget,
@@ -24,11 +25,13 @@ from PySide6.QtWidgets import (
     QAbstractItemView,
 )
 from PySide6.QtCore import Qt
+from PySide6.QtCore import QProcess
 
 from clamav_gui.ui.menu import ClamAVMenuBar
 from clamav_gui.ui.settings import AppSettings
 from clamav_gui.ui.updates_ui import check_for_updates
 from clamav_gui import __version__
+from clamav_gui.utils.quarantine_manager import QuarantineManager
 
 logger = logging.getLogger(__name__)
 
@@ -83,20 +86,31 @@ class MainUIWindow(QMainWindow):
         update_tab = self._create_update_tab()
         self.tabs.addTab(update_tab, "Update")
 
-        # Tab 5: Quarantine (UI only)
+        # Tab 5: Virus DB Update
+        virus_db_tab = self._create_virus_db_tab()
+        self.tabs.addTab(virus_db_tab, "Virus DB")
+
+        # Tab 6: Quarantine (UI only)
         quarantine_tab = self._create_quarantine_tab()
         self.tabs.addTab(quarantine_tab, "Quarantine")
 
-        # Tab 6: Config Editor (UI only)
+        # Tab 7: Config Editor (UI only)
         config_tab = self._create_config_editor_tab()
         self.tabs.addTab(config_tab, "Config Editor")
 
-        # Tab 7: Settings (ported minimally)
+        # Tab 8: Settings (ported minimally)
         settings_tab = self._create_settings_tab()
         self.tabs.addTab(settings_tab, "Settings")
 
         layout.addWidget(self.tabs)
         self.setCentralWidget(central)
+
+        # Status bar at bottom
+        self.status = self.statusBar()
+        try:
+            self.status.showMessage("Ready")
+        except Exception:
+            pass
 
         # Diagnostics
         try:
@@ -106,6 +120,21 @@ class MainUIWindow(QMainWindow):
             )
         except Exception as e:
             logger.warning(f"[MainUIWindow] menu diagnostics failed: {e}")
+        
+        # Scan process state
+        self.scan_process: QProcess | None = None
+
+        # Quarantine manager
+        self.quarantine_manager = QuarantineManager()
+
+        # Virus DB update process state
+        self.db_process: QProcess | None = None
+
+    def set_status(self, message: str, timeout_ms: int = 3000) -> None:
+        try:
+            self.status.showMessage(message, timeout_ms)
+        except Exception:
+            pass
 
     # --- Settings tab (ported) ---
     def _create_settings_tab(self) -> QWidget:
@@ -119,9 +148,12 @@ class MainUIWindow(QMainWindow):
         self.clamd_path = QLineEdit()
         self.freshclam_path = QLineEdit()
         self.clamscan_path = QLineEdit()
+        self.db_dir_path = QLineEdit()
+        self.db_dir_path.setPlaceholderText(r"e.g. C:\\ProgramData\\ClamAV\\db or a writable folder")
         path_form.addRow("ClamD Path:", self.clamd_path)
         path_form.addRow("FreshClam Path:", self.freshclam_path)
         path_form.addRow("ClamScan Path:", self.clamscan_path)
+        path_form.addRow("Virus DB Directory:", self.db_dir_path)
         path_group.setLayout(path_form)
 
         scan_group = QGroupBox("Scan Settings")
@@ -331,45 +363,158 @@ class MainUIWindow(QMainWindow):
         v.addLayout(bulk)
         v.addWidget(export_btn)
 
-        # Initial fill (stub)
+        # Initial fill
         self._refresh_quarantine_stats()
         self._refresh_quarantine_files()
 
         return tab
 
-    # Quarantine handlers (stubs)
+    # Quarantine handlers (real)
     def _refresh_quarantine_stats(self) -> None:
-        self.quarantine_stats_text.setPlainText(
-            "Quarantine Statistics:\n====================\n\nTotal quarantined files: 0\nTotal size: 0.00 MB\n\nThreat types found:\n  None\n\nLast activity:\n  Newest file: N/A\n  Oldest file: N/A"
-        )
+        try:
+            stats = self.quarantine_manager.get_quarantine_stats()
+            text = (
+                "Quarantine Statistics:\n====================\n\n"
+                f"Total quarantined files: {stats.get('total_quarantined', 0)}\n"
+                f"Total size: {stats.get('total_size_mb', 0):.2f} MB\n\n"
+                "Threat types found:\n"
+            )
+            threats = stats.get('threat_types') or []
+            if threats:
+                text += "\n".join(f"  • {t}" for t in threats)
+            else:
+                text += "  None"
+            text += (
+                "\n\nLast activity:\n"
+                f"  Newest file: {stats.get('newest_file') or 'N/A'}\n"
+                f"  Oldest file: {stats.get('oldest_file') or 'N/A'}"
+            )
+            self.quarantine_stats_text.setPlainText(text)
+        except Exception as e:
+            self.quarantine_stats_text.setPlainText(f"Error loading quarantine statistics: {e}")
 
     def _refresh_quarantine_files(self) -> None:
-        self.quarantine_files_list.clear()
-        self.quarantine_files_list.addItem("No quarantined files")
+        try:
+            self.quarantine_files_list.clear()
+            files = self.quarantine_manager.list_quarantined_files()
+            if not files:
+                self.quarantine_files_list.addItem("No quarantined files")
+                return
+            for info in files:
+                filename = info.get('original_filename', 'Unknown')
+                threat = info.get('threat_name', 'Unknown')
+                size = info.get('file_size', 0)
+                item_text = f"{filename} - {threat} ({size} bytes)"
+                item = QListWidgetItem(item_text)
+                item.setData(Qt.UserRole, info)
+                self.quarantine_files_list.addItem(item)
+        except Exception as e:
+            self.quarantine_files_list.clear()
+            self.quarantine_files_list.addItem(f"Error loading quarantined files: {e}")
+
+    def _get_selected_file_ids(self) -> list[str]:
+        ids: list[str] = []
+        for item in self.quarantine_files_list.selectedItems():
+            info = item.data(Qt.UserRole) or {}
+            # Determine file_id from metadata
+            file_id = info.get('file_hash') and f"{info.get('file_hash')}_{info.get('quarantine_time','')}"
+            if not file_id and 'quarantined_path' in info:
+                # Extract timestamp_hash_filename format
+                basename = info['quarantined_path'].split(os.sep)[-1]
+                parts = basename.split('_', 2)
+                if len(parts) >= 2:
+                    file_id = f"{parts[1]}_{parts[0]}"
+            if file_id:
+                ids.append(file_id)
+        return ids
 
     def _restore_selected_files(self) -> None:
-        self._append_quarantine_msg("Restore selected (stub)")
+        ids = self._get_selected_file_ids()
+        if not ids:
+            self._append_quarantine_msg("No files selected to restore.")
+            return
+        for fid in ids:
+            ok, msg = self.quarantine_manager.restore_file(fid)
+            self._append_quarantine_msg(msg)
+        self._refresh_quarantine_files()
+        self._refresh_quarantine_stats()
 
     def _delete_selected_files(self) -> None:
-        self._append_quarantine_msg("Delete selected (stub)")
+        ids = self._get_selected_file_ids()
+        if not ids:
+            self._append_quarantine_msg("No files selected to delete.")
+            return
+        for fid in ids:
+            ok, msg = self.quarantine_manager.delete_quarantined_file(fid)
+            self._append_quarantine_msg(msg)
+        self._refresh_quarantine_files()
+        self._refresh_quarantine_stats()
 
     def _restore_all_files(self) -> None:
-        self._append_quarantine_msg("Restore all (stub)")
+        # Restore all listed files
+        count = self.quarantine_files_list.count()
+        restored = 0
+        for i in range(count):
+            item = self.quarantine_files_list.item(i)
+            info = item.data(Qt.UserRole) or {}
+            if not info:
+                continue
+            file_id = info.get('file_hash') and f"{info.get('file_hash')}_{info.get('quarantine_time','')}"
+            if not file_id and 'quarantined_path' in info:
+                basename = info['quarantined_path'].split(os.sep)[-1]
+                parts = basename.split('_', 2)
+                if len(parts) >= 2:
+                    file_id = f"{parts[1]}_{parts[0]}"
+            if file_id:
+                ok, msg = self.quarantine_manager.restore_file(file_id)
+                self._append_quarantine_msg(msg)
+                if ok:
+                    restored += 1
+        self._append_quarantine_msg(f"Restored {restored} files.")
+        self._refresh_quarantine_files()
+        self._refresh_quarantine_stats()
 
     def _delete_all_files(self) -> None:
-        self._append_quarantine_msg("Delete all (stub)")
+        count = self.quarantine_files_list.count()
+        deleted = 0
+        for i in range(count):
+            item = self.quarantine_files_list.item(i)
+            info = item.data(Qt.UserRole) or {}
+            if not info:
+                continue
+            file_id = info.get('file_hash') and f"{info.get('file_hash')}_{info.get('quarantine_time','')}"
+            if not file_id and 'quarantined_path' in info:
+                basename = info['quarantined_path'].split(os.sep)[-1]
+                parts = basename.split('_', 2)
+                if len(parts) >= 2:
+                    file_id = f"{parts[1]}_{parts[0]}"
+            if file_id:
+                ok, msg = self.quarantine_manager.delete_quarantined_file(file_id)
+                self._append_quarantine_msg(msg)
+                if ok:
+                    deleted += 1
+        self._append_quarantine_msg(f"Deleted {deleted} files.")
+        self._refresh_quarantine_files()
+        self._refresh_quarantine_stats()
 
     def _cleanup_old_files(self) -> None:
-        self._append_quarantine_msg("Cleanup old files (stub)")
+        try:
+            count, msg = self.quarantine_manager.cleanup_old_files(days_old=30)
+            self._append_quarantine_msg(msg)
+        except Exception as e:
+            self._append_quarantine_msg(f"Cleanup failed: {e}")
+        self._refresh_quarantine_files()
+        self._refresh_quarantine_stats()
 
     def _export_quarantine_list(self) -> None:
-        path, _ = QFileDialog.getSaveFileName(self, "Export Quarantine List", "quarantine_list.txt", "Text Files (*.txt)")
+        path, _ = QFileDialog.getSaveFileName(self, "Export Quarantine List", "quarantine_list.json", "JSON Files (*.json);;All Files (*.*)")
         if path:
             try:
-                with open(path, "w", encoding="utf-8") as f:
-                    for i in range(self.quarantine_files_list.count()):
-                        f.write(self.quarantine_files_list.item(i).text() + "\n")
-                self._append_quarantine_msg(f"Exported list to: {path}")
+                ok = self.quarantine_manager.export_quarantine_list(path)
+                if ok:
+                    self._append_quarantine_msg(f"Exported list to: {path}")
+                else:
+                    self._append_quarantine_msg("Failed to export list.")
             except Exception as e:
                 self._append_quarantine_msg(f"Failed to export list: {e}")
 
@@ -449,6 +594,116 @@ class MainUIWindow(QMainWindow):
         except Exception as e:
             self.update_output.append(f"Failed to check updates: {e}")
 
+    # --- Virus DB tab ---
+    def _create_virus_db_tab(self) -> QWidget:
+        tab = QWidget()
+        v = QVBoxLayout(tab)
+        info = QLabel("Update ClamAV virus definitions using freshclam")
+        self.db_output = QTextEdit()
+        self.db_output.setReadOnly(True)
+        self.db_progress = QProgressBar()
+        btns = QHBoxLayout()
+        start_btn = QPushButton("Update Virus DB")
+        stop_btn = QPushButton("Stop")
+        stop_btn.setEnabled(False)
+        start_btn.clicked.connect(self._start_db_update)
+        stop_btn.clicked.connect(self._stop_db_update)
+        self.db_start_btn = start_btn
+        self.db_stop_btn = stop_btn
+        btns.addWidget(start_btn)
+        btns.addWidget(stop_btn)
+        btns.addStretch(1)
+        v.addWidget(info)
+        v.addLayout(btns)
+        v.addWidget(self.db_output)
+        v.addWidget(self.db_progress)
+        return tab
+
+    def _start_db_update(self) -> None:
+        # Resolve freshclam path from settings; fallback to 'freshclam'
+        try:
+            if not hasattr(self, "current_settings"):
+                self.current_settings = self.settings.load_settings() or {}
+        except Exception:
+            self.current_settings = {}
+        freshclam = self.current_settings.get("freshclam_path") or "freshclam"
+        db_dir = self.current_settings.get("virus_db_dir") or r"C:\\ProgramData\\ClamAV\\db"
+
+        # Ensure DB directory exists and is writable
+        try:
+            os.makedirs(db_dir, exist_ok=True)
+        except Exception as e:
+            self.db_output.append(f"Failed to create DB directory '{db_dir}': {e}")
+            self.db_output.append("Tip: choose a writable path in Settings → Virus DB Directory or run with elevated privileges.")
+            return
+
+        self.db_process = QProcess(self)
+        self.db_process.setProcessChannelMode(QProcess.MergedChannels)
+        self.db_process.readyReadStandardOutput.connect(self._on_db_output)
+        self.db_process.finished.connect(self._on_db_finished)
+        self.db_process.errorOccurred.connect(self._on_db_error)
+
+        args = [f"--datadir={db_dir}"]
+        self.db_output.append(f"Running: {freshclam} {' '.join(args)}")
+        self.db_progress.setRange(0, 0)
+        self.db_start_btn.setEnabled(False)
+        self.db_stop_btn.setEnabled(True)
+        try:
+            self.db_process.start(freshclam, args)
+        except Exception as e:
+            self.db_output.append(f"Failed to start freshclam: {e}")
+            self.db_progress.setRange(0, 1)
+            self.db_progress.setValue(0)
+            self.db_start_btn.setEnabled(True)
+            self.db_stop_btn.setEnabled(False)
+
+    def _stop_db_update(self) -> None:
+        if self.db_process is not None:
+            try:
+                if self.db_process.state() != QProcess.NotRunning:
+                    self.db_process.terminate()
+                    if not self.db_process.waitForFinished(2000):
+                        self.db_process.kill()
+            except Exception:
+                pass
+            self.db_process = None
+        self.db_progress.setRange(0, 1)
+        self.db_progress.setValue(0)
+        self.db_output.append("Virus DB update stopped.")
+        self.db_start_btn.setEnabled(True)
+        self.db_stop_btn.setEnabled(False)
+
+    def _on_db_output(self) -> None:
+        try:
+            data = self.db_process.readAllStandardOutput() if self.db_process else b""
+            if not data:
+                return
+            try:
+                text = bytes(data).decode("utf-8", errors="replace")
+            except Exception:
+                text = str(bytes(data))
+            if text:
+                self.db_output.append(text.rstrip())
+        except Exception as e:
+            self.db_output.append(f"Output error: {e}")
+
+    def _on_db_finished(self, exit_code: int, exit_status) -> None:
+        self.db_progress.setRange(0, 1)
+        self.db_progress.setValue(0)
+        self.db_output.append(f"Virus DB update finished with code {exit_code}.")
+        self.db_start_btn.setEnabled(True)
+        self.db_stop_btn.setEnabled(False)
+        self.db_process = None
+
+    def _on_db_error(self, process_error) -> None:
+        self.db_output.append("Virus DB update process error occurred.")
+        if self.db_process is not None:
+            self.db_output.append(f"Process error: {process_error}")
+        self.db_start_btn.setEnabled(True)
+        self.db_stop_btn.setEnabled(False)
+        self.db_progress.setRange(0, 1)
+        self.db_progress.setValue(0)
+
     # --- Scan tab (UI only with stubbed logic) ---
     def _create_scan_tab(self) -> QWidget:
         tab = QWidget()
@@ -525,23 +780,64 @@ class MainUIWindow(QMainWindow):
             self.target_input.setText(file_path)
 
     def _start_scan(self) -> None:
-        # Stub: just echo options for now
+        # Start real scan using clamscan via QProcess
         target = self.target_input.text().strip()
         if not target:
             self.output.append("Please select a target before starting the scan.")
             return
-        self.output.append(f"Starting scan on: {target}")
-        self.output.append(
-            f"Options: recursive={self.recursive_scan.isChecked()}, heuristic={self.heuristic_scan.isChecked()}, "
-            f"archives={self.scan_archives_opt.isChecked()}, pua={self.scan_pua_opt.isChecked()}"
-        )
-        self.progress.setRange(0, 0)  # indeterminate for stub
+        # Resolve clamscan path from settings; fallback to 'clamscan'
+        try:
+            if not hasattr(self, "current_settings"):
+                self.current_settings = self.settings.load_settings() or {}
+        except Exception:
+            self.current_settings = {}
+        clamscan = self.current_settings.get("clamscan_path") or "clamscan"
+
+        # Build arguments
+        args = []
+        if self.recursive_scan.isChecked():
+            args.append("-r")
+        # PUA detection flag if supported; include only if requested
+        if self.scan_pua_opt.isChecked():
+            args.append("--detect-pua")
+        # Append target last
+        args.append(target)
+
+        # Prepare process
+        self.scan_process = QProcess(self)
+        # Merge channels to simplify output handling
+        self.scan_process.setProcessChannelMode(QProcess.MergedChannels)
+        self.scan_process.readyReadStandardOutput.connect(self._on_scan_output)
+        self.scan_process.finished.connect(self._on_scan_finished)
+        self.scan_process.errorOccurred.connect(self._on_scan_error)
+
+        # UI state
+        self.output.append(f"Running: {clamscan} {' '.join(args)}")
+        self.progress.setRange(0, 0)
         self.scan_btn.setEnabled(False)
         self.stop_btn.setEnabled(True)
         self.save_report_btn.setEnabled(False)
 
+        try:
+            self.scan_process.start(clamscan, args)
+        except Exception as e:
+            self.output.append(f"Failed to start scan: {e}")
+            self.progress.setRange(0, 1)
+            self.progress.setValue(0)
+            self.scan_btn.setEnabled(True)
+            self.stop_btn.setEnabled(False)
+
     def _stop_scan(self) -> None:
-        # Stub: stop the fake progress
+        # Stop running scan process if any
+        if self.scan_process is not None:
+            try:
+                if self.scan_process.state() != QProcess.NotRunning:
+                    self.scan_process.terminate()
+                    if not self.scan_process.waitForFinished(2000):
+                        self.scan_process.kill()
+            except Exception:
+                pass
+            self.scan_process = None
         self.progress.setRange(0, 1)
         self.progress.setValue(0)
         self.output.append("Scan stopped.")
@@ -564,11 +860,46 @@ class MainUIWindow(QMainWindow):
             except Exception as e:
                 self.output.append(f"Failed to save report: {e}")
 
+    # Scan process callbacks
+    def _on_scan_output(self) -> None:
+        try:
+            data = self.scan_process.readAllStandardOutput() if self.scan_process else b""
+            if not data:
+                return
+            try:
+                text = bytes(data).decode("utf-8", errors="replace")
+            except Exception:
+                text = str(bytes(data))
+            if text:
+                self.output.append(text.rstrip())
+        except Exception as e:
+            self.output.append(f"Output error: {e}")
+
+    def _on_scan_finished(self, exit_code: int, exit_status) -> None:
+        self.progress.setRange(0, 1)
+        self.progress.setValue(0)
+        self.output.append(f"Scan finished with code {exit_code}.")
+        self.scan_btn.setEnabled(True)
+        self.stop_btn.setEnabled(False)
+        self.save_report_btn.setEnabled(True)
+        self.scan_process = None
+
+    def _on_scan_error(self, process_error) -> None:
+        # Provide a helpful hint if clamscan is not found
+        self.output.append("Scan process error occurred.")
+        if self.scan_process is not None:
+            self.output.append(f"Process error: {process_error}")
+        self.scan_btn.setEnabled(True)
+        self.stop_btn.setEnabled(False)
+        self.progress.setRange(0, 1)
+        self.progress.setValue(0)
+
     def _apply_settings(self) -> None:
         cs = self.current_settings
         self.clamd_path.setText(cs.get("clamd_path", ""))
         self.freshclam_path.setText(cs.get("freshclam_path", ""))
         self.clamscan_path.setText(cs.get("clamscan_path", ""))
+        self.db_dir_path.setText(cs.get("virus_db_dir", r"C:\\ProgramData\\ClamAV\\db"))
         self.scan_archives.setChecked(bool(cs.get("scan_archives", True)))
         self.scan_heuristics.setChecked(bool(cs.get("scan_heuristics", True)))
         self.scan_pua.setChecked(bool(cs.get("scan_pua", False)))
@@ -579,6 +910,7 @@ class MainUIWindow(QMainWindow):
             "clamd_path": self.clamd_path.text().strip(),
             "freshclam_path": self.freshclam_path.text().strip(),
             "clamscan_path": self.clamscan_path.text().strip(),
+            "virus_db_dir": self.db_dir_path.text().strip(),
             "scan_archives": self.scan_archives.isChecked(),
             "scan_heuristics": self.scan_heuristics.isChecked(),
             "scan_pua": self.scan_pua.isChecked(),
