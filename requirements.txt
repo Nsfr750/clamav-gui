@@ -8,3 +8,4 @@ qrcode>=7.4.2
 setuptools>=67.0.0
 wheel>=0.40.0
 requests>=2.31.0
+matplotlib>=3.7.1
