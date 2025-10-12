@@ -43,6 +43,16 @@ version_info = tuple(map(int, __version__.split('.')))
 __changelog__ = """
 ## [1.1.0] - 2025-10-12
 ### Added
+- Machine Learning Integration: AI-powered threat detection with feature extraction and ML models
+- Error Recovery: Automatic retry mechanisms for failed operations with exponential backoff
+- Advanced Reporting: Comprehensive analytics, threat intelligence, and export capabilities
+- Sandbox Analysis: Behavioral analysis and system monitoring for suspicious files
+- Email Scanning: Complete email scanning with .eml/.msg file support and attachment analysis
+- Network Drive Scanning: UNC path support with network connectivity validation
+- Enhanced Quarantine Management: Full restore/delete functionality with bulk operations and metadata display
+- Async Scanning: Non-blocking UI during large scans with progress cancellation
+- Smart Scanning: Skip known safe files using hash databases
+- Incremental Updates: Differential virus database updates for faster downloads
 - Enhanced error handling for missing ClamAV installation with auto-detection and installation guidance
 - Comprehensive scan report generation with HTML and text formats
 - Advanced quarantine management system for infected files

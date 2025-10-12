@@ -1,6 +1,6 @@
 # ClamAV GUI Project Structure
 
-This document describes the current structure of the ClamAV GUI project as of version 1.1.0.
+This document describes the current structure of the ClamAV GUI project as of version 1.3.0.
 
 ## Directory Structure
 
@@ -108,6 +108,10 @@ clamav-gui/
   - **`scan_report.py`**: Scan result formatting and HTML report generation
   - **`updates.py`**: Application and virus database update checking
   - **`virus_db.py`**: Virus database download and integrity verification
+  - **`error_recovery.py`**: Automatic retry mechanisms for failed operations
+  - **`advanced_reporting.py`**: Comprehensive analytics and threat intelligence
+  - **`ml_threat_detector.py`**: AI-powered threat detection with ML models
+  - **`sandbox_analyzer.py`**: Behavioral analysis and system monitoring
 
 ## Testing Infrastructure
 
@@ -229,4 +233,4 @@ The codebase is designed with extension points for:
 
 ---
 
-*This structure document reflects the ClamAV GUI project as of version 1.1.0 and is updated as the project evolves.*
+*This structure document reflects the ClamAV GUI project as of version 1.3.0 and is updated as the project evolves.*

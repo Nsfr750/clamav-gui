@@ -47,8 +47,14 @@ from clamav_gui.utils.enhanced_db_updater import EnhancedVirusDBUpdater, Enhance
 # Import hash database for smart scanning
 from clamav_gui.utils.hash_database import HashDatabase
 
-# Import error recovery system
-from clamav_gui.utils.error_recovery import ErrorRecoveryManager, ErrorType, NetworkErrorRecovery
+# Import advanced reporting system
+from clamav_gui.utils.advanced_reporting import AdvancedReporting
+
+# Import ML threat detector
+from clamav_gui.utils.ml_threat_detector import MLThreatDetector, MLSandboxAnalyzer
+
+# Import sandbox analyzer
+from clamav_gui.utils.sandbox_analyzer import SandboxAnalyzer
 
 # Setup logger
 logger = logging.getLogger(__name__)
@@ -76,6 +82,10 @@ class ClamAVGUI(ClamAVMainWindow):
         self.quarantine_manager = QuarantineManager()
         self.error_recovery = ErrorRecoveryManager()
         self.network_recovery = NetworkErrorRecovery()
+        self.advanced_reporting = AdvancedReporting()
+        self.ml_detector = MLThreatDetector()
+        self.sandbox_analyzer = MLSandboxAnalyzer()
+        self.sandbox_analyzer = SandboxAnalyzer()
         
         self.lang_manager = lang_manager or SimpleLanguageManager()
         
@@ -1153,6 +1163,68 @@ Last activity:
         self.config_editor = QPlainTextEdit()
         config_layout.addWidget(self.config_editor)
         
+        # Create Reports menu
+        reports_menu = menu_bar.addMenu(self.tr("&Reports"))
+
+        # Add reporting actions
+        generate_report_action = QAction(self.tr("Generate Scan Report"), self)
+        generate_report_action.triggered.connect(self.generate_scan_report)
+        reports_menu.addAction(generate_report_action)
+
+        generate_analytics_action = QAction(self.tr("Generate Analytics Report"), self)
+        generate_analytics_action.triggered.connect(self.generate_analytics_report)
+        reports_menu.addAction(generate_analytics_action)
+
+        threat_intelligence_action = QAction(self.tr("Threat Intelligence Report"), self)
+        threat_intelligence_action.triggered.connect(self.generate_threat_intelligence_report)
+        reports_menu.addAction(threat_intelligence_action)
+
+        reports_menu.addSeparator()
+
+        export_report_action = QAction(self.tr("Export Current Report"), self)
+        export_report_action.triggered.connect(self.export_current_report)
+        reports_menu.addAction(export_report_action)
+
+        # Create ML Analysis menu
+        ml_menu = menu_bar.addMenu(self.tr("&ML Analysis"))
+
+        # Add ML analysis actions
+        analyze_file_action = QAction(self.tr("Analyze File with ML"), self)
+        analyze_file_action.triggered.connect(self.analyze_file_with_ml)
+        ml_menu.addAction(analyze_file_action)
+
+        batch_analyze_action = QAction(self.tr("Batch ML Analysis"), self)
+        batch_analyze_action.triggered.connect(self.batch_analyze_files)
+        ml_menu.addAction(batch_analyze_action)
+
+        train_model_action = QAction(self.tr("Train ML Model"), self)
+        train_model_action.triggered.connect(self.train_ml_model)
+        ml_menu.addAction(train_model_action)
+
+        ml_menu.addSeparator()
+
+        ml_info_action = QAction(self.tr("ML Model Info"), self)
+        ml_info_action.triggered.connect(self.show_ml_model_info)
+        ml_menu.addAction(ml_info_action)
+
+        # Create Sandbox Analysis menu
+        sandbox_menu = menu_bar.addMenu(self.tr("&Sandbox Analysis"))
+
+        # Add sandbox analysis actions
+        sandbox_analyze_action = QAction(self.tr("Analyze File in Sandbox"), self)
+        sandbox_analyze_action.triggered.connect(self.sandbox_analyze_file)
+        sandbox_menu.addAction(sandbox_analyze_action)
+
+        batch_sandbox_action = QAction(self.tr("Batch Sandbox Analysis"), self)
+        batch_sandbox_action.triggered.connect(self.batch_sandbox_analysis)
+        sandbox_menu.addAction(batch_sandbox_action)
+
+        sandbox_menu.addSeparator()
+
+        sandbox_capabilities_action = QAction(self.tr("Sandbox Capabilities"), self)
+        sandbox_capabilities_action.triggered.connect(self.show_sandbox_capabilities)
+        sandbox_menu.addAction(sandbox_capabilities_action)
+
         # Buttons
         btn_layout = QHBoxLayout()
         
@@ -1937,8 +2009,822 @@ Recent files:
                 self.tr(f"Failed to save email scan report: {str(e)}")
             )
 
+    def generate_scan_report(self):
+        """Generate a detailed scan report for the latest scan."""
+        try:
+            report = self.advanced_reporting.generate_scan_report(format_type='html')
 
-class ScanThread(QThread):
+            # Show report in a dialog
+            dialog = QDialog(self)
+            dialog.setWindowTitle(self.tr("Scan Report"))
+            dialog.resize(800, 600)
+
+            layout = QVBoxLayout(dialog)
+
+            text_edit = QTextEdit()
+            text_edit.setHtml(report)
+            text_edit.setReadOnly(True)
+            layout.addWidget(text_edit)
+
+            btn_layout = QHBoxLayout()
+            export_btn = QPushButton(self.tr("Export Report"))
+            export_btn.clicked.connect(lambda: self.export_report_dialog(report))
+            btn_layout.addWidget(export_btn)
+
+            close_btn = QPushButton(self.tr("Close"))
+            close_btn.clicked.connect(dialog.accept)
+            btn_layout.addWidget(close_btn)
+
+            layout.addLayout(btn_layout)
+
+            dialog.exec()
+
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Error"),
+                               self.tr(f"Failed to generate scan report: {str(e)}"))
+
+    def generate_analytics_report(self):
+        """Generate analytics report for scan history."""
+        try:
+            analytics = self.advanced_reporting.generate_analytics_report(30)  # Last 30 days
+
+            if 'error' in analytics:
+                QMessageBox.warning(self, self.tr("No Data"),
+                                  self.tr(analytics['error']))
+                return
+
+            report = []
+            report.append("ClamAV Analytics Report (Last 30 Days)")
+            report.append("=" * 50)
+            report.append(f"Total Scans: {analytics['total_scans']}")
+            report.append(f"Files Scanned: {analytics['total_files_scanned']:,}")
+            report.append(f"Threats Found: {analytics['total_threats_found']:,}")
+            report.append(f"Average Scan Time: {analytics['average_scan_time']:.1f}s")
+            report.append(f"Threat Detection Rate: {analytics['threat_detection_rate']:.2f}%")
+            report.append("")
+
+            if analytics['most_common_threats']:
+                report.append("Most Common Threats:")
+                for threat, count in analytics['most_common_threats'][:10]:
+                    report.append(f"  {threat}: {count}")
+                report.append("")
+
+            report_text = "\n".join(report)
+
+            # Show report in a dialog
+            dialog = QDialog(self)
+            dialog.setWindowTitle(self.tr("Analytics Report"))
+            dialog.resize(600, 400)
+
+            layout = QVBoxLayout(dialog)
+
+            text_edit = QTextEdit()
+            text_edit.setPlainText(report_text)
+            text_edit.setReadOnly(True)
+            layout.addWidget(text_edit)
+
+            btn_layout = QHBoxLayout()
+            export_btn = QPushButton(self.tr("Export Report"))
+            export_btn.clicked.connect(lambda: self.export_analytics_dialog(analytics))
+            btn_layout.addWidget(export_btn)
+
+            close_btn = QPushButton(self.tr("Close"))
+            close_btn.clicked.connect(dialog.accept)
+            btn_layout.addWidget(close_btn)
+
+            layout.addLayout(btn_layout)
+
+            dialog.exec()
+
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Error"),
+                               self.tr(f"Failed to generate analytics report: {str(e)}"))
+
+    def generate_threat_intelligence_report(self):
+        """Generate threat intelligence report."""
+        try:
+            report = self.advanced_reporting.generate_threat_intelligence_report()
+
+            # Show report in a dialog
+            dialog = QDialog(self)
+            dialog.setWindowTitle(self.tr("Threat Intelligence Report"))
+            dialog.resize(600, 400)
+
+            layout = QVBoxLayout(dialog)
+
+            text_edit = QTextEdit()
+            text_edit.setPlainText(report)
+            text_edit.setReadOnly(True)
+            layout.addWidget(text_edit)
+
+            btn_layout = QHBoxLayout()
+            export_btn = QPushButton(self.tr("Export Report"))
+            export_btn.clicked.connect(lambda: self.export_ti_dialog(report))
+            btn_layout.addWidget(export_btn)
+
+            close_btn = QPushButton(self.tr("Close"))
+            close_btn.clicked.connect(dialog.accept)
+            btn_layout.addWidget(close_btn)
+
+            layout.addLayout(btn_layout)
+
+            dialog.exec()
+
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Error"),
+                               self.tr(f"Failed to generate threat intelligence report: {str(e)}"))
+
+    def export_report_dialog(self, report_content):
+        """Show export dialog for scan report."""
+        file_name, selected_filter = QFileDialog.getSaveFileName(
+            self,
+            self.tr("Export Scan Report"),
+            "",
+            "HTML Files (*.html);;Text Files (*.txt);;All Files (*)"
+        )
+
+        if not file_name:
+            return
+
+        # Determine format from file extension
+        if file_name.lower().endswith('.html'):
+            format_type = 'html'
+        elif file_name.lower().endswith('.txt'):
+            format_type = 'txt'
+        else:
+            # Default to HTML
+            format_type = 'html'
+            if not file_name.lower().endswith('.html'):
+                file_name += '.html'
+
+        success = self.advanced_reporting.export_report(report_content, file_name, format_type)
+
+        if success:
+            QMessageBox.information(self, self.tr("Export Successful"),
+                                  self.tr(f"Report exported successfully:\n{file_name}"))
+        else:
+            QMessageBox.critical(self, self.tr("Export Failed"),
+                               self.tr("Failed to export report"))
+
+    def export_analytics_dialog(self, analytics_data):
+        """Show export dialog for analytics report."""
+        file_name, selected_filter = QFileDialog.getSaveFileName(
+            self,
+            self.tr("Export Analytics Report"),
+            "",
+            "JSON Files (*.json);;CSV Files (*.csv);;Text Files (*.txt);;All Files (*)"
+        )
+
+        if not file_name:
+            return
+
+        # Determine format from file extension
+        if file_name.lower().endswith('.json'):
+            format_type = 'json'
+        elif file_name.lower().endswith('.csv'):
+            format_type = 'csv'
+        elif file_name.lower().endswith('.txt'):
+            format_type = 'txt'
+        else:
+            format_type = 'json'
+            if not file_name.lower().endswith('.json'):
+                file_name += '.json'
+
+        if format_type == 'txt':
+            # Generate text report from analytics data
+            report_lines = []
+            report_lines.append("ClamAV Analytics Report (Last 30 Days)")
+            report_lines.append("=" * 50)
+            report_lines.append(f"Total Scans: {analytics_data['total_scans']}")
+            report_lines.append(f"Files Scanned: {analytics_data['total_files_scanned']:,}")
+            report_lines.append(f"Threats Found: {analytics_data['total_threats_found']:,}")
+            report_lines.append(f"Average Scan Time: {analytics_data['average_scan_time']:.1f}s")
+            report_lines.append(f"Threat Detection Rate: {analytics_data['threat_detection_rate']:.2f}%")
+
+            report_content = "\n".join(report_lines)
+            success = self.advanced_reporting.export_report(report_content, file_name, 'txt')
+        else:
+            # For JSON/CSV, use the analytics data directly
+            success = self.advanced_reporting.export_report(json.dumps(analytics_data), file_name, format_type)
+
+        if success:
+            QMessageBox.information(self, self.tr("Export Successful"),
+                                  self.tr(f"Analytics report exported successfully:\n{file_name}"))
+        else:
+            QMessageBox.critical(self, self.tr("Export Failed"),
+                               self.tr("Failed to export analytics report"))
+
+    def export_ti_dialog(self, report_content):
+        """Show export dialog for threat intelligence report."""
+        file_name, _ = QFileDialog.getSaveFileName(
+            self,
+            self.tr("Export Threat Intelligence Report"),
+            "",
+            "Text Files (*.txt);;All Files (*)"
+        )
+
+        if not file_name:
+            return
+
+        if not file_name.lower().endswith('.txt'):
+            file_name += '.txt'
+
+        success = self.advanced_reporting.export_report(report_content, file_name, 'txt')
+
+        if success:
+            QMessageBox.information(self, self.tr("Export Successful"),
+                                  self.tr(f"Threat intelligence report exported successfully:\n{file_name}"))
+        else:
+            QMessageBox.critical(self, self.tr("Export Failed"),
+                               self.tr("Failed to export threat intelligence report"))
+
+    def export_current_report(self):
+        """Export the current scan report if available."""
+        # Check if we have recent scan data
+        if hasattr(self, 'scan_report_generator') and self.scan_report_generator.scan_results:
+            # Generate report from current scan results
+            report_data = {
+                'scan_type': 'manual',
+                'target': getattr(self, 'target_input', {}).text() if hasattr(self, 'target_input') else '',
+                'total_files': 0,
+                'scanned_files': 0,
+                'threats_found': 0,
+                'threats': [],
+                'scan_time_seconds': 0,
+                'settings_used': {}
+            }
+
+            # Add scan results
+            for result in self.scan_report_generator.scan_results:
+                report_data['scanned_files'] += 1
+                if result.status == 'infected':
+                    report_data['threats_found'] += 1
+                    report_data['threats'].append({
+                        'name': result.threat_name,
+                        'file_path': result.file_path
+                    })
+
+            # Add to reporting system
+            self.advanced_reporting.add_scan_result(report_data)
+
+            # Generate and export report
+            report = self.advanced_reporting.generate_scan_report(format_type='html')
+            self.export_report_dialog(report)
+        else:
+            QMessageBox.information(self, self.tr("No Data"),
+                                  self.tr("No current scan data available for export"))
+
+    def analyze_file_with_ml(self):
+        """Analyze a single file using ML threat detection."""
+        file_name, _ = QFileDialog.getOpenFileName(
+            self,
+            self.tr("Select File for ML Analysis"),
+            "",
+            "All Files (*)"
+        )
+
+        if not file_name:
+            return
+
+        try:
+            # Perform ML analysis
+            analysis_result = self.sandbox_analyzer.analyze_file(file_name)
+
+            if 'error' in analysis_result:
+                QMessageBox.critical(self, self.tr("Analysis Error"),
+                                   self.tr(f"Failed to analyze file: {analysis_result['error']}"))
+                return
+
+            # Display results in a dialog
+            dialog = QDialog(self)
+            dialog.setWindowTitle(self.tr("ML Analysis Results"))
+            dialog.resize(600, 400)
+
+            layout = QVBoxLayout(dialog)
+
+            # Results display
+            results_text = QTextEdit()
+            results_text.setReadOnly(True)
+
+            result_lines = []
+            result_lines.append("Machine Learning Analysis Results")
+            result_lines.append("=" * 40)
+            result_lines.append(f"File: {analysis_result['file_path']}")
+            result_lines.append(f"ML Confidence: {analysis_result['ml_confidence']:.3f}")
+            result_lines.append(f"ML Category: {analysis_result['ml_category']}")
+            result_lines.append(f"Risk Level: {analysis_result['risk_level'].upper()}")
+            result_lines.append(f"File Size: {analysis_result['file_size']:,} bytes")
+            result_lines.append(f"Entropy: {analysis_result['entropy']:.2f}")
+            result_lines.append(f"Is Executable: {'Yes' if analysis_result['is_executable'] else 'No'}")
+            result_lines.append(f"Analysis Time: {analysis_result['analysis_timestamp']}")
+
+            results_text.setPlainText("\n".join(result_lines))
+            layout.addWidget(results_text)
+
+            # Action buttons
+            btn_layout = QHBoxLayout()
+
+            # Risk level indicator
+            risk_color = {'low': 'green', 'medium': 'orange', 'high': 'red'}.get(analysis_result['risk_level'], 'gray')
+            risk_label = QLabel(f"Risk Level: <span style='color: {risk_color}; font-weight: bold;'>{analysis_result['risk_level'].upper()}</span>")
+            btn_layout.addWidget(risk_label)
+            btn_layout.addStretch()
+
+            export_btn = QPushButton(self.tr("Export Results"))
+            export_btn.clicked.connect(lambda: self.export_ml_analysis(analysis_result))
+            btn_layout.addWidget(export_btn)
+
+            close_btn = QPushButton(self.tr("Close"))
+            close_btn.clicked.connect(dialog.accept)
+            btn_layout.addWidget(close_btn)
+
+            layout.addLayout(btn_layout)
+
+            dialog.exec()
+
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Error"),
+                               self.tr(f"Failed to perform ML analysis: {str(e)}"))
+
+    def batch_analyze_files(self):
+        """Perform batch ML analysis on multiple files."""
+        file_names, _ = QFileDialog.getOpenFileNames(
+            self,
+            self.tr("Select Files for Batch ML Analysis"),
+            "",
+            "All Files (*)"
+        )
+
+        if not file_names:
+            return
+
+        try:
+            # Perform batch analysis
+            results = self.sandbox_analyzer.batch_analyze(file_names)
+
+            # Display results in a dialog
+            dialog = QDialog(self)
+            dialog.setWindowTitle(self.tr("Batch ML Analysis Results"))
+            dialog.resize(800, 600)
+
+            layout = QVBoxLayout(dialog)
+
+            # Summary statistics
+            summary_text = QTextEdit()
+            summary_text.setReadOnly(True)
+
+            total_files = len(results)
+            risk_counts = {'high': 0, 'medium': 0, 'low': 0}
+            ml_detections = 0
+
+            for result in results:
+                if 'error' not in result:
+                    risk_counts[result.get('risk_level', 'low')] += 1
+                    if result.get('ml_confidence', 0) > 0.5:
+                        ml_detections += 1
+
+            summary_lines = []
+            summary_lines.append("Batch ML Analysis Summary")
+            summary_lines.append("=" * 30)
+            summary_lines.append(f"Total Files: {total_files}")
+            summary_lines.append(f"ML Detections: {ml_detections}")
+            summary_lines.append("")
+            summary_lines.append("Risk Distribution:")
+            for level, count in risk_counts.items():
+                percentage = (count / total_files * 100) if total_files > 0 else 0
+                summary_lines.append(f"  {level.upper()}: {count} ({percentage:.1f}%)")
+
+            summary_text.setPlainText("\n".join(summary_lines))
+            layout.addWidget(summary_text)
+
+            # Detailed results table
+            results_table = QTableWidget()
+            results_table.setColumnCount(5)
+            results_table.setHorizontalHeaderLabels([
+                self.tr("File"), self.tr("Risk Level"), self.tr("ML Confidence"),
+                self.tr("Category"), self.tr("File Size")
+            ])
+
+            results_table.setRowCount(len(results))
+
+            for i, result in enumerate(results):
+                if 'error' in result:
+                    results_table.setItem(i, 0, QTableWidgetItem(result['file_path']))
+                    results_table.setItem(i, 1, QTableWidgetItem("ERROR"))
+                    results_table.setItem(i, 2, QTableWidgetItem(str(result['error'])))
+                    results_table.setItem(i, 3, QTableWidgetItem(""))
+                    results_table.setItem(i, 4, QTableWidgetItem(""))
+                else:
+                    results_table.setItem(i, 0, QTableWidgetItem(os.path.basename(result['file_path'])))
+                    results_table.setItem(i, 1, QTableWidgetItem(result.get('risk_level', 'unknown').upper()))
+                    results_table.setItem(i, 2, QTableWidgetItem(f"{result.get('ml_confidence', 0):.3f}"))
+                    results_table.setItem(i, 3, QTableWidgetItem(result.get('ml_category', 'unknown')))
+                    results_table.setItem(i, 4, QTableWidgetItem(f"{result.get('file_size', 0):,}"))
+
+
+            results_table.resizeColumnsToContents()
+            layout.addWidget(results_table)
+
+            # Action buttons
+            btn_layout = QHBoxLayout()
+
+            export_btn = QPushButton(self.tr("Export Report"))
+            export_btn.clicked.connect(lambda: self.export_batch_analysis(results))
+            btn_layout.addWidget(export_btn)
+
+            close_btn = QPushButton(self.tr("Close"))
+            close_btn.clicked.connect(dialog.accept)
+            btn_layout.addWidget(close_btn)
+
+            layout.addLayout(btn_layout)
+
+            dialog.exec()
+
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Error"),
+                               self.tr(f"Failed to perform batch analysis: {str(e)}"))
+
+    def train_ml_model(self):
+        """Train the ML model (placeholder for future implementation)."""
+        QMessageBox.information(
+            self,
+            self.tr("Training Not Available"),
+            self.tr("ML model training requires labeled training data and is not yet implemented.\n\n"
+                   "This feature would allow training custom ML models on your specific threat data.")
+        )
+
+    def show_ml_model_info(self):
+        """Show information about the current ML model."""
+        model_info = self.ml_detector.get_model_info()
+
+        info_text = "Machine Learning Model Information\n"
+        info_text += "=" * 40 + "\n"
+
+        if model_info['status'] == 'not_trained':
+            info_text += "Status: No trained model available\n"
+            info_text += "The ML threat detection feature requires training data to function.\n"
+        else:
+            info_text += f"Status: {model_info['status']}\n"
+            info_text += f"Model Type: {model_info['model_type']}\n"
+            info_text += f"Features: {model_info['feature_count']}\n"
+            info_text += f"Classes: {', '.join(model_info['classes'])}\n"
+
+        QMessageBox.information(self, self.tr("ML Model Info"), info_text)
+
+    def export_ml_analysis(self, analysis_result):
+        """Export ML analysis results."""
+        file_name, _ = QFileDialog.getSaveFileName(
+            self,
+            self.tr("Export ML Analysis"),
+            "",
+            "JSON Files (*.json);;Text Files (*.txt);;All Files (*)"
+        )
+
+        if not file_name:
+            return
+
+        # Determine format
+        if file_name.lower().endswith('.json'):
+            content = json.dumps(analysis_result, indent=2, ensure_ascii=False)
+        else:
+            # Text format
+            lines = []
+            lines.append("Machine Learning Analysis Results")
+            lines.append("=" * 40)
+            for key, value in analysis_result.items():
+                if key != 'file_path':  # Skip file path in summary
+                    lines.append(f"{key.replace('_', ' ').title()}: {value}")
+            content = "\n".join(lines)
+
+            if not file_name.lower().endswith('.txt'):
+                file_name += '.txt'
+
+        try:
+            with open(file_name, 'w', encoding='utf-8') as f:
+                f.write(content)
+
+            QMessageBox.information(self, self.tr("Export Successful"),
+                                  self.tr(f"ML analysis exported successfully:\n{file_name}"))
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Export Failed"),
+                               self.tr(f"Failed to export ML analysis: {str(e)}"))
+
+    def export_batch_analysis(self, results):
+        """Export batch analysis results."""
+        file_name, _ = QFileDialog.getSaveFileName(
+            self,
+            self.tr("Export Batch Analysis"),
+            "",
+            "Text Files (*.txt);;JSON Files (*.json);;All Files (*)"
+        )
+
+        if not file_name:
+            return
+
+        # Generate report
+        report = self.sandbox_analyzer.generate_ml_report(results)
+
+        # Determine format
+        if file_name.lower().endswith('.json'):
+            content = json.dumps(results, indent=2, ensure_ascii=False)
+        else:
+            content = report
+            if not file_name.lower().endswith('.txt'):
+                file_name += '.txt'
+
+        try:
+            with open(file_name, 'w', encoding='utf-8') as f:
+                f.write(content)
+
+            QMessageBox.information(self, self.tr("Export Successful"),
+                                  self.tr(f"Batch analysis exported successfully:\n{file_name}"))
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Export Failed"),
+                               self.tr(f"Failed to export batch analysis: {str(e)}"))
+
+    def sandbox_analyze_file(self):
+        """Analyze a file in the sandbox environment."""
+        file_name, _ = QFileDialog.getOpenFileName(
+            self,
+            self.tr("Select File for Sandbox Analysis"),
+            "",
+            "All Files (*)"
+        )
+
+        if not file_name:
+            return
+
+        try:
+            # Perform sandbox analysis
+            analysis_result = self.sandbox_analyzer.analyze_file_behavior(file_name)
+
+            if 'error' in analysis_result:
+                QMessageBox.critical(self, self.tr("Analysis Error"),
+                                   self.tr(f"Failed to analyze file: {analysis_result['error']}"))
+                return
+
+            # Generate report
+            report = self.sandbox_analyzer.generate_sandbox_report(analysis_result)
+
+            # Display results in a dialog
+            dialog = QDialog(self)
+            dialog.setWindowTitle(self.tr("Sandbox Analysis Results"))
+            dialog.resize(700, 500)
+
+            layout = QVBoxLayout(dialog)
+
+            # Summary section
+            summary_text = QTextEdit()
+            summary_text.setReadOnly(True)
+
+            risk_level = analysis_result.get('risk_assessment', {}).get('risk_level', 'unknown')
+            risk_color = {'low': 'green', 'medium': 'orange', 'high': 'red'}.get(risk_level, 'gray')
+
+            summary_lines = []
+            summary_lines.append("Sandbox Analysis Summary")
+            summary_lines.append("=" * 30)
+            summary_lines.append(f"Risk Level: <span style='color: {risk_color}; font-weight: bold;'>{risk_level.upper()}</span>")
+            summary_lines.append(f"Analysis Duration: {analysis_result.get('analysis_duration', 0):.2f}s")
+            summary_lines.append("")
+
+            if risk_level == 'high':
+                summary_lines.append("⚠️ HIGH RISK DETECTED")
+                summary_lines.append("This file shows suspicious behavior and should be handled with extreme caution.")
+            elif risk_level == 'medium':
+                summary_lines.append("⚡ MEDIUM RISK DETECTED")
+                summary_lines.append("This file shows some suspicious behavior. Monitor system after use.")
+            else:
+                summary_lines.append("✅ LOW RISK")
+                summary_lines.append("This file appears safe for normal use.")
+
+            summary_text.setHtml("\n".join(summary_lines))
+            layout.addWidget(summary_text)
+
+            # Detailed report
+            report_text = QTextEdit()
+            report_text.setPlainText(report)
+            report_text.setReadOnly(True)
+            layout.addWidget(report_text)
+
+            # Action buttons
+            btn_layout = QHBoxLayout()
+
+            export_btn = QPushButton(self.tr("Export Report"))
+            export_btn.clicked.connect(lambda: self.export_sandbox_report(analysis_result))
+            btn_layout.addWidget(export_btn)
+
+            close_btn = QPushButton(self.tr("Close"))
+            close_btn.clicked.connect(dialog.accept)
+            btn_layout.addWidget(close_btn)
+
+            layout.addLayout(btn_layout)
+
+            dialog.exec()
+
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Error"),
+                               self.tr(f"Failed to perform sandbox analysis: {str(e)}"))
+
+    def batch_sandbox_analysis(self):
+        """Perform batch sandbox analysis on multiple files."""
+        file_names, _ = QFileDialog.getOpenFileNames(
+            self,
+            self.tr("Select Files for Batch Sandbox Analysis"),
+            "",
+            "All Files (*)"
+        )
+
+        if not file_names:
+            return
+
+        try:
+            # Perform batch analysis
+            results = self.sandbox_analyzer.batch_sandbox_analysis(file_names)
+
+            # Display results in a dialog
+            dialog = QDialog(self)
+            dialog.setWindowTitle(self.tr("Batch Sandbox Analysis Results"))
+            dialog.resize(900, 600)
+
+            layout = QVBoxLayout(dialog)
+
+            # Summary statistics
+            summary_text = QTextEdit()
+            summary_text.setReadOnly(True)
+
+            total_files = len(results)
+            risk_counts = {'high': 0, 'medium': 0, 'low': 0}
+            errors = 0
+
+            for result in results:
+                if 'error' in result:
+                    errors += 1
+                else:
+                    risk_level = result.get('risk_assessment', {}).get('risk_level', 'low')
+                    risk_counts[risk_level] += 1
+
+            summary_lines = []
+            summary_lines.append("Batch Sandbox Analysis Summary")
+            summary_lines.append("=" * 35)
+            summary_lines.append(f"Total Files: {total_files}")
+            summary_lines.append(f"Successful Analyses: {total_files - errors}")
+            summary_lines.append(f"Errors: {errors}")
+            summary_lines.append("")
+            summary_lines.append("Risk Distribution:")
+            for level, count in risk_counts.items():
+                percentage = (count / (total_files - errors) * 100) if (total_files - errors) > 0 else 0
+                summary_lines.append(f"  {level.upper()}: {count} ({percentage:.1f}%)")
+
+            summary_text.setPlainText("\n".join(summary_lines))
+            layout.addWidget(summary_text)
+
+            # Results table
+            results_table = QTableWidget()
+            results_table.setColumnCount(3)
+            results_table.setHorizontalHeaderLabels([
+                self.tr("File"), self.tr("Risk Level"), self.tr("Status")
+            ])
+
+            results_table.setRowCount(len(results))
+
+            for i, result in enumerate(results):
+                file_name = os.path.basename(result.get('file_info', {}).get('path', 'Unknown')) if 'file_info' in result else 'Unknown'
+
+                if 'error' in result:
+                    results_table.setItem(i, 0, QTableWidgetItem(file_name))
+                    results_table.setItem(i, 1, QTableWidgetItem("ERROR"))
+                    results_table.setItem(i, 2, QTableWidgetItem(result['error']))
+                else:
+                    risk_level = result.get('risk_assessment', {}).get('risk_level', 'unknown')
+                    results_table.setItem(i, 0, QTableWidgetItem(file_name))
+                    results_table.setItem(i, 1, QTableWidgetItem(risk_level.upper()))
+                    results_table.setItem(i, 2, QTableWidgetItem("Analyzed"))
+
+            results_table.resizeColumnsToContents()
+            layout.addWidget(results_table)
+
+            # Action buttons
+            btn_layout = QHBoxLayout()
+
+            export_btn = QPushButton(self.tr("Export Report"))
+            export_btn.clicked.connect(lambda: self.export_batch_sandbox_report(results))
+            btn_layout.addWidget(export_btn)
+
+            close_btn = QPushButton(self.tr("Close"))
+            close_btn.clicked.connect(dialog.accept)
+            btn_layout.addWidget(close_btn)
+
+            layout.addLayout(btn_layout)
+
+            dialog.exec()
+
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Error"),
+                               self.tr(f"Failed to perform batch sandbox analysis: {str(e)}"))
+
+    def show_sandbox_capabilities(self):
+        """Show information about sandbox analysis capabilities."""
+        capabilities = self.sandbox_analyzer.get_sandbox_capabilities()
+
+        info_text = "Sandbox Analysis Capabilities\n"
+        info_text += "=" * 35 + "\n"
+        info_text += f"Platform Support: {', '.join(capabilities.get('supported_platforms', []))}\n"
+        info_text += f"Analysis Timeout: {capabilities.get('analysis_timeout', 0)} seconds\n"
+        info_text += f"Memory Limit: {capabilities.get('max_memory_limit', 0) / (1024*1024):.0f} MB\n"
+        info_text += "\nMonitoring Features:\n"
+
+        for feature in capabilities.get('monitoring_features', []):
+            info_text += f"  • {feature.replace('_', ' ').title()}\n"
+
+        info_text += "\nSupported File Types:\n"
+        if capabilities.get('supports_scripts'):
+            info_text += "  • Batch files (.bat, .cmd)\n"
+        if capabilities.get('supports_windows_executables'):
+            info_text += "  • Windows executables (.exe, .dll)\n"
+
+        QMessageBox.information(self, self.tr("Sandbox Capabilities"), info_text)
+
+    def export_sandbox_report(self, analysis_result):
+        """Export sandbox analysis results."""
+        file_name, _ = QFileDialog.getSaveFileName(
+            self,
+            self.tr("Export Sandbox Analysis"),
+            "",
+            "Text Files (*.txt);;JSON Files (*.json);;All Files (*)"
+        )
+
+        if not file_name:
+            return
+
+        # Generate report
+        report = self.sandbox_analyzer.generate_sandbox_report(analysis_result)
+
+        # Determine format
+        if file_name.lower().endswith('.json'):
+            content = json.dumps(analysis_result, indent=2, ensure_ascii=False)
+        else:
+            content = report
+            if not file_name.lower().endswith('.txt'):
+                file_name += '.txt'
+
+        try:
+            with open(file_name, 'w', encoding='utf-8') as f:
+                f.write(content)
+
+            QMessageBox.information(self, self.tr("Export Successful"),
+                                  self.tr(f"Sandbox analysis exported successfully:\n{file_name}"))
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Export Failed"),
+                               self.tr(f"Failed to export sandbox analysis: {str(e)}"))
+
+    def export_batch_sandbox_report(self, results):
+        """Export batch sandbox analysis results."""
+        file_name, _ = QFileDialog.getSaveFileName(
+            self,
+            self.tr("Export Batch Sandbox Analysis"),
+            "",
+            "Text Files (*.txt);;JSON Files (*.json);;All Files (*)"
+        )
+
+        if not file_name:
+            return
+
+        # Generate combined report
+        report_lines = []
+        report_lines.append("Batch Sandbox Analysis Report")
+        report_lines.append("=" * 40)
+        report_lines.append(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        report_lines.append(f"Files Analyzed: {len(results)}")
+        report_lines.append("")
+
+        for i, result in enumerate(results):
+            if 'error' in result:
+                report_lines.append(f"File {i+1}: ERROR - {result['error']}")
+            else:
+                risk_level = result.get('risk_assessment', {}).get('risk_level', 'unknown')
+                file_name = os.path.basename(result.get('file_info', {}).get('path', 'Unknown'))
+                report_lines.append(f"File {i+1}: {file_name} - Risk: {risk_level.upper()}")
+
+        report = "\n".join(report_lines)
+
+        # Determine format
+        if file_name.lower().endswith('.json'):
+            content = json.dumps(results, indent=2, ensure_ascii=False)
+        else:
+            content = report
+            if not file_name.lower().endswith('.txt'):
+                file_name += '.txt'
+
+        try:
+            with open(file_name, 'w', encoding='utf-8') as f:
+                f.write(content)
+
+            QMessageBox.information(self, self.tr("Export Successful"),
+                                  self.tr(f"Batch sandbox analysis exported successfully:\n{file_name}"))
+        except Exception as e:
+            QMessageBox.critical(self, self.tr("Export Failed"),
+                               self.tr(f"Failed to export batch sandbox analysis: {str(e)}"))
+
     """Thread for running ClamAV scans with enhanced async support."""
     update_output = Signal(str)
     update_progress = Signal(int)  # Signal for progress updates (0-100)

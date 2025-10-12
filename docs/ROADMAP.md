@@ -2,7 +2,7 @@
 
 This document outlines the development roadmap for ClamAV GUI, including upcoming features, improvements, and long-term goals.
 
-## Version 1.2.0 (Next Major Release) 🚀
+## Version 1.1.0 (Current Release) 🚀
 
 ### Core Features
 
@@ -12,6 +12,13 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 - [x] **Custom Scan Profiles**: Save and reuse scan configurations for different use cases
 - [x] **Network Drive Support**: Scan network-attached storage and mapped drives
 - [x] **Email Scanning**: Scan email files (.eml, .msg) and analyze attachments
+
+### Advanced Features
+
+- [x] **Machine Learning Integration**: AI-powered threat detection with feature extraction and ML models
+- [x] **Error Recovery**: Automatic retry mechanisms for failed operations with exponential backoff
+- [x] **Advanced Reporting**: Comprehensive analytics, threat intelligence, and export capabilities
+- [x] **Sandbox Analysis**: Behavioral analysis and system monitoring for suspicious files
 
 ### User Experience
 
@@ -27,21 +34,30 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 - [x] **Incremental Updates**: Differential virus database updates for faster downloads
 - [ ] **Error Recovery**: Automatic retry mechanisms for failed operations
 
-## Version 1.3.0 (Future Release) 🔮
+## Version 1.2.0 (Future Release) 🔮
+
+### User Experience
+
+- [ ] **Dark Mode**: Complete dark theme support with system theme detection
+- [ ] **Multi-language Support**: Expand to 10+ languages beyond English and Italian
+- [ ] **Accessibility Improvements**: WCAG 2.1 compliance for users with disabilities
+- [ ] **Mobile-Responsive Design**: Better experience on high-DPI displays and tablets
 
 ### Advanced Features
+
 - [ ] **Cloud Integration**: Sync quarantine data and scan history across devices
 - [ ] **API Endpoints**: REST API for integration with other security tools
 - [ ] **Plugin System**: Extensible architecture for custom scan modules
 - [ ] **Advanced Reporting**: Detailed analytics and threat intelligence reports
 
 ### Enterprise Features
+
 - [ ] **Centralized Management**: Admin console for managing multiple installations
 - [ ] **Compliance Reporting**: Generate reports for security audits and compliance
 - [ ] **LDAP Integration**: Enterprise authentication and user management
 - [ ] **SIEM Integration**: Send alerts and logs to enterprise monitoring systems
 
-## Version 2.0.0 (Major Release) ⚡
+## Version 1.3.0 (Major Release) ⚡
 
 ### Architecture Overhaul
 - [ ] **Cross-Platform Support**: Native Linux and macOS versions

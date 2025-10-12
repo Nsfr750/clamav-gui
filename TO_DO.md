@@ -22,6 +22,13 @@
 - [ ] Progress tracking
 - [ ] Multi-language support
 
+## Completed in v1.3.0
+
+- [x] **Machine Learning Integration** - AI-powered threat detection with feature extraction and ML models
+- [x] **Error Recovery** - Automatic retry mechanisms for failed operations with exponential backoff
+- [x] **Advanced Reporting** - Comprehensive analytics, threat intelligence, and export capabilities
+- [x] **Sandbox Analysis** - Behavioral analysis and system monitoring for suspicious files
+
 ## Completed in v1.2.0
 
 - [x] **Email scanning** - Complete email scanning with .eml/.msg file support and attachment analysis

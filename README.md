@@ -19,6 +19,40 @@ A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows.
   - Performance controls (max file size, scan time limits)
   - Automatic quarantine of infected files
   - Support for archives, heuristics, and PUA detection
+  - Email scanning (.eml, .msg files) with attachment analysis
+  - Network drive scanning (UNC paths) with connectivity validation
+  - Smart scanning (skip known safe files using hash databases)
+  - Async scanning (non-blocking UI during large scans)
+
+- **Machine Learning Integration**
+
+  - AI-powered threat detection with feature extraction
+  - ML model training and inference for advanced threat analysis
+  - Behavioral analysis and anomaly detection
+  - Risk assessment based on ML confidence and file characteristics
+
+- **Advanced Reporting**
+
+  - Comprehensive analytics and threat intelligence reports
+  - Historical scan data analysis with trend detection
+  - Multiple export formats (HTML, JSON, CSV, text)
+  - Threat categorization and severity assessment
+  - Real-time statistics during scanning operations
+
+- **Sandbox Analysis**
+
+  - Behavioral analysis of suspicious files in isolated environment
+  - System activity monitoring (network, processes, file I/O)
+  - Execution behavior analysis with timeout protection
+  - Risk level assessment based on behavioral indicators
+  - Safe file execution testing
+
+- **Error Recovery**
+
+  - Automatic retry mechanisms for failed operations
+  - Exponential backoff strategies for different error types
+  - Robust handling of network timeouts and system failures
+  - Comprehensive error logging and recovery tracking
 
 - **Quarantine Management**
 
@@ -27,13 +61,14 @@ A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows.
   - File restoration and permanent deletion options
   - Quarantine statistics and metadata tracking
   - Export quarantine lists for analysis
+  - Bulk operations (restore/delete multiple files)
 
 - **Database Management**
 
-  - One-click virus database updates
-  - Automatic update scheduling
-  - Database integrity verification
-  - Support for custom ClamAV paths
+  - One-click virus database updates with incremental support
+  - Automatic update scheduling with error recovery
+  - Database integrity verification and backup/restore
+  - Support for custom ClamAV paths and configurations
 
 - **Configuration**
 

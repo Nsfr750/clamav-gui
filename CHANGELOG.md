@@ -6,6 +6,16 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Machine Learning Integration**: AI-powered threat detection with feature extraction and ML models for advanced threat analysis beyond traditional signatures
+- **Error Recovery System**: Automatic retry mechanisms for failed operations with exponential backoff strategies for different error types (network, file access, database, scan interruptions)
+- **Advanced Reporting**: Comprehensive analytics, threat intelligence reports, historical scan data analysis, trend detection, and multiple export formats (HTML, JSON, CSV, text)
+- **Sandbox Analysis**: Behavioral analysis of suspicious files in isolated environments with system activity monitoring (network, processes, file I/O) and risk assessment
+- **Email Scanning**: Complete email file scanning with support for .eml and .msg formats including attachment analysis and content inspection
+- **Network Drive Scanning**: Full UNC path support (\\\\server\\share) with network connectivity validation and accessibility checks
+- **Enhanced Quarantine Management**: Complete restore/delete functionality with bulk operations, metadata display, and advanced file management
+- **Async Scanning**: Non-blocking UI during large scans with progress cancellation support and improved responsiveness
+- **Smart Scanning**: Hash database system to skip known safe files, significantly reducing scan times for repeated scans
+- **Incremental Database Updates**: Differential virus database updates for faster downloads and better reliability
 - **Enhanced Error Handling**: Improved detection and handling of missing ClamAV installations with automatic path detection and installation guidance
 - **Comprehensive Scan Reports**: Advanced scan report generation with HTML and text formats, including detailed statistics and threat analysis
 - **Quarantine Management System**: Complete quarantine functionality for infected files with metadata tracking, restore/delete operations, and export capabilities
@@ -21,7 +31,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.0.0] - 2025-09-25
 
-### Added (1.0.0)
+### Added
 
 - Initial release of ClamAV GUI
 - Basic scanning and updating functionality
