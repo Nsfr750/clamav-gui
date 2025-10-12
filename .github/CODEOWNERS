@@ -1,0 +1,45 @@
+# ClamAV GUI Code Owners
+# This file defines who owns different parts of the codebase for review purposes
+
+# Global Owners - Default reviewers for all files
+* @Nsfr750
+
+# Core Application Code
+clamav_gui/ @Nsfr750
+
+# User Interface Components
+clamav_gui/ui/ @Nsfr750
+
+# Language and Internationalization
+clamav_gui/lang/ @Nsfr750
+
+# Utility Modules
+clamav_gui/utils/ @Nsfr750
+
+# Documentation
+docs/ @Nsfr750
+
+# Test Suite
+tests/ @Nsfr750
+
+# Build and Configuration
+.github/ @Nsfr750
+build.py @Nsfr750
+setup.py @Nsfr750
+requirements.txt @Nsfr750
+requirements-dev.txt @Nsfr750
+
+# Project Metadata
+README.md @Nsfr750
+LICENSE @Nsfr750
+CHANGELOG.md @Nsfr750
+TO_DO.md @Nsfr750
+
+# CI/CD and Automation
+.github/workflows/ @Nsfr750
+Makefile @Nsfr750
+clean_pycache.py @Nsfr750
+
+# Version Management
+version_info.txt @Nsfr750
+clamav_gui/version.py @Nsfr750
