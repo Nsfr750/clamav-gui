@@ -13,7 +13,7 @@ logger = get_logger("ClamAV-GUI")
 
 try:
     from PySide6.QtWidgets import QApplication, QMessageBox
-    from PySide6.QtCore import QTranslator, QLocale, QLibraryInfo, QTimer, Qt
+    from PySide6.QtCore import QTranslator, QLocale, QLibraryInfo, QTimer, Qt, QCoreApplication
     from PySide6.QtGui import QIcon, QGuiApplication, QShortcut
     
     # Now that PySide6 is imported, we can import our modules that might use it
@@ -38,6 +38,12 @@ def setup_application():
         os.environ["QT_QPA_PLATFORM"] = "windows"
     logger.info(f"Qt platform: {os.environ.get('QT_QPA_PLATFORM')}")
     
+    # Force software OpenGL to avoid GPU/driver issues on some systems
+    try:
+        QCoreApplication.setAttribute(Qt.AA_UseSoftwareOpenGL, True)
+    except Exception:
+        pass
+    
     app = QApplication(sys.argv)
     try:
         app.setQuitOnLastWindowClosed(False)
@@ -48,7 +54,10 @@ def setup_application():
     app.setOrganizationName("Tuxxle")
     
     # Set application style
-    app.setStyle('Fusion')
+    try:
+        app.setStyle('Windows')
+    except Exception:
+        app.setStyle('Fusion')
     
     # Set application icon
     try:
