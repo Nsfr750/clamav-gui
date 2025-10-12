@@ -244,19 +244,24 @@ class ClamAVGUI(ClamAVMainWindow):
     
     def change_language(self):
         """Change the application language."""
-        action = self.sender()
-        if not action or not hasattr(self, 'lang_manager'):
-            return
-            
-        lang_code = action.data()
-        if lang_code and self.lang_manager.set_language(lang_code):
-            logger.info(f"Language changed to {lang_code}")
-            
-            # Save language preference
-            if not hasattr(self, 'current_settings'):
-                self.current_settings = {}
-            self.current_settings['language'] = lang_code
-            self.settings.save_settings(self.current_settings)
+        # Initialize action to None to ensure it's always defined
+        action = None
+        try:
+            action = self.sender()
+            if not action or not hasattr(self, 'lang_manager'):
+                return
+                
+            lang_code = action.data()
+            if lang_code and self.lang_manager.set_language(lang_code):
+                logger.info(f"Language changed to {lang_code}")
+                
+                # Save language preference
+                if not hasattr(self, 'current_settings'):
+                    self.current_settings = {}
+                self.current_settings['language'] = lang_code
+                self.settings.save_settings(self.current_settings)
+        except Exception as e:
+            logger.error(f"Error in change_language: {e}")
     
     def retranslate_ui(self, language_code=None):
         """Retranslate the UI when language changes.

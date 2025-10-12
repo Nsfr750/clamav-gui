@@ -348,9 +348,9 @@ class ClamAVMenuBar(QMenuBar):
                 self.language_menu.blockSignals(True)
             
             # Clear existing actions and disconnect signals
-            for action in self.language_menu.actions():
+            for action_item in self.language_menu.actions():
                 try:
-                    action.triggered.disconnect()
+                    action_item.triggered.disconnect()
                 except (TypeError, RuntimeError):
                     pass
             self.language_menu.clear()
@@ -545,83 +545,6 @@ class ClamAVMenuBar(QMenuBar):
                 
         except Exception as e:
             logger.error(f"Unexpected error in on_language_selected: {e}", exc_info=True)
-            
-            logger.info(f"Attempting to change language to: {lang_code}")
-            
-            # Update the language using the language manager
-            if hasattr(self, 'lang_manager') and hasattr(self.lang_manager, 'set_language'):
-                # Set the new language
-                success = self.lang_manager.set_language(lang_code)
-                if not success:
-                    logger.error(f"Failed to set language to {lang_code}")
-                    return
-                
-                logger.info(f"Language successfully changed to: {lang_code}")
-                
-                # Save the language preference if settings are available
-                if hasattr(self, 'settings') and hasattr(self.settings, 'setValue'):
-                    try:
-                        self.settings.setValue("language", lang_code)
-                        logger.debug(f"Saved language preference: {lang_code}")
-                    except Exception as e:
-                        logger.error(f"Failed to save language preference: {e}", exc_info=True)
-                
-                # Emit the language changed signal if available
-                if hasattr(self, 'language_changed') and callable(self.language_changed):
-                    try:
-                        self.language_changed.emit(lang_code)
-                    except Exception as e:
-                        logger.error(f"Error emitting language_changed signal: {e}", exc_info=True)
-                
-                # Update the UI
-                self.retranslate_ui()
-                
-                # Update the checked state of all language actions
-                if hasattr(self, 'language_menu') and hasattr(self.language_menu, 'actions'):
-                    for act in self.language_menu.actions():
-                        if hasattr(act, 'isCheckable') and act.isCheckable():
-                            if hasattr(act, 'data') and callable(act.data):
-                                act.setChecked(act.data() == lang_code)
-                            elif hasattr(act, 'data'):
-                                act.setChecked(str(act.data) == lang_code)
-                
-                # Update menu actions
-                if hasattr(self, 'exit_action'):
-                    self.exit_action.setText(self.tr("E&xit"))
-                if hasattr(self, 'check_updates_action'):
-                    self.check_updates_action.setText(self.tr("Check for &Updates..."))
-                if hasattr(self, 'help_action'):
-                    self.help_action.setText(self.tr("&Help"))
-                if hasattr(self, 'about_action'):
-                    self.about_action.setText(self.tr("&About"))
-                if hasattr(self, 'sponsor_action'):
-                    self.sponsor_action.setText(self.tr("&Support the Project"))
-                
-                # Update tab names if they exist
-                if hasattr(self, 'tabs') and hasattr(self.tabs, 'setTabText'):
-                    try:
-                        self.tabs.setTabText(0, self.tr("Scan"))
-                        self.tabs.setTabText(1, self.tr("Update"))
-                        self.tabs.setTabText(2, self.tr("Settings"))
-                        self.tabs.setTabText(3, self.tr("Config Editor"))
-                    except Exception as e:
-                        logger.error(f"Error updating tab names: {e}")
-                
-                # Update status bar if it exists
-                if hasattr(self, 'status_bar') and hasattr(self.status_bar, 'showMessage'):
-                    try:
-                        self.status_bar.showMessage(self.tr("Ready"))
-                    except Exception as e:
-                        logger.error(f"Error updating status bar: {e}")
-                
-                return True
-            else:
-                logger.warning("Language manager not available or doesn't support set_language")
-                return False
-                
-        except Exception as e:
-            logger.error(f"Unexpected error in on_language_selected: {e}", exc_info=True)
-            return False
 
     def __del__(self):
         """Cleanup resources when the object is being destroyed."""
