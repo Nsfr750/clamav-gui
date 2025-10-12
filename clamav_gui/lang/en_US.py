@@ -17,6 +17,21 @@ TRANSLATIONS = {
         "tab.home": "Home",
         "tab.status": "Status",
         "tab.virus_db": "Virus DB",
+
+        # Menu titles
+        "menu.file": "&File",
+        "menu.tools": "&Tools",
+        "menu.help": "&Help",
+        "menu.language": "&Language",
+
+        # Menu actions (literal keys used by menu)
+        "E&xit": "E&xit",
+        "Check for &Updates...": "Check for &Updates...",
+        "&Help": "&Help",
+        "&About": "&About",
+        "&Sponsor": "&Sponsor",
+        "&Wiki": "&Wiki",
+        "View &Logs": "View &Logs",
         
         # Scan tab
         "scan.target": "Scan Target",

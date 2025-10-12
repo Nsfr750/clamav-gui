@@ -40,28 +40,44 @@ class ClamAVMenuBar(QMenuBar):
     
     def setup_ui(self):
         """Set up the menu bar UI components."""
-        # Store references to menus as instance variables
-        self.file_menu = self.addMenu(self.tr("&File"))
+        # Create language menu (will be populated later)
+        self.language_menu = QMenu(self.tr("&Language"), self)
+        if self.language_menu is None:
+            self.language_menu = QMenu(self)
+        
+        # File menu
+        self.file_menu = QMenu(self.tr("&File"), self)
+        if self.file_menu is None:
+            self.file_menu = QMenu(self)
+        self.addMenu(self.file_menu)
         
         # Add menu items
         self.exit_action = QAction(self.tr("E&xit"), self)
         self.exit_action.setShortcut("Ctrl+Q")
-        self.exit_action.triggered.connect(self.parent().close)  # Close the parent window
+        try:
+            from PySide6.QtWidgets import QApplication
+            self.exit_action.triggered.connect(lambda: (self.parent().close() if self.parent() else QApplication.instance().quit()))
+        except Exception:
+            pass
         self.file_menu.addAction(self.exit_action)
         
         # Tools menu
         self.tools_menu = self.addMenu(self.tr("&Tools"))
+        if self.tools_menu is None:
+            self.tools_menu = QMenu(self.tr("&Tools"), self)
+            self.addMenu(self.tools_menu)
         
         # Check for updates action
         self.check_updates_action = QAction(self.tr("Check for &Updates..."), self)
         self.check_updates_action.triggered.connect(self.check_for_updates)
         self.tools_menu.addAction(self.check_updates_action)
-        
-        # Create language menu (will be populated later)
-        self.language_menu = QMenu(self.tr("&Language"), self)
-        
+        self.tools_menu.addSeparator()
+
         # Help menu
         self.help_menu = self.addMenu(self.tr("&Help"))
+        if self.help_menu is None:
+            self.help_menu = QMenu(self.tr("&Help"), self)
+            self.addMenu(self.help_menu)
         
         # Help action
         self.help_action = QAction(self.tr("&Help"), self)
@@ -81,19 +97,23 @@ class ClamAVMenuBar(QMenuBar):
         self.sponsor_action.triggered.connect(self.show_sponsor_dialog)
         self.help_menu.addAction(self.sponsor_action)
         
-        # View Logs action
-        self.view_logs_action = QAction(self.tr("View &Logs"), self)
-        self.view_logs_action.triggered.connect(self.show_logs_dialog)
-        self.help_menu.addAction(self.view_logs_action)
-
         # Wiki action
         self.wiki_action = QAction(self.tr("&Wiki"), self)
         self.wiki_action.triggered.connect(self.open_wiki)
         self.help_menu.addAction(self.wiki_action)
+
+        # View Logs action (must be added after help_menu exists)
+        self.view_logs_action = QAction(self.tr("View &Logs"), self)
+        self.view_logs_action.triggered.connect(self.show_logs_dialog)
+        if self.help_menu is not None:
+            self.help_menu.addAction(self.view_logs_action)
         
         # Add language menu to menu bar after it's fully initialized
-        self.addMenu(self.language_menu)
-        
+        if self.language_menu is not None:
+            try:
+                self.addMenu(self.language_menu)
+            except Exception:
+                pass
         # Import here to avoid circular imports
         try:
             from .updates_ui import UpdatesDialog
@@ -381,24 +401,16 @@ class ClamAVMenuBar(QMenuBar):
             current_lang = getattr(self.lang_manager, 'current_lang', '')
             logger.debug(f"Setting up language menu. Current: {current_lang}, Available: {list(available_langs.items())}")
             
-            # Add available languages
+            # Add available languages (do not filter out; show even if translations not yet loaded)
             for lang_code, lang_name in available_langs.items():
                 try:
-                    # Skip if language is not available
-                    if hasattr(self.lang_manager, 'is_language_available') and \
-                       not self.lang_manager.is_language_available(lang_code):
-                        continue
-                    
-                    # Get translated language name if possible
-                    display_name = getattr(self.lang_manager, 'tr', lambda x: x)(lang_name)
-                    
-                    # Create and configure action
+                    # Display name (no translation to avoid recursion)
+                    display_name = str(lang_name)
                     action = self.language_menu.addAction(display_name)
                     action.setCheckable(True)
                     action.setData(lang_code)
                     action.setChecked(lang_code == current_lang)
                     action.triggered.connect(lambda checked, code=lang_code: self.on_language_selected(checked))
-                    
                 except Exception as e:
                     logger.error(f"Error adding language {lang_code}: {e}", exc_info=True)
         

@@ -168,6 +168,11 @@ class MainUIWindow(QMainWindow):
         """Update window title and tab labels after language change."""
         try:
             self.setWindowTitle(self._tr("window.title", "ClamAV GUI"))
+            # Update status bar message to translated 'Ready'
+            try:
+                self.status.showMessage(self._tr("status.ready", "Ready"), 2000)
+            except Exception:
+                pass
             if hasattr(self, "tabs") and self.tabs:
                 # Tab order must match creation order
                 labels = [
@@ -184,6 +189,12 @@ class MainUIWindow(QMainWindow):
                 for i, text in enumerate(labels):
                     if i < self.tabs.count():
                         self.tabs.setTabText(i, text)
+            # Ask the menu bar to retranslate itself as well
+            try:
+                if hasattr(self, "menu_bar") and self.menu_bar:
+                    self.menu_bar.retranslate_ui()
+            except Exception:
+                pass
         except Exception:
             pass
 
