@@ -145,13 +145,15 @@ class ClamAVMenuBar(QMenuBar):
                 # Connect the language menu's triggered signal
                 if hasattr(self, 'language_menu') and self.language_menu:
                     try:
-                        # Disconnect any existing connections to avoid duplicates
-                        try:
-                            self.language_menu.triggered.disconnect()
-                        except (TypeError, RuntimeError):
-                            pass  # No connections to disconnect
+                        # Disconnect only if we connected before, and disconnect the specific slot
+                        if getattr(self, '_lang_menu_signal_connected', False):
+                            try:
+                                self.language_menu.triggered.disconnect(self.on_language_selected)
+                            except Exception:
+                                pass
                         # Connect the signal
                         self.language_menu.triggered.connect(self.on_language_selected)
+                        self._lang_menu_signal_connected = True
                         logger.debug("Connected language menu triggered signal")
                     except Exception as e:
                         logger.error(f"Failed to connect language menu signal: {e}")
