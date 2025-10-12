@@ -56,6 +56,12 @@ class MainUIWindow(QMainWindow):
         self.setMenuBar(self.menu_bar)
         if hasattr(self.menu_bar, "set_language_manager") and self.lang_manager is not None:
             self.menu_bar.set_language_manager(self.lang_manager)
+        # React to language changes
+        try:
+            if self.lang_manager is not None and hasattr(self.lang_manager, "language_changed"):
+                self.lang_manager.language_changed.connect(self.retranslate_ui)
+        except Exception:
+            pass
 
         # Prepare settings early so other tabs can read stored values
         try:
@@ -64,6 +70,12 @@ class MainUIWindow(QMainWindow):
         except Exception:
             self.current_settings = {}
 
+        # Initialize managers needed by tabs before creating them
+        try:
+            self.quarantine_manager = QuarantineManager()
+        except Exception:
+            self.quarantine_manager = None
+
         # Central UI (simple tabs to validate rendering)
         central = QWidget(self)
         layout = QVBoxLayout(central)
@@ -71,42 +83,48 @@ class MainUIWindow(QMainWindow):
 
         # Tab 0: Scan (UI only, stubbed handlers)
         scan_tab = self._create_scan_tab()
-        self.tabs.addTab(scan_tab, "Scan")
+        self.tabs.addTab(scan_tab, self._tr("tab.scan", "Scan"))
 
         # Tab 1: Email Scan (UI only, stubbed handlers)
         email_tab = self._create_email_scan_tab()
-        self.tabs.addTab(email_tab, "Email Scan")
+        self.tabs.addTab(email_tab, self._tr("tab.email_scan", "Email Scan"))
 
         # Tab 2: Home (enhanced)
         home = self._create_home_tab()
-        self.tabs.addTab(home, "Home")
+        self.tabs.addTab(home, self._tr("tab.home", "Home"))
 
         # Tab 3: Status (enhanced)
         status = self._create_status_tab()
-        self.tabs.addTab(status, "Status")
+        self.tabs.addTab(status, self._tr("tab.status", "Status"))
 
         # Tab 4: Update
         update_tab = self._create_update_tab()
-        self.tabs.addTab(update_tab, "Update")
+        self.tabs.addTab(update_tab, self._tr("tab.update", "Update"))
 
         # Tab 5: Virus DB Update
         virus_db_tab = self._create_virus_db_tab()
-        self.tabs.addTab(virus_db_tab, "Virus DB")
+        self.tabs.addTab(virus_db_tab, self._tr("tab.virus_db", "Virus DB"))
 
         # Tab 6: Quarantine (UI only)
         quarantine_tab = self._create_quarantine_tab()
-        self.tabs.addTab(quarantine_tab, "Quarantine")
+        self.tabs.addTab(quarantine_tab, self._tr("tab.quarantine", "Quarantine"))
 
         # Tab 7: Config Editor (UI only)
         config_tab = self._create_config_editor_tab()
-        self.tabs.addTab(config_tab, "Config Editor")
+        self.tabs.addTab(config_tab, self._tr("tab.config_editor", "Config Editor"))
 
         # Tab 8: Settings (ported minimally)
         settings_tab = self._create_settings_tab()
-        self.tabs.addTab(settings_tab, "Settings")
+        self.tabs.addTab(settings_tab, self._tr("tab.settings", "Settings"))
 
         layout.addWidget(self.tabs)
         self.setCentralWidget(central)
+
+        # Select Home tab by default (index 2)
+        try:
+            self.tabs.setCurrentIndex(2)
+        except Exception:
+            pass
 
         # Status bar at bottom
         self.status = self.statusBar()
@@ -127,8 +145,7 @@ class MainUIWindow(QMainWindow):
         # Scan process state
         self.scan_process: QProcess | None = None
 
-        # Quarantine manager
-        self.quarantine_manager = QuarantineManager()
+        # Quarantine manager already initialized above
 
         # Virus DB update process state
         self.db_process: QProcess | None = None
@@ -136,6 +153,37 @@ class MainUIWindow(QMainWindow):
     def set_status(self, message: str, timeout_ms: int = 3000) -> None:
         try:
             self.status.showMessage(message, timeout_ms)
+        except Exception:
+            pass
+
+    def _tr(self, key: str, default: str = "") -> str:
+        try:
+            if self.lang_manager is not None and hasattr(self.lang_manager, "tr"):
+                return self.lang_manager.tr(key, default) or default
+        except Exception:
+            pass
+        return default
+
+    def retranslate_ui(self, *_args, **_kwargs) -> None:
+        """Update window title and tab labels after language change."""
+        try:
+            self.setWindowTitle(self._tr("window.title", "ClamAV GUI"))
+            if hasattr(self, "tabs") and self.tabs:
+                # Tab order must match creation order
+                labels = [
+                    self._tr("tab.scan", "Scan"),
+                    self._tr("tab.email_scan", "Email Scan"),
+                    self._tr("tab.home", "Home"),
+                    self._tr("tab.status", "Status"),
+                    self._tr("tab.update", "Update"),
+                    self._tr("tab.virus_db", "Virus DB"),
+                    self._tr("tab.quarantine", "Quarantine"),
+                    self._tr("tab.config_editor", "Config Editor"),
+                    self._tr("tab.settings", "Settings"),
+                ]
+                for i, text in enumerate(labels):
+                    if i < self.tabs.count():
+                        self.tabs.setTabText(i, text)
         except Exception:
             pass
 
@@ -734,7 +782,14 @@ class MainUIWindow(QMainWindow):
         self.db_process.finished.connect(self._on_db_finished)
         self.db_process.errorOccurred.connect(self._on_db_error)
 
-        args = [f"--datadir={db_dir}"]
+        # Build args with writable log path to avoid Program Files permission issues
+        try:
+            from clamav_gui.utils.logger import ensure_logs_dir
+            logs_dir = ensure_logs_dir()
+        except Exception:
+            logs_dir = db_dir
+        log_file = os.path.join(str(logs_dir), "freshclam.log")
+        args = [f"--datadir={db_dir}", f"--log={log_file}"]
         self.db_output.append(f"Running: {freshclam} {' '.join(args)}")
         self.db_progress.setRange(0, 0)
         self.db_start_btn.setEnabled(False)
