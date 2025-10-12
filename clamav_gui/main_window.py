@@ -59,7 +59,7 @@ from clamav_gui.utils.sandbox_analyzer import SandboxAnalyzer
 # Setup logger
 logger = logging.getLogger(__name__)
 
-from .ui.UI import ClamAVMainWindow
+from clamav_gui.ui.UI import ClamAVMainWindow
 
 class ClamAVGUI(ClamAVMainWindow):
     """Main window for the ClamAV GUI application."""
@@ -71,7 +71,7 @@ class ClamAVGUI(ClamAVMainWindow):
             lang_manager: Instance of SimpleLanguageManager for translations
             parent: Parent widget
         """
-        super().__init__(parent)
+        super().__init__(lang_manager, parent)
         self.settings = AppSettings()
         self.process = None
         self.scan_thread = None
@@ -123,6 +123,10 @@ class ClamAVGUI(ClamAVMainWindow):
         
         # Apply language
         self.retranslate_ui()
+        try:
+            self.start_menu_diagnostics()
+        except Exception as e:
+            logger.warning(f"Menu diagnostics init failed: {e}")
     
     def init_ui(self):
         """Initialize the user interface."""
@@ -167,6 +171,15 @@ class ClamAVGUI(ClamAVMainWindow):
         # Create and set up the menu bar
         self.menu_bar = ClamAVMenuBar(self)
         self.setMenuBar(self.menu_bar)
+        try:
+            mb = self.menuBar()
+            logger.info(f"Menu bar set: exists={mb is not None}")
+            if mb is not None:
+                menus = mb.findChildren(QMenu)
+                titles = [m.title() for m in menus]
+                logger.info(f"Menu count={len(menus)} titles={titles}")
+        except Exception as e:
+            logger.warning(f"Menu bar diagnostic error: {e}")
         
         # Set the language manager for the menu bar
         if hasattr(self, 'lang_manager') and self.lang_manager is not None:
@@ -180,6 +193,29 @@ class ClamAVGUI(ClamAVMainWindow):
         
         # Set up the language menu
         self.setup_language_menu()
+
+    def start_menu_diagnostics(self):
+        self._menu_diag_count = 0
+        self._menu_diag_timer = QTimer(self)
+        def _tick():
+            try:
+                mb = self.menuBar()
+                exists = mb is not None
+                titles = []
+                actions = 0
+                if mb is not None:
+                    menus = mb.findChildren(QMenu)
+                    titles = [m.title() for m in menus]
+                    actions = sum(len(m.actions()) for m in menus)
+                logger.info(f"Menu diag: exists={exists} menus={len(titles)} actions={actions} titles={titles}")
+            except Exception as e:
+                logger.warning(f"Menu diag error: {e}")
+            finally:
+                self._menu_diag_count += 1
+                if self._menu_diag_count >= 8:
+                    self._menu_diag_timer.stop()
+        self._menu_diag_timer.timeout.connect(_tick)
+        self._menu_diag_timer.start(2000)
     
     def show_help(self):
         """Open the help dialog by executing help.py."""

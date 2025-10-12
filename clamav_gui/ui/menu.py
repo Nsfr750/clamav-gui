@@ -81,6 +81,11 @@ class ClamAVMenuBar(QMenuBar):
         self.sponsor_action.triggered.connect(self.show_sponsor_dialog)
         self.help_menu.addAction(self.sponsor_action)
         
+        # View Logs action
+        self.view_logs_action = QAction(self.tr("View &Logs"), self)
+        self.view_logs_action.triggered.connect(self.show_logs_dialog)
+        self.help_menu.addAction(self.view_logs_action)
+
         # Wiki action
         self.wiki_action = QAction(self.tr("&Wiki"), self)
         self.wiki_action.triggered.connect(self.open_wiki)
@@ -306,6 +311,16 @@ class ClamAVMenuBar(QMenuBar):
             logger.error(f"Error showing help dialog: {e}")
             QMessageBox.critical(self, "Error", f"Failed to open help: {str(e)}")
         
+    def show_logs_dialog(self):
+        """Show the Logs viewer dialog."""
+        try:
+            from .view_log import LogViewerDialog
+            dialog = LogViewerDialog(self)
+            dialog.exec_()
+        except Exception as e:
+            logger.error(f"Error showing logs dialog: {e}")
+            QMessageBox.critical(self, "Error", f"Failed to open logs viewer: {str(e)}")
+
     def show_sponsor_dialog(self):
         """Show the sponsor dialog."""
         try:
