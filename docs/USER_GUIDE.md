@@ -19,6 +19,8 @@ Welcome to ClamAV GUI! This comprehensive guide will help you get started with u
 ### Prerequisites
 
 - **Windows 10/11** (64-bit)
+- **Linux** (64-bit)
+- **macOS** (64-bit)
 - **Python 3.10+** (if running from source)
 - **ClamAV Antivirus** (recommended for full functionality)
 
@@ -215,7 +217,7 @@ Optimize scan performance:
 - **GitHub Discussions**: [General Questions](https://github.com/Nsfr750/clamav-gui/discussions)
 
 #### Direct Support
-- **Email**: [nsfr750@yandex.com](mailto:nsfr750@yandex.com)
+- **Email**: [Nsfr750](mailto:nsfr750@yandex.com)
 - **Response Time**: Within 48 hours
 
 ### Logs and Debugging
@@ -330,16 +332,16 @@ If ClamAV GUI helps keep your system secure, consider supporting the development
 
 ---
 
-*This user guide was last updated for ClamAV GUI version 1.3.0. For the latest version, visit the [GitHub repository](https://github.com/Nsfr750/clamav-gui).*
+*This user guide was last updated for ClamAV GUI version 1.1.0. For the latest version, visit the [GitHub repository](https://github.com/Nsfr750/clamav-gui).*
 
 
 ### Quick Reference
 
-**Application**: ClamAV GUI v1.3.0
+**Application**: ClamAV GUI v1.1.0
 **License**: GPLv3
 **Platform**: Windows 10/11
 **Support**: [GitHub Issues](https://github.com/Nsfr750/clamav-gui/issues)
-**Documentation**: [GitHub Pages](https://nsfr750.github.io/clamav-gui/)
+**Documentation**: [GitHub Pages](https://github.com/Nsfr750/clamav-gui/wiki)
 
 Thank you for using ClamAV GUI! Stay secure! 🛡️
 
@@ -432,11 +434,11 @@ Thank you for using ClamAV GUI! Stay secure! 🛡️
 
 - **Virus definitions won't update**: Check your internet connection and ensure ClamAV service is running
 - **Scan is slow**: Try excluding large files or directories
-- **Application crashes**: Check the log file at `~/.clamav-gui/clamav-gui.log`
+- **Application crashes**: Check the log file at `~/.clamav-gui/logs/clamav-gui.log`
 
 ### Viewing Logs
 
-Logs are stored in `~/.clamav-gui/` directory:
+Logs are stored in `~/.clamav-gui/logs/` directory:
 
 - `clamav-gui.log`: Application logs
 - `clamscan.log`: Scan logs

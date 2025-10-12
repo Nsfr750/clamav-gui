@@ -20,13 +20,6 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 - [x] **Advanced Reporting**: Comprehensive analytics, threat intelligence, and export capabilities
 - [x] **Sandbox Analysis**: Behavioral analysis and system monitoring for suspicious files
 
-### User Experience
-
-- [ ] **Dark Mode**: Complete dark theme support with system theme detection
-- [ ] **Multi-language Support**: Expand to 10+ languages beyond English and Italian
-- [ ] **Accessibility Improvements**: WCAG 2.1 compliance for users with disabilities
-- [ ] **Mobile-Responsive Design**: Better experience on high-DPI displays and tablets
-
 ### Performance & Reliability
 
 - [x] **Async Scanning**: Non-blocking UI during large scans with progress cancellation

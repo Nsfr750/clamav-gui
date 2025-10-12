@@ -12,6 +12,8 @@ from typing import Dict, List, Optional, Tuple, Any
 from pathlib import Path
 from datetime import datetime
 
+logger = logging.getLogger(__name__)
+
 try:
     import joblib
     from sklearn.ensemble import RandomForestClassifier
@@ -22,8 +24,6 @@ try:
 except ImportError:
     SKLEARN_AVAILABLE = False
     logger.warning("scikit-learn not available. ML features will be disabled.")
-
-logger = logging.getLogger(__name__)
 
 
 class MLThreatDetector:

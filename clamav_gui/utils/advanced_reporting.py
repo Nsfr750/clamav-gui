@@ -9,9 +9,6 @@ import logging
 from typing import Dict, List, Optional, Tuple, Any
 from datetime import datetime, timedelta
 from collections import defaultdict, Counter
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_agg import FigureCanvasAgg
-import io
 
 logger = logging.getLogger(__name__)
 
