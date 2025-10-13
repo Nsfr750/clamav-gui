@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Nuitka Compiler for ClamAV GUI
+PyInstaller Compiler for ClamAV GUI
 
 This script compiles the ClamAV GUI application into a standalone executable
-using Nuitka with optimized settings for Windows.
+using PyInstaller with optimized settings for Windows.
 """
 
 import os
@@ -19,7 +19,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-logger = logging.getLogger("Nuitka-Compiler")
+logger = logging.getLogger("PyInstaller-Compiler")
 
 # Constants
 PROJECT_NAME = "ClamAV-GUI"
@@ -34,6 +34,7 @@ DIST_DIR = BASE_DIR / "dist"
 ICON_PATH = BASE_DIR / "assets" / "icon.ico"
 VERSION_FILE = SRC_DIR / "version.py"
 LOGS_DIR = BASE_DIR / "logs"
+SPEC_FILE = BASE_DIR / "clamav_gui.spec"
 
 # Configure logging
 def setup_logging():
@@ -45,7 +46,7 @@ def setup_logging():
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     # Setup logger
-    logger = logging.getLogger("Nuitka-Compiler")
+    logger = logging.getLogger("PyInstaller-Compiler")
     logger.setLevel(logging.INFO)
 
     # Remove existing handlers to avoid duplicates
@@ -57,7 +58,7 @@ def setup_logging():
     logger.addHandler(console_handler)
 
     # File handler
-    log_file = LOGS_DIR / "nuitka_compiler.log"
+    log_file = LOGS_DIR / "pyinstaller_compiler.log"
     file_handler = logging.FileHandler(log_file, encoding='utf-8')
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
@@ -89,130 +90,140 @@ def clean_build():
             except Exception as e:
                 logger.error(f"Failed to remove {directory}: {e}")
 
-def build_nuitka(onefile=True, clean=False, debug=False, jobs=None, show_console=False):
+def build_pyinstaller(onefile=True, clean=False, debug=False, jobs=None, show_console=False, upx=True):
     """
-    Build the application using Nuitka.
-    
+    Build the application using PyInstaller.
+
     Args:
         onefile: If True, create a single executable file.
         clean: If True, clean build directories before building.
-        debug: If True, create a debug build.
+        debug: If True, enable debug mode.
         jobs: Number of parallel jobs for compilation.
         show_console: If True, keep console window visible for debugging.
+        upx: If True, use UPX compression.
     """
     version = get_version()
     logger.info(f"Building {PROJECT_NAME} v{version}")
-    
+
     if clean:
         clean_build()
-    
+
     # Create output directories
     BUILD_DIR.mkdir(exist_ok=True)
     DIST_DIR.mkdir(exist_ok=True)
-    
-    # Base Nuitka command - use MinGW64 to avoid Windows path issues
+
+    # Base PyInstaller command - use direct executable path
+    venv_pyinstaller = BASE_DIR / "venv" / "Scripts" / "pyinstaller.exe"
     cmd = [
-        sys.executable, "-m", "nuitka",
-        "--follow-imports",
-        "--show-progress",
-        "--standalone",
-        # Use MinGW64 to avoid MSVC Windows path issues
-        "--mingw64",
-        # Minimal options to avoid Scons issues
-        "--assume-yes-for-downloads",
-        # Windows-specific optimizations
-        "--windows-disable-console" if (IS_WINDOWS and not show_console) else None,
-        # Output configuration
-        f"--output-dir={DIST_DIR}",
-        f"--windows-icon-from-ico={ICON_PATH}" if (IS_WINDOWS and ICON_PATH.exists()) else None,
-        # Use onefile format
-        "--onefile",
-        # Package and data inclusion
-        "--include-package=clamav_gui",
-        f"--include-data-dir={BASE_DIR / 'assets'}=assets",
-        f"--include-data-dir={BASE_DIR / 'clamav_gui' / 'lang'}=clamav_gui/lang",
-        # Minimal PySide6 support - avoid problematic modules
-        "--enable-plugin=pyside6",
-        "--include-qt-plugins=platforms",
-        # Use more conservative import following to avoid problematic modules
-        "--nofollow-import-to=shibokensupport",
-        "--nofollow-import-to=certifi",
-        # Windows metadata
-        "--windows-company-name=Tuxxle",
-        "--output-filename=ClamAV-GUI.exe" if IS_WINDOWS else "--output-filename=ClamAV-GUI",
-        f"--windows-file-version={version}",
-        f"--windows-product-version={version}",
-        f"--windows-product-name={PROJECT_NAME}",
-        f"--windows-file-description={PROJECT_NAME} - A graphical interface for ClamAV Antivirus",
-        "--copyright=© Copyright 2025 Nsfr750 - All Rights Reserved",
-        # Main script
+        str(venv_pyinstaller),
+        # Main script first
         str(SRC_DIR / "__main__.py")
     ]
-    
+
+    # Icon for Windows
+    if IS_WINDOWS and ICON_PATH.exists():
+        cmd.extend(["--icon", str(ICON_PATH)])
+
+    # Windowed mode (no console)
+    if IS_WINDOWS and not show_console:
+        cmd.append("--windowed")
+
+    # UPX compression
+    if not upx and onefile:
+        cmd.append("--noupx")
+
+    # Package and data inclusion
+    cmd.extend([
+        "--add-data", f"{BASE_DIR / 'assets'};assets",
+        "--add-data", f"{BASE_DIR / 'clamav_gui' / 'lang'};clamav_gui/lang"
+    ])
+
+    # Hidden imports for PySide6
+    cmd.extend([
+        "--hidden-import", "PySide6.QtCore",
+        "--hidden-import", "PySide6.QtWidgets",
+        "--hidden-import", "PySide6.QtGui",
+        "--hidden-import", "PySide6.QtNetwork",
+        "--hidden-import", "PySide6.QtSvg"
+    ])
+
+    # Version information for Windows
+    if IS_WINDOWS:
+        if SPEC_FILE.exists():
+            cmd.extend(["--version-file", str(SPEC_FILE)])
+        cmd.extend(["--name", "ClamAV-GUI"])
+
+    # Debug options
+    if debug:
+        cmd.extend([
+            "--debug=all",
+            "--optimize=0"
+        ])
+    else:
+        cmd.append("--optimize=2")
+
+    # Parallel jobs
+    if jobs:
+        cmd.extend(["--jobs", str(jobs)])
+
     # Filter out None values
     cmd = [arg for arg in cmd if arg is not None]
-    
+
     # Log the command for debugging
     logger.debug("Command: %s", " ".join(f'"{arg}"' if ' ' in str(arg) else str(arg) for arg in cmd))
-    
-    # Run Nuitka
-    logger.info("Starting Nuitka compilation...")
-    
+
+    # Run PyInstaller
+    logger.info("Starting PyInstaller compilation...")
+
     try:
-        # Run the command with the current environment
-        env = os.environ.copy()
-        if IS_WINDOWS:
-            # Remove MSVC environment variables when using MinGW64
-            env.pop("VSCMD_VERB_LOGGER", None)
-            # Fix Windows path issues for MinGW64
-            env["NUITKA_NO_DEPLOYMENT_FLAG_SELF_EXECUTION"] = "1"
-            # Disable problematic module introspection that causes _SixMetaPathImporter issues
-            env["NUITKA_NO_MODULE_INTROSPECTION"] = "1"
-        
-        logger.info("Executing Nuitka command...")
+        # Run the command
+        logger.info("Executing PyInstaller command...")
         result = subprocess.run(
             cmd,
             check=False,  # We'll handle the error ourselves
-            env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
             timeout=1800  # 30 minute timeout for compilation
         )
-        
+
         # Log the output with better formatting
         if result.stdout:
-            logger.debug("Nuitka stdout:\n%s", result.stdout)
+            logger.debug("PyInstaller stdout:\n%s", result.stdout)
         if result.stderr:
             # Only log stderr as error if compilation failed
             if result.returncode != 0:
-                logger.error("Nuitka stderr:\n%s", result.stderr)
+                logger.error("PyInstaller stderr:\n%s", result.stderr)
             else:
-                logger.debug("Nuitka stderr:\n%s", result.stderr)
-            
+                logger.debug("PyInstaller stderr:\n%s", result.stderr)
+
         if result.returncode != 0:
-            logger.error("Nuitka compilation failed with return code %d", result.returncode)
+            logger.error("PyInstaller compilation failed with return code %d", result.returncode)
             logger.error("Check the logs above for detailed error information")
             return False
-            
+
         logger.info("Compilation completed successfully!")
         logger.info(f"Executable is available in: {DIST_DIR}")
-        
+
         # Verify the output file exists
-        output_file = DIST_DIR / ("ClamAV-GUI.exe" if IS_WINDOWS else "ClamAV-GUI")
+        if onefile:
+            output_file = DIST_DIR / ("ClamAV-GUI.exe" if IS_WINDOWS else "ClamAV-GUI")
+        else:
+            output_file = DIST_DIR / ("ClamAV-GUI" if IS_WINDOWS else "ClamAV-GUI") / ("ClamAV-GUI.exe" if IS_WINDOWS else "ClamAV-GUI")
+
         if output_file.exists():
             size = output_file.stat().st_size
             logger.info(f"Output file size: {size / (1024*1024):.2f} MB")
         else:
             logger.warning("Output file not found after compilation!")
-            
+
         return True
-        
+
     except subprocess.TimeoutExpired:
-        logger.error("Nuitka compilation timed out after 30 minutes")
+        logger.error("PyInstaller compilation timed out after 30 minutes")
         return False
     except subprocess.CalledProcessError as e:
-        logger.error(f"Nuitka compilation failed with return code {e.returncode}")
+        logger.error(f"PyInstaller compilation failed with return code {e.returncode}")
         return False
     except Exception as e:
         logger.error(f"Error during compilation: {e}", exc_info=True)
@@ -222,8 +233,8 @@ def build_nuitka(onefile=True, clean=False, debug=False, jobs=None, show_console
 def parse_arguments():
     """Parse command line arguments."""
     import argparse
-    
-    parser = argparse.ArgumentParser(description=f"Build {PROJECT_NAME} with Nuitka")
+
+    parser = argparse.ArgumentParser(description=f"Build {PROJECT_NAME} with PyInstaller")
     parser.add_argument(
         "--clean",
         action="store_true",
@@ -263,29 +274,37 @@ def parse_arguments():
         action="store_true",
         help="Keep console window visible for debugging (Windows only)"
     )
-    
+    parser.add_argument(
+        "--no-upx",
+        dest="upx",
+        action="store_false",
+        default=True,
+        help="Disable UPX compression"
+    )
+
     return parser.parse_args()
 
 
 def main():
     """Main entry point."""
     args = parse_arguments()
-    
+
     if args.debug:
         logger.setLevel(logging.DEBUG)
-    
+
     # Handle custom output directory
     if hasattr(args, 'output_dir') and args.output_dir:
         global DIST_DIR
         DIST_DIR = Path(args.output_dir).absolute()
         logger.info(f"Using custom output directory: {DIST_DIR}")
-    
-    success = build_nuitka(
-        onefile=args.onefile, 
+
+    success = build_pyinstaller(
+        onefile=args.onefile,
         clean=args.clean,
         debug=args.debug_build,
         jobs=args.jobs,
-        show_console=args.show_console
+        show_console=args.show_console,
+        upx=args.upx
     )
     sys.exit(0 if success else 1)
 
