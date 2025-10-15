@@ -1,0 +1,14 @@
+2025-10-12 18:07:35 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-12 18:07:35 - ClamAV-GUI - INFO - Application starting...
+2025-10-12 18:07:35 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-12 18:07:35 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-12 18:07:35 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-12 18:07:35 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-12 18:07:35 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-12 18:07:35 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-12 18:07:35 - clamav_gui.ui.main_ui - INFO - [MainUIWindow] menu_bar exists=True, actions=4
+2025-10-12 18:07:38 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-12 18:07:38 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.0, latest: 1.1.0)
+2025-10-12 18:10:25 - clamav_gui.ui.menu - WARNING - Invalid action in language selection
+2025-10-12 18:10:25 - clamav_gui.ui.menu - WARNING - Invalid action in language selection
+2025-10-12 18:10:28 - clamav_gui.ui.menu - WARNING - Invalid action in language selection

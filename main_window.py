@@ -149,6 +149,7 @@ class ClamAVGUI(ClamAVMainWindow):
         self.settings_tab = self.create_settings_tab()
         self.quarantine_tab = self.create_quarantine_tab()
         self.config_editor_tab = self.create_config_editor_tab()
+        self.status_tab = self.create_status_tab()
         
         self.tabs.addTab(self.scan_tab, self.tr("Scan"))
         self.tabs.addTab(self.email_scan_tab, self.tr("Email Scan"))
@@ -156,6 +157,7 @@ class ClamAVGUI(ClamAVMainWindow):
         self.tabs.addTab(self.settings_tab, self.tr("Settings"))
         self.tabs.addTab(self.quarantine_tab, self.tr("Quarantine"))
         self.tabs.addTab(self.config_editor_tab, self.tr("Config Editor"))
+        self.tabs.addTab(self.status_tab, self.tr("Status"))
         
         # Status bar
         self.status_bar = self.statusBar()

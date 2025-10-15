@@ -72,8 +72,9 @@ class EnhancedVirusDBUpdater:
             logger.error(f"Error saving metadata: {e}")
 
     def get_database_info(self) -> Dict:
-        """Get information about the current virus database."""
+        """Get comprehensive information about the current virus database."""
         try:
+            # First get basic file information
             db_files = []
             total_size = 0
 
@@ -87,7 +88,7 @@ class EnhancedVirusDBUpdater:
                         'modified': file_path.stat().st_mtime
                     })
 
-            return {
+            base_info = {
                 'directory': self.db_dir,
                 'file_count': len(db_files),
                 'total_size': total_size,
@@ -95,6 +96,59 @@ class EnhancedVirusDBUpdater:
                 'files': db_files,
                 'exists': os.path.exists(self.db_dir)
             }
+
+            # Try to get detailed signature information using sigtool if available
+            try:
+                result = subprocess.run(['sigtool', '--info'],
+                                      capture_output=True, text=True, timeout=10)
+
+                if result.returncode == 0:
+                    output = result.stdout
+                    # Parse sigtool output for signature information
+                    for line in output.split('\n'):
+                        line = line.strip()
+                        if ': ' in line:
+                            key, value = line.split(': ', 1)
+                            key = key.lower().replace(' ', '_')
+                            if key == 'signatures':
+                                try:
+                                    base_info['signature_count'] = int(value.replace(',', ''))
+                                except ValueError:
+                                    pass
+                            elif key == 'version':
+                                base_info['database_version'] = value
+                            elif key == 'build_time':
+                                base_info['build_time'] = value
+
+            except (FileNotFoundError, subprocess.TimeoutExpired, subprocess.SubprocessError):
+                # sigtool not available or failed, use basic info
+                base_info['note'] = 'Detailed signature count requires sigtool (ClamAV development tools)'
+
+                # Try to estimate signature count based on file sizes
+                # This is a rough estimation based on typical ClamAV database characteristics
+                if 'main.cvd' in [f['name'] for f in db_files]:
+                    main_file = next(f for f in db_files if f['name'] == 'main.cvd')
+                    # Rough estimation: main.cvd typically contains ~50,000-100,000 signatures per 100MB
+                    estimated_main = int(main_file['size'] / 100000 * 75000)  # Conservative estimate
+                    base_info['estimated_main_signatures'] = estimated_main
+
+                if 'daily.cld' in [f['name'] for f in db_files]:
+                    daily_file = next(f for f in db_files if f['name'] == 'daily.cld')
+                    # Daily signatures are typically smaller and more numerous
+                    estimated_daily = int(daily_file['size'] / 1000 * 100)  # Rough estimate
+                    base_info['estimated_daily_signatures'] = estimated_daily
+
+                if 'bytecode.cvd' in [f['name'] for f in db_files]:
+                    bytecode_file = next(f for f in db_files if f['name'] == 'bytecode.cvd')
+                    # Bytecode signatures are specialized
+                    estimated_bytecode = int(bytecode_file['size'] / 10000 * 50)  # Rough estimate
+                    base_info['estimated_bytecode_signatures'] = estimated_bytecode
+
+                if 'estimated_main_signatures' in base_info or 'estimated_daily_signatures' in base_info or 'estimated_bytecode_signatures' in base_info:
+                    total_estimated = sum(base_info.get(key, 0) for key in ['estimated_main_signatures', 'estimated_daily_signatures', 'estimated_bytecode_signatures'])
+                    base_info['estimated_total_signatures'] = total_estimated
+
+            return base_info
 
         except Exception as e:
             logger.error(f"Error getting database info: {e}")
@@ -104,7 +158,8 @@ class EnhancedVirusDBUpdater:
                 'total_size': 0,
                 'total_size_mb': 0,
                 'files': [],
-                'exists': False
+                'exists': False,
+                'error': str(e)
             }
 
     def check_for_updates(self) -> Tuple[bool, str, Dict]:

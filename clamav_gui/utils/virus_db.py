@@ -3,6 +3,7 @@ Virus database update functionality for ClamAV GUI.
 """
 import os
 import logging
+import subprocess
 from pathlib import Path
 from PySide6.QtCore import QObject, Signal, QProcess
 
@@ -159,3 +160,91 @@ class VirusDBUpdater:
             self.signals.output.emit("Virus database update completed successfully.")
         else:
             self.signals.output.emit("Virus database update failed.")
+
+    def get_database_info(self):
+        """
+        Get information about the ClamAV virus database.
+
+        Returns:
+            dict: Dictionary containing database information including:
+                - version: Database version
+                - signatures: Number of virus signatures
+                - build_time: When the database was built
+                - error: Error message if operation failed
+        """
+        try:
+            # Try to find sigtool in PATH
+            try:
+                result = subprocess.run(['sigtool', '--info'],
+                                      capture_output=True, text=True, timeout=10)
+            except FileNotFoundError:
+                # If sigtool not in PATH, try to find it in common locations
+                common_paths = [
+                    '/usr/bin/sigtool',
+                    '/usr/local/bin/sigtool',
+                    '/opt/clamav/bin/sigtool',
+                    'C:\\Program Files\\ClamAV\\bin\\sigtool.exe',
+                    'C:\\Program Files (x86)\\ClamAV\\bin\\sigtool.exe'
+                ]
+
+                sigtool_path = None
+                for path in common_paths:
+                    if os.path.exists(path):
+                        sigtool_path = path
+                        break
+
+                if not sigtool_path:
+                    # Try alternative method using clamscan --version
+                    try:
+                        result = subprocess.run(['clamscan', '--version'],
+                                              capture_output=True, text=True, timeout=10)
+                        if result.returncode == 0:
+                            version_output = result.stdout
+                            # Parse version info from clamscan output
+                            info = {'clamscan_version': version_output.strip()}
+                            # Try to estimate database info
+                            info['note'] = 'Detailed database info requires sigtool. Install ClamAV development tools for full functionality.'
+                            return info
+                    except (subprocess.TimeoutExpired, FileNotFoundError):
+                        pass
+
+                    return {
+                        'error': 'sigtool not found. Install ClamAV development tools for detailed database information.',
+                        'note': 'Basic ClamAV functionality is still available.'
+                    }
+
+                result = subprocess.run([sigtool_path, '--info'],
+                                      capture_output=True, text=True, timeout=10)
+
+            if result.returncode == 0:
+                output = result.stdout
+
+                # Parse the sigtool output
+                info = {}
+                for line in output.split('\n'):
+                    line = line.strip()
+                    if ': ' in line:
+                        key, value = line.split(': ', 1)
+                        info[key.lower().replace(' ', '_')] = value
+
+                # Extract signature count if available
+                if 'signatures' in info:
+                    try:
+                        info['signature_count'] = int(info['signatures'])
+                    except (ValueError, KeyError):
+                        pass
+
+                return info
+            else:
+                return {
+                    'error': f'sigtool failed with exit code {result.returncode}: {result.stderr}'
+                }
+
+        except subprocess.TimeoutExpired:
+            return {
+                'error': 'sigtool timed out'
+            }
+        except Exception as e:
+            return {
+                'error': f'Error getting database info: {str(e)}'
+            }
