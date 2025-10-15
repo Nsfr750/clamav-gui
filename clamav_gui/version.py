@@ -3,7 +3,7 @@ Version information for ClamAV GUI.
 """
 
 # Version as a tuple (major, minor, patch)
-VERSION = (1, 1, 0)
+VERSION = (1, 1, 1)
 
 # String version
 __version__ = ".".join(map(str, VERSION))
@@ -19,7 +19,7 @@ __license__ = "GPL-3.0"
 
 # Build information
 __build__ = ""
-__date__ = "2025-10-12"
+__date__ = "2025-10-15"
 
 # Version description
 __description__ = "A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows with enhanced scanning, reporting, and quarantine management."
@@ -41,6 +41,17 @@ version_info = tuple(map(int, __version__.split('.')))
 
 # Changelog
 __changelog__ = """
+## [1.1.1] - 2025-10-15
+### Added
+- Enhanced UI styling for scan progress bar (animated blue gradient)
+- Improved button styling with color-coded actions (green for start, red for stop)
+- Better visual feedback for scan operations
+
+### Improved
+- Enhanced progress bar visualization with animated gradients
+- Color-coded action buttons for better user experience
+- Improved visual consistency across scan interface
+
 ## [1.1.0] - 2025-10-12
 ### Added
 - Machine Learning Integration: AI-powered threat detection with feature extraction and ML models
@@ -82,6 +93,18 @@ def get_version_info():
 def get_version_history():
     """Return the version history."""
     return [
+        {
+            "version": "1.1.1",
+            "date": "2025-10-15",
+            "changes": [
+                "Enhanced UI styling for scan progress bar (animated blue gradient)",
+                "Improved button styling with color-coded actions (green for start, red for stop)",
+                "Better visual feedback for scan operations",
+                "Enhanced progress bar visualization with animated gradients",
+                "Color-coded action buttons for better user experience",
+                "Improved visual consistency across scan interface"
+            ]
+        },
         {
             "version": "1.1.0",
             "date": "2025-10-12",

@@ -27,6 +27,7 @@ from clamav_gui.ui.help import HelpDialog
 from clamav_gui.ui.menu import ClamAVMenuBar
 from clamav_gui.ui.about import AboutDialog
 from clamav_gui.ui.sponsor import SponsorDialog
+from clamav_gui.ui.status_tab import StatusTab
 from clamav_gui.utils.virus_db import VirusDBUpdater
 
 # Import language manager
@@ -149,7 +150,7 @@ class ClamAVGUI(ClamAVMainWindow):
         self.settings_tab = self.create_settings_tab()
         self.quarantine_tab = self.create_quarantine_tab()
         self.config_editor_tab = self.create_config_editor_tab()
-        self.status_tab = self.create_status_tab()
+        self.status_tab = StatusTab(self)
         
         self.tabs.addTab(self.scan_tab, self.tr("Scan"))
         self.tabs.addTab(self.email_scan_tab, self.tr("Email Scan"))
@@ -371,6 +372,7 @@ class ClamAVGUI(ClamAVMainWindow):
                 self.tabs.setTabText(3, self.tr("Settings"))
                 self.tabs.setTabText(4, self.tr("Quarantine"))
                 self.tabs.setTabText(5, self.tr("Config Editor"))
+                self.tabs.setTabText(6, self.tr("Status"))
             
             # Update status bar
             if hasattr(self, 'status_bar'):
@@ -447,17 +449,63 @@ class ClamAVGUI(ClamAVMainWindow):
         
         # Progress
         self.progress = QProgressBar()
-        
+        self.progress.setRange(0, 0)  # Animated progress bar
+        self.progress.setStyleSheet("""
+            QProgressBar {
+                border: 2px solid #333;
+                border-radius: 5px;
+                text-align: center;
+                font-weight: bold;
+            }
+            QProgressBar::chunk {
+                background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                    stop: 0 #4CAF50, stop: 0.5 #2196F3, stop: 1 #4CAF50);
+                border-radius: 3px;
+            }
+        """)
+
         # Buttons
         button_layout = QHBoxLayout()
-        
+
         self.scan_btn = QPushButton(self.tr("Start Scan"))
         self.scan_btn.clicked.connect(self.start_scan)
+        self.scan_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                font-weight: bold;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #45a049;
+            }
+            QPushButton:pressed {
+                background-color: #3e8e41;
+            }
+        """)
         button_layout.addWidget(self.scan_btn)
-        
+
         self.stop_btn = QPushButton(self.tr("Stop"))
         self.stop_btn.setEnabled(False)
         self.stop_btn.clicked.connect(self.stop_scan)
+        self.stop_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #f44336;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                font-weight: bold;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #da190b;
+            }
+            QPushButton:pressed {
+                background-color: #c62828;
+            }
+        """)
         button_layout.addWidget(self.stop_btn)
         
         # Report buttons
@@ -1277,11 +1325,8 @@ Last activity:
         config_layout.addLayout(btn_layout)
         config_group.setLayout(config_layout)
         
-        # Add to main layout
-        layout.addWidget(config_group)
-        
         return tab
-    
+
     # Add the rest of the original methods here
     def browse_target(self):
         """Open a file dialog to select a file or directory to scan."""
@@ -1534,11 +1579,9 @@ Last activity:
             
             # Configure progress bar
             if hasattr(self, 'progress'):
-                self.progress.setRange(0, 100)
+                self.progress.setRange(0, 0)  # Animated mode
                 self.progress.setValue(0)
-                self.progress.setFormat("%p%")
-                self.progress.setAlignment(Qt.AlignCenter)
-                self.progress.setTextVisible(True)
+                self.progress.setTextVisible(False)  # Hide percentage for animated mode
             
             # Start the thread
             self.scan_thread.start()

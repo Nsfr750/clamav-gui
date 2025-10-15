@@ -2,7 +2,7 @@
 
 This document outlines the development roadmap for ClamAV GUI, including upcoming features, improvements, and long-term goals.
 
-## Version 1.1.0 (Current Release) 🚀
+## Version 1.1.1 (Current Release) 🚀
 
 ### Core Features
 
@@ -174,4 +174,4 @@ We follow [Semantic Versioning](https://semver.org/) principles:
 
 ---
 
-*This roadmap is continuously updated based on community feedback, technical requirements, and market needs. Last updated: October 12, 2025*
+*This roadmap is continuously updated based on community feedback, technical requirements, and market needs. Last updated: October 15, 2025*

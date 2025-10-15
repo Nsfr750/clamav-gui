@@ -22,21 +22,21 @@
 - [ ] Progress tracking
 - [ ] Multi-language support
 
-## Completed in v1.3.0
+## Completed in v1.1.1
 
 - [x] **Machine Learning Integration** - AI-powered threat detection with feature extraction and ML models
 - [x] **Error Recovery** - Automatic retry mechanisms for failed operations with exponential backoff
 - [x] **Advanced Reporting** - Comprehensive analytics, threat intelligence, and export capabilities
 - [x] **Sandbox Analysis** - Behavioral analysis and system monitoring for suspicious files
-
-## Completed in v1.2.0
-
 - [x] **Email scanning** - Complete email scanning with .eml/.msg file support and attachment analysis
 - [x] **Network drive scanning** - UNC path support with network connectivity validation
 - [x] **Enhanced quarantine management** - Full restore/delete functionality with bulk operations and metadata display
 - [x] **Async Scanning** - Non-blocking UI during large scans with progress cancellation
 - [x] **Smart Scanning** - Skip known safe files using hash databases
 - [x] **Incremental Updates** - Differential virus database updates for faster downloads
+- [x] **Enhanced UI styling** - Improved scan progress bar with animated blue gradient visualization
+- [x] **Color-coded action buttons** - Green "Start Scan" and red "Stop Scan" buttons with hover effects for better user experience
+- [x] **Visual feedback improvements** - Better visual consistency across scan interface with modern styling
 
 ## Completed in v1.1.0
 

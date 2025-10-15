@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] - 2025-10-15
+
+### Added
+
+- **Enhanced UI Styling**: Improved scan progress bar with animated blue gradient visualization
+- **Color-coded Action Buttons**: Green "Start Scan" and red "Stop Scan" buttons with hover effects for better user experience
+- **Visual Feedback Improvements**: Better visual consistency across scan interface with modern styling
+
+### Improved
+
+- **Progress Bar Visualization**: Enhanced animated progress indicators with gradient effects
+- **Button Design**: Color-coded action buttons for improved user interface clarity
+- **User Experience**: Better visual feedback for scan operations and status indication
+
 ## [1.1.0] - 2025-10-12
 
 ### Added

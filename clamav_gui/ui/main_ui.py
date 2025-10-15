@@ -30,6 +30,8 @@ from PySide6.QtCore import QProcess
 from clamav_gui.ui.menu import ClamAVMenuBar
 from clamav_gui.ui.settings import AppSettings
 from clamav_gui.ui.updates_ui import check_for_updates
+from clamav_gui.ui.home_tab import HomeTab
+from clamav_gui.ui.status_tab import StatusTab
 from clamav_gui import __version__
 from clamav_gui.utils.quarantine_manager import QuarantineManager
 
@@ -90,11 +92,11 @@ class MainUIWindow(QMainWindow):
         self.tabs.addTab(email_tab, self._tr("tab.email_scan", "Email Scan"))
 
         # Tab 2: Home (enhanced)
-        home = self._create_home_tab()
+        home = HomeTab(self)
         self.tabs.addTab(home, self._tr("tab.home", "Home"))
 
         # Tab 3: Status (enhanced)
-        status = self._create_status_tab()
+        status = StatusTab(self)
         self.tabs.addTab(status, self._tr("tab.status", "Status"))
 
         # Tab 4: Update
@@ -197,93 +199,6 @@ class MainUIWindow(QMainWindow):
                 pass
         except Exception:
             pass
-
-    # --- Home tab ---
-    def _create_home_tab(self) -> QWidget:
-        tab = QWidget()
-        v = QVBoxLayout(tab)
-        title = QLabel("ClamAV GUI")
-        try:
-            title.setStyleSheet("font-size: 22px; font-weight: bold;")
-        except Exception:
-            pass
-        subtitle = QLabel("Welcome! Use the tabs above to scan, update, and manage quarantine.")
-        actions = QHBoxLayout()
-        quick_scan_btn = QPushButton("Quick Scan...")
-        quick_scan_btn.clicked.connect(lambda: self.tabs.setCurrentIndex(0))
-        updates_btn = QPushButton("Check for Updates")
-        updates_btn.clicked.connect(lambda: self._do_check_updates())
-        open_logs_btn = QPushButton("Open Logs Folder")
-        open_logs_btn.clicked.connect(self._open_logs_folder_from_home)
-        actions.addWidget(quick_scan_btn)
-        actions.addWidget(updates_btn)
-        actions.addWidget(open_logs_btn)
-        v.addWidget(title)
-        v.addWidget(subtitle)
-        v.addLayout(actions)
-        v.addStretch(1)
-        return tab
-
-    def _open_logs_folder_from_home(self) -> None:
-        try:
-            from clamav_gui.utils.logger import ensure_logs_dir
-            logs_dir = ensure_logs_dir()
-            os.startfile(str(logs_dir))
-            self.set_status(f"Opened logs: {logs_dir}")
-        except Exception:
-            self.set_status("Could not open logs folder", 4000)
-
-    # --- Status tab ---
-    def _create_status_tab(self) -> QWidget:
-        tab = QWidget()
-        v = QVBoxLayout(tab)
-        info = QGroupBox("Environment")
-        form = QFormLayout(info)
-        try:
-            import platform
-            from clamav_gui import __version__ as app_ver
-            py_ver = platform.python_version()
-            os_name = platform.platform()
-        except Exception:
-            app_ver = "unknown"
-            py_ver = "unknown"
-            os_name = "unknown"
-        app_lab = QLabel(app_ver)
-        py_lab = QLabel(py_ver)
-        os_lab = QLabel(os_name)
-        form.addRow("App Version:", app_lab)
-        form.addRow("Python:", py_lab)
-        form.addRow("OS:", os_lab)
-
-        tools = QGroupBox("Tools")
-        tform = QFormLayout(tools)
-        clamscan_ok = QLabel()
-        freshclam_ok = QLabel()
-        try:
-            if not hasattr(self, "current_settings"):
-                self.current_settings = self.settings.load_settings() or {}
-        except Exception:
-            self.current_settings = {}
-        clamscan_path = self.current_settings.get("clamscan_path") or "clamscan"
-        freshclam_path = self.current_settings.get("freshclam_path") or "freshclam"
-        clamscan_ok.setText(clamscan_path)
-        freshclam_ok.setText(freshclam_path)
-        tform.addRow("clamscan:", clamscan_ok)
-        tform.addRow("freshclam:", freshclam_ok)
-
-        buttons = QHBoxLayout()
-        goto_settings = QPushButton("Open Settings")
-        goto_settings.clicked.connect(lambda: self.tabs.setCurrentIndex(self.tabs.count()-1))
-        show_logs = QPushButton("View Logs")
-        show_logs.clicked.connect(self._open_logs_folder_from_home)
-        buttons.addWidget(goto_settings)
-        buttons.addWidget(show_logs)
-
-        v.addWidget(info)
-        v.addWidget(tools)
-        v.addLayout(buttons)
-        v.addStretch(1)
-        return tab
 
     # --- Settings tab (ported) ---
     def _create_settings_tab(self) -> QWidget:

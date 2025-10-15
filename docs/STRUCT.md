@@ -1,6 +1,6 @@
 # ClamAV GUI Project Structure
 
-This document describes the current structure of the ClamAV GUI project as of version 1.3.0.
+This document describes the current structure of the ClamAV GUI project as of version 1.1.1.
 
 ## Directory Structure
 
@@ -233,4 +233,4 @@ The codebase is designed with extension points for:
 
 ---
 
-*This structure document reflects the ClamAV GUI project as of version 1.3.0 and is updated as the project evolves.*
+*This structure document reflects the ClamAV GUI project as of version 1.1.1 and is updated as the project evolves.*

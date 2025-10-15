@@ -10,8 +10,8 @@ from PyInstaller.utils.win32.versioninfo import VSVersionInfo, FixedFileInfo, St
 
 vs_version_info = VSVersionInfo(
     ffi=FixedFileInfo(
-        filevers=(1, 1, 0, 0),
-        prodvers=(1, 1, 0, 0),
+        filevers=(1, 1, 1, 0),
+        prodvers=(1, 1, 1, 0),
         mask=0x3f,
         flags=0x0,
         OS=0x40004,
@@ -27,12 +27,12 @@ vs_version_info = VSVersionInfo(
                     [
                         StringStruct('CompanyName', 'Tuxxle'),
                         StringStruct('FileDescription', 'ClamAV GUI - Antivirus Interface with Enhanced Scanning and Quarantine Management'),
-                        StringStruct('FileVersion', '1.1.0'),
+                        StringStruct('FileVersion', '1.1.1'),
                         StringStruct('InternalName', 'ClamAV-GUI'),
                         StringStruct('LegalCopyright', '© 2025 Nsfr750 - All Rights Reserved'),
                         StringStruct('OriginalFilename', 'ClamAV-GUI.exe'),
                         StringStruct('ProductName', 'ClamAV GUI'),
-                        StringStruct('ProductVersion', '1.1.0'),
+                        StringStruct('ProductVersion', '1.1.1'),
                     ]
                 )
             ]

@@ -332,12 +332,12 @@ If ClamAV GUI helps keep your system secure, consider supporting the development
 
 ---
 
-*This user guide was last updated for ClamAV GUI version 1.1.0. For the latest version, visit the [GitHub repository](https://github.com/Nsfr750/clamav-gui).*
+*This user guide was last updated for ClamAV GUI version 1.1.1. For the latest version, visit the [GitHub repository](https://github.com/Nsfr750/clamav-gui).*
 
 
 ### Quick Reference
 
-**Application**: ClamAV GUI v1.1.0
+**Application**: ClamAV GUI v1.1.1
 **License**: GPLv3
 **Platform**: Windows 10/11
 **Support**: [GitHub Issues](https://github.com/Nsfr750/clamav-gui/issues)
