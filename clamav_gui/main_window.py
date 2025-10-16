@@ -55,8 +55,13 @@ from clamav_gui.utils.hash_database import HashDatabase
 # Import advanced reporting system
 from clamav_gui.utils.advanced_reporting import AdvancedReporting
 
-# Import ML threat detector
-from clamav_gui.utils.ml_threat_detector import MLThreatDetector, MLSandboxAnalyzer
+# Optional ML imports (only if needed and available)
+_ML_AVAILABLE = True
+try:
+    from clamav_gui.utils.ml_threat_detector import MLThreatDetector, MLSandboxAnalyzer
+except ImportError as e:
+    logger.warning(f"ML threat detector not available: {e}")
+    _ML_AVAILABLE = False
 
 # Import sandbox analyzer
 from clamav_gui.utils.sandbox_analyzer import SandboxAnalyzer
@@ -89,8 +94,20 @@ class ClamAVGUI(ClamAVMainWindow):
         # self.error_recovery = ErrorRecoveryManager()
         # self.network_recovery = NetworkErrorRecovery()
         self.advanced_reporting = AdvancedReporting()
-        self.ml_detector = MLThreatDetector()
-        self.sandbox_analyzer = MLSandboxAnalyzer()
+
+        # Initialize ML components only if available
+        self.ml_detector = None
+        self.ml_sandbox_analyzer = None
+        if _ML_AVAILABLE:
+            try:
+                self.ml_detector = MLThreatDetector()
+                self.ml_sandbox_analyzer = MLSandboxAnalyzer()
+                logger.info("ML threat detector initialized successfully")
+            except Exception as e:
+                logger.warning(f"Failed to initialize ML components: {e}")
+                self.ml_detector = None
+                self.ml_sandbox_analyzer = None
+
         self.sandbox_analyzer = SandboxAnalyzer()
         
         self.lang_manager = lang_manager or SimpleLanguageManager()

@@ -14,6 +14,7 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
+# Try to import scikit-learn and related ML libraries
 try:
     import joblib
     from sklearn.ensemble import RandomForestClassifier
@@ -21,9 +22,30 @@ try:
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import accuracy_score, classification_report
     SKLEARN_AVAILABLE = True
-except ImportError:
+    logger.info("scikit-learn and ML libraries successfully imported")
+except ImportError as e:
     SKLEARN_AVAILABLE = False
-    logger.warning("scikit-learn not available. ML features will be disabled.")
+    logger.warning(f"scikit-learn not available: {e}. ML features will be disabled.")
+    # Define dummy classes to prevent import errors
+    class RandomForestClassifier:
+        def __init__(self, **kwargs): pass
+        def fit(self, X, y): pass
+        def predict(self, X): return []
+        def predict_proba(self, X): return []
+        @property
+        def classes_(self): return []
+
+    class DictVectorizer:
+        def __init__(self, **kwargs): pass
+        def fit_transform(self, X): return []
+        def transform(self, X): return []
+        @property
+        def feature_names_(self): return []
+
+    def train_test_split(*args, **kwargs): return [], [], [], []
+    def accuracy_score(*args, **kwargs): return 0.0
+    def classification_report(*args, **kwargs): return ""
+    joblib = None
 
 
 class MLThreatDetector:
@@ -39,6 +61,7 @@ class MLThreatDetector:
             logger.warning("ML features disabled due to missing scikit-learn")
             self.model = None
             self.vectorizer = None
+            self.feature_names = []
             return
 
         if model_path is None:
@@ -56,7 +79,8 @@ class MLThreatDetector:
 
     def load_model(self):
         """Load the trained ML model."""
-        if not SKLEARN_AVAILABLE:
+        if not SKLEARN_AVAILABLE or not joblib:
+            logger.debug("Skipping model load - scikit-learn not available")
             return
 
         try:
@@ -75,7 +99,8 @@ class MLThreatDetector:
 
     def save_model(self):
         """Save the trained ML model."""
-        if not SKLEARN_AVAILABLE or not self.model:
+        if not SKLEARN_AVAILABLE or not joblib or not self.model:
+            logger.debug("Skipping model save - scikit-learn not available or no model")
             return
 
         try:
@@ -275,7 +300,8 @@ class MLThreatDetector:
         Returns:
             Tuple of (confidence_score, threat_category)
         """
-        if not self.model or not self.vectorizer:
+        if not SKLEARN_AVAILABLE or not self.model or not self.vectorizer:
+            logger.debug("ML prediction skipped - model or vectorizer not available")
             return 0.0, "unknown"
 
         try:
