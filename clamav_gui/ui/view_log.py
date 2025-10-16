@@ -658,29 +658,32 @@ class LogViewerDialog(QDialog):
         lines = self.log_content.split('\n')
         filtered_lines = []
 
-        # Check if any filter is enabled
-        any_filter_enabled = any(self.level_filters.values())
-
         for line in lines:
             show_line = False
 
-            if not any_filter_enabled:
-                # If no filters are enabled, show all lines
+            if self.current_filter == "all":
+                # Show all lines
                 show_line = True
-            else:
-                # Check each filter condition
-                if "ERROR" in line.upper() and self.level_filters["ERROR"]:
+            elif self.current_filter == "error":
+                # Show only error lines
+                if "ERROR" in line.upper():
                     show_line = True
-                if ("WARNING" in line.upper() or "WARN" in line.upper()) and self.level_filters["WARNING"]:
+            elif self.current_filter == "warning":
+                # Show only warning lines
+                if "WARNING" in line.upper() or "WARN" in line.upper():
                     show_line = True
-                if "INFO" in line.upper() and self.level_filters["INFO"]:
+            elif self.current_filter == "info":
+                # Show only info lines
+                if "INFO" in line.upper():
                     show_line = True
-                if "DEBUG" in line.upper() and self.level_filters["DEBUG"]:
+            elif self.current_filter == "debug":
+                # Show only debug lines
+                if "DEBUG" in line.upper():
                     show_line = True
-                if self.level_filters["OTHER"]:
-                    # Show lines that don't match any level filter
-                    if not any(level in line.upper() for level in ["ERROR", "WARNING", "WARN", "INFO", "DEBUG"]):
-                        show_line = True
+            elif self.current_filter == "other":
+                # Show lines that don't match any level filter
+                if not any(level in line.upper() for level in ["ERROR", "WARNING", "WARN", "INFO", "DEBUG"]):
+                    show_line = True
 
             if show_line:
                 filtered_lines.append(line)
