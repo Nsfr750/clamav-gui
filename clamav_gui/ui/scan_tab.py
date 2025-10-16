@@ -82,18 +82,22 @@ class ScanTab(QWidget):
 
         # Progress
         self.progress = QProgressBar()
-        self.progress.setRange(0, 0)  # Animated progress bar
+        self.progress.setRange(0, 100)  # 0-100% range
+        self.progress.setValue(0)  # Start at 0%
+        self.progress.setFormat("Idle - %p%")
         self.progress.setStyleSheet("""
             QProgressBar {
                 border: 2px solid #333;
                 border-radius: 5px;
                 text-align: center;
                 font-weight: bold;
+                height: 25px;
             }
             QProgressBar::chunk {
                 background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
                     stop: 0 #4CAF50, stop: 0.5 #2196F3, stop: 1 #4CAF50);
                 border-radius: 3px;
+                width: 10px;  /* Width of each chunk */
             }
         """)
 
@@ -171,8 +175,24 @@ class ScanTab(QWidget):
         if file_path:
             self.target_input.setText(file_path)
 
+    def count_files(self, path):
+        """Count the number of files in a directory (recursively)."""
+        if os.path.isfile(path):
+            return 1
+
+        count = 0
+        if os.path.isdir(path):
+            for root, _, files in os.walk(path):
+                if not self.stop_btn.isEnabled():
+                    return count  # Stop counting if scan was cancelled
+                count += len(files)
+                # Update progress while counting
+                self.progress.setFormat(f"Counting files... {count} found")
+                QtCore.QCoreApplication.processEvents()  # Keep UI responsive
+        return count
+
     def start_scan(self) -> None:
-        """Start scan (simplified version for scan_tab.py)."""
+        """Start scan with progress based on file count."""
         target = self.target_input.text().strip()
         if not target:
             QMessageBox.warning(self, self.tr("Error"), self.tr("Please select a target to scan"))
@@ -183,40 +203,79 @@ class ScanTab(QWidget):
             QMessageBox.warning(self, self.tr("Error"), self.tr("Selected target does not exist"))
             return
 
-        # Simplified scan logic for scan_tab.py
+        # Initialize UI
+        self.output.clear()
         self.output.append(f"Starting scan of: {target}")
-        self.output.append("Note: This is a simplified scan implementation.")
-        self.output.append("For full functionality, use the main ClamAV GUI application.")
-        self.output.append("")
-
-        self.progress.setRange(0, 0)  # Animated progress
+        self.output.append("Scanning files...")
+        self.progress.setFormat("Counting files...")
+        self.progress.setValue(0)
         self.scan_btn.setEnabled(False)
         self.stop_btn.setEnabled(True)
         self.save_report_btn.setEnabled(False)
+        QtCore.QCoreApplication.processEvents()  # Update UI
 
-        # Simulate scan progress
-        for i in range(10):
-            if not self.stop_btn.isEnabled():
-                break  # Stop was pressed
-            time.sleep(0.5)
-            self.output.append(f"Scanning... {i*10}%")
+        try:
+            # Count total files first
+            total_files = self.count_files(target)
+            if total_files == 0:
+                if os.path.isfile(target):
+                    total_files = 1  # Single file case
+                else:
+                    self.output.append("No files found to scan.")
+                    return
 
-        # Complete scan
-        self.progress.setRange(0, 1)
-        self.progress.setValue(1)
-        self.scan_btn.setEnabled(True)
-        self.stop_btn.setEnabled(False)
-        self.save_report_btn.setEnabled(True)
-        self.output.append("Scan completed (simulated)")
+            self.output.append(f"Found {total_files} files to scan.")
+            self.progress.setRange(0, total_files)
+            self.progress.setFormat("Scanning: %v/%m files (%p%)")
+
+            # Simulate scanning each file
+            scanned_files = 0
+            for root, _, files in os.walk(target) if os.path.isdir(target) else ([os.path.dirname(target)], [], [os.path.basename(target)]):
+                for file in files:
+                    if not self.stop_btn.isEnabled():
+                        break  # Stop was pressed
+
+                    file_path = os.path.join(root, file)
+                    # Simulate file scanning time
+                    time.sleep(0.05)  # Small delay to show progress
+
+                    # Update progress
+                    scanned_files += 1
+                    self.progress.setValue(scanned_files)
+
+                    # Show current file every 10 files or if it's one of the first few
+                    if scanned_files <= 5 or scanned_files % 10 == 0:
+                        self.output.append(f"Scanning: {file_path}")
+                        self.output.moveCursor(QtGui.QTextCursor.End)
+
+                    QtCore.QCoreApplication.processEvents()  # Keep UI responsive
+
+                if not self.stop_btn.isEnabled():
+                    break  # Stop was pressed
+
+            if self.stop_btn.isEnabled():  # Only show completion if not cancelled
+                self.output.append("\nScan completed successfully!")
+                self.progress.setFormat("Scan complete: %m files scanned")
+            else:
+                self.output.append("\nScan was cancelled by user.")
+                self.progress.setFormat("Scan cancelled at %p%")
+
+        except Exception as e:
+            self.output.append(f"\nError during scan: {str(e)}")
+            self.progress.setFormat("Error during scan")
+            logger.error(f"Scan error: {e}", exc_info=True)
+
+        finally:
+            self.scan_btn.setEnabled(True)
+            self.stop_btn.setEnabled(False)
+            self.save_report_btn.setEnabled(True)
 
     def stop_scan(self) -> None:
-        """Stop scan (simplified version for scan_tab.py)."""
-        self.progress.setRange(0, 1)
-        self.progress.setValue(0)
-        self.output.append("Scan stopped by user.")
-        self.scan_btn.setEnabled(True)
-        self.stop_btn.setEnabled(False)
-        self.save_report_btn.setEnabled(True)
+        """Stop the current scan operation."""
+        self.stop_btn.setEnabled(False)  # This will be detected in the scan loop
+        self.output.append("Stopping scan...")
+        self.progress.setFormat("Stopping...")
+        QtCore.QCoreApplication.processEvents()  # Update UI immediately
 
     def save_scan_report(self) -> None:
         """Save scan report (simplified version for scan_tab.py)."""

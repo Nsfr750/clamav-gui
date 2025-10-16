@@ -1296,26 +1296,46 @@ Last activity:
             return
         
         # Validate ClamAV installation first
-        is_installed, status_msg, version_info = self.clamav_validator.check_clamav_installation()
-        
-        if not is_installed:
-            # Show detailed error message with installation guidance
-            error_msg = f"{status_msg}\n\n{self.clamav_validator.get_installation_guidance()}"
-            QMessageBox.critical(self, self.tr("ClamAV Not Found"), error_msg)
-            
-            # Also try to suggest auto-detection of clamscan path
-            suggested_path = self.clamav_validator.find_clamscan()
-            if suggested_path and suggested_path != self.clamscan_path.text().strip():
-                reply = QMessageBox.question(
-                    self, self.tr("Auto-detect ClamAV?"),
-                    self.tr(f"Would you like to use the detected path: {suggested_path}?"),
-                    QMessageBox.Yes | QMessageBox.No
-                )
-                if reply == QMessageBox.Yes:
-                    self.clamscan_path.setText(suggested_path)
-                    return  # Return to let user try again
-            
-            return
+        # For now, use a simple check since clamav_validator doesn't exist
+        import subprocess
+        import os
+
+        try:
+            clamscan_path = self.clamscan_path.text().strip() if hasattr(self, 'clamscan_path') else 'clamscan'
+            if not clamscan_path:
+                clamscan_path = 'clamscan'
+
+            # Try to run clamscan --version to check if it's available
+            result = subprocess.run([clamscan_path, '--version'],
+                                  capture_output=True, text=True, timeout=5)
+
+            if result.returncode == 0:
+                is_installed = True
+                status_msg = f"ClamAV found at: {clamscan_path}"
+                # Parse version info from output
+                output = result.stdout.strip()
+                version_info = {'version': output.split('\n')[0] if output else 'Unknown'}
+            else:
+                is_installed = False
+                status_msg = "ClamAV not found or not working"
+                version_info = {'version': 'Not available'}
+
+        except (subprocess.TimeoutExpired, FileNotFoundError, subprocess.CalledProcessError):
+            is_installed = False
+            status_msg = "ClamAV not found - Please install ClamAV"
+            version_info = {'version': 'Not available'}
+
+        # Simple installation guidance
+        def get_installation_guidance():
+            return "Please install ClamAV and ensure it's in your system PATH, or configure the correct path in Settings."
+
+        # Simple clamscan finder
+        def find_clamscan():
+            common_paths = ['clamscan', '/usr/bin/clamscan', '/usr/local/bin/clamscan', 'C:\\Program Files\\ClamAV\\clamscan.exe']
+            for path in common_paths:
+                if os.path.exists(path):
+                    return path
+            return None
         
         # Validate network path if it's a UNC path
         if target.startswith('\\\\'):
@@ -1333,7 +1353,24 @@ Last activity:
                 if reply != QMessageBox.Yes:
                     return
         
-        # ClamAV is installed, proceed with scan
+        if not is_installed:
+            # Show detailed error message with installation guidance
+            error_msg = f"{status_msg}\n\n{get_installation_guidance()}"
+            QMessageBox.critical(self, self.tr("ClamAV Not Found"), error_msg)
+            
+            # Also try to suggest auto-detection of clamscan path
+            suggested_path = find_clamscan()
+            if suggested_path and suggested_path != self.clamscan_path.text().strip():
+                reply = QMessageBox.question(
+                    self, self.tr("Auto-detect ClamAV?"),
+                    self.tr(f"Would you like to use the detected path: {suggested_path}?"),
+                    QMessageBox.Yes | QMessageBox.No
+                )
+                if reply == QMessageBox.Yes:
+                    self.clamscan_path.setText(suggested_path)
+                    return  # Return to let user try again
+            
+            return
         logger.info(f"Starting scan with ClamAV at: {status_msg}")
         
         # Get the path to clamscan from settings or use default

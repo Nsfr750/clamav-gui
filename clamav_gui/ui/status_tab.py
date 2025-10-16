@@ -78,15 +78,18 @@ class StatusTab(QWidget):
             # Get ClamAV paths from settings
             clamav_paths = self._get_clamav_paths()
 
+            # Check if ClamAV is available
+            clamav_available = version_info.get('version', '').startswith('ClamAV')
+
             # Format information in a clean, organized way
             info_text = f"""ClamAV Information:
 ==================
 
 📋 Version Information:
    • ClamAV Version: {version_info.get('version', 'Unknown')}
-   • Engine Version: {version_info.get('engine_version', 'Unknown')}
-   • Platform: {version_info.get('platform', 'Unknown')}
-   • Build Date: {version_info.get('build_date', 'Unknown')}
+   • Engine Version: {version_info.get('engine_version', 'Not available')}
+   • Platform: {version_info.get('platform', 'Not available')}
+   • Build Date: {version_info.get('build_date', 'Not available')}
 
 🗃️ Database Information:
    • Database Path: {db_info.get('database_path', 'Unknown')}
@@ -104,7 +107,7 @@ class StatusTab(QWidget):
    • FreshClam Path: {clamav_paths.get('freshclam_path', 'Not configured')}
    • ClamD Path: {clamav_paths.get('clamd_path', 'Not configured')}
 
-🔄 Status: {'✅ Up to date' if db_info.get('total_signatures', '0').isdigit() and int(db_info['total_signatures']) > 0 else '⚠️ Database may need update'}
+🔄 Status: {'✅ ClamAV detected and ready' if clamav_available else '⚠️ ClamAV not found - Please install ClamAV or check paths in Settings'}
 """
 
             self.info_text.setPlainText(info_text.strip())
@@ -133,6 +136,9 @@ class StatusTab(QWidget):
             # Check if clamscan exists
             if not os.path.exists(clamscan_path) and clamscan_path != 'clamscan':
                 info['version'] = f"ClamAV executable not found at: {clamscan_path}"
+                info['engine_version'] = 'Configure ClamAV path in Settings'
+                info['platform'] = 'Configure ClamAV path in Settings'
+                info['build_date'] = 'Configure ClamAV path in Settings'
                 return info
 
             # Run clamscan --version
@@ -208,16 +214,31 @@ class StatusTab(QWidget):
                     info['version'] = f"ClamAV found: {clamscan_path}"
             else:
                 info['version'] = f"Error running clamscan: {process.stderr.strip()}"
+                info['engine_version'] = 'Check ClamAV installation'
+                info['platform'] = 'Check ClamAV installation'
+                info['build_date'] = 'Check ClamAV installation'
 
         except FileNotFoundError:
             info['version'] = f"ClamAV not found - Please install ClamAV or check the path in Settings"
+            info['engine_version'] = 'Install ClamAV'
+            info['platform'] = 'Install ClamAV'
+            info['build_date'] = 'Install ClamAV'
         except subprocess.TimeoutExpired:
             info['version'] = "ClamAV command timed out - Please check installation"
+            info['engine_version'] = 'Check ClamAV installation'
+            info['platform'] = 'Check ClamAV installation'
+            info['build_date'] = 'Check ClamAV installation'
         except subprocess.CalledProcessError as e:
             info['version'] = f"Error running ClamAV: {e}"
+            info['engine_version'] = 'Check ClamAV installation'
+            info['platform'] = 'Check ClamAV installation'
+            info['build_date'] = 'Check ClamAV installation'
         except Exception as e:
             logger.error(f"Error getting ClamAV version: {e}")
             info['version'] = f"Unexpected error: {str(e)}"
+            info['engine_version'] = 'Check system configuration'
+            info['platform'] = 'Check system configuration'
+            info['build_date'] = 'Check system configuration'
 
         return info
 
@@ -260,10 +281,10 @@ class StatusTab(QWidget):
                     info['database_version'] = 'No database files found'
                     info['last_update'] = 'No database files found'
             else:
-                info['database_path'] = 'Database directory not found'
-                info['total_signatures'] = 'Database directory not found'
-                info['database_version'] = 'Database directory not found'
-                info['last_update'] = 'Database directory not found'
+                info['database_path'] = 'Database directory not found - Check ClamAV installation'
+                info['total_signatures'] = 'Configure ClamAV paths in Settings'
+                info['database_version'] = 'Configure ClamAV paths in Settings'
+                info['last_update'] = 'Configure ClamAV paths in Settings'
 
         except Exception as e:
             logger.error(f"Error getting database info: {e}")
