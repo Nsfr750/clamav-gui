@@ -125,14 +125,8 @@ class LogViewerDialog(QDialog):
         self.auto_refresh_timer: Optional[QTimer] = None
         self.auto_refresh_enabled: bool = False
 
-        # Log level filtering
-        self.level_filters: Dict[str, bool] = {
-            "ERROR": True,
-            "WARNING": True,
-            "INFO": True,
-            "DEBUG": False,  # Usually too verbose
-            "OTHER": True
-        }
+        # Log level filtering - now using dropdown selection
+        self.current_filter = "all"  # Current filter mode
 
         self._setup_ui()
         self._populate_logs()
@@ -185,25 +179,17 @@ class LogViewerDialog(QDialog):
         # Filter controls
         filter_layout = QHBoxLayout()
 
-        self.error_filter = QCheckBox("ERROR")
-        self.error_filter.setChecked(self.level_filters["ERROR"])
-        self.error_filter.stateChanged.connect(self._apply_filters)
-        filter_layout.addWidget(self.error_filter)
-
-        self.warning_filter = QCheckBox("WARNING")
-        self.warning_filter.setChecked(self.level_filters["WARNING"])
-        self.warning_filter.stateChanged.connect(self._apply_filters)
-        filter_layout.addWidget(self.warning_filter)
-
-        self.info_filter = QCheckBox("INFO")
-        self.info_filter.setChecked(self.level_filters["INFO"])
-        self.info_filter.stateChanged.connect(self._apply_filters)
-        filter_layout.addWidget(self.info_filter)
-
-        self.debug_filter = QCheckBox("DEBUG")
-        self.debug_filter.setChecked(self.level_filters["DEBUG"])
-        self.debug_filter.stateChanged.connect(self._apply_filters)
-        filter_layout.addWidget(self.debug_filter)
+        self.filter_combo = QComboBox()
+        self.filter_combo.addItem("All Logs", "all")
+        self.filter_combo.addItem("Errors Only", "error")
+        self.filter_combo.addItem("Warnings Only", "warning")
+        self.filter_combo.addItem("Info Only", "info")
+        self.filter_combo.addItem("Debug Only", "debug")
+        self.filter_combo.addItem("Other Only", "other")
+        self.filter_combo.setCurrentIndex(0)  # Default to "All Logs"
+        self.filter_combo.currentIndexChanged.connect(self._apply_filters)
+        filter_layout.addWidget(QLabel("Filter:"))
+        filter_layout.addWidget(self.filter_combo)
 
         filter_layout.addStretch()
         toolbar_layout.addLayout(filter_layout)
@@ -255,7 +241,7 @@ class LogViewerDialog(QDialog):
         stats_layout = QVBoxLayout()
 
         self.error_count_label = QLabel("ERROR: 0")
-        self.error_count_label.setStyleSheet("color: yellow; font-weight: bold;")
+        self.error_count_label.setStyleSheet("color: red; font-weight: bold;")
         stats_layout.addWidget(self.error_count_label)
 
         self.warning_count_label = QLabel("WARNING: 0")
@@ -393,6 +379,9 @@ class LogViewerDialog(QDialog):
             content = file_path.read_text(encoding="utf-8", errors="replace")
             self.log_content = content
 
+            # Update statistics
+            self._update_statistics()
+
             # Apply filters and formatting
             self._apply_filters()
 
@@ -400,28 +389,44 @@ class LogViewerDialog(QDialog):
             error_msg = f"Failed to read log file: {e}"
             self.log_view.setPlainText(error_msg)
             self.search_results_label.setText("Error loading file")
+            self._update_statistics()  # Still update stats even on error
 
     def _apply_filters(self) -> None:
         """Apply log level filters to the current content."""
         if not self.log_content:
             return
 
+        # Get current filter selection
+        current_index = self.filter_combo.currentIndex()
+        filter_data = self.filter_combo.itemData(current_index)
+        self.current_filter = filter_data if filter_data else "all"
+
         lines = self.log_content.split('\n')
         filtered_lines = []
 
         for line in lines:
-            # Check log level
             show_line = False
 
-            if "ERROR" in line.upper() and self.level_filters["ERROR"]:
+            if self.current_filter == "all":
+                # Show all lines
                 show_line = True
-            elif ("WARNING" in line.upper() or "WARN" in line.upper()) and self.level_filters["WARNING"]:
-                show_line = True
-            elif "INFO" in line.upper() and self.level_filters["INFO"]:
-                show_line = True
-            elif "DEBUG" in line.upper() and self.level_filters["DEBUG"]:
-                show_line = True
-            elif self.level_filters["OTHER"]:
+            elif self.current_filter == "error":
+                # Show only error lines
+                if "ERROR" in line.upper():
+                    show_line = True
+            elif self.current_filter == "warning":
+                # Show only warning lines
+                if "WARNING" in line.upper() or "WARN" in line.upper():
+                    show_line = True
+            elif self.current_filter == "info":
+                # Show only info lines
+                if "INFO" in line.upper():
+                    show_line = True
+            elif self.current_filter == "debug":
+                # Show only debug lines
+                if "DEBUG" in line.upper():
+                    show_line = True
+            elif self.current_filter == "other":
                 # Show lines that don't match any level filter
                 if not any(level in line.upper() for level in ["ERROR", "WARNING", "WARN", "INFO", "DEBUG"]):
                     show_line = True
@@ -450,9 +455,9 @@ class LogViewerDialog(QDialog):
             elif "WARNING" in line.upper() or "WARN" in line.upper():
                 formatted_lines.append(f'<span style="color: orange; font-weight: bold;">{line}</span>')
             elif "INFO" in line.upper():
-                formatted_lines.append(f'<span style="color: blue;">{line}</span>')
+                formatted_lines.append(f'<span style="color: white;">{line}</span>')
             elif "DEBUG" in line.upper():
-                formatted_lines.append(f'<span style="color: gray;">{line}</span>')
+                formatted_lines.append(f'<span style="color: yellow;">{line}</span>')
             else:
                 formatted_lines.append(line)
 
@@ -476,12 +481,37 @@ class LogViewerDialog(QDialog):
             self.file_modified_label.setText("Error")
             self.file_lines_label.setText("Error")
 
-    def _clear_file_info(self) -> None:
-        """Clear file information display."""
-        self.file_path_label.setText("No file selected")
-        self.file_size_label.setText("0 bytes")
-        self.file_modified_label.setText("Never")
-        self.file_lines_label.setText("0 lines")
+    def _update_statistics(self) -> None:
+        """Update statistics display with current log content."""
+        if not self.log_content:
+            self.error_count_label.setText("ERROR: 0")
+            self.warning_count_label.setText("WARNING: 0")
+            self.info_count_label.setText("INFO: 0")
+            return
+
+        lines = self.log_content.split('\n')
+        error_count = 0
+        warning_count = 0
+        info_count = 0
+        debug_count = 0
+        other_count = 0
+
+        for line in lines:
+            line_upper = line.upper()
+            if "ERROR" in line_upper:
+                error_count += 1
+            elif "WARNING" in line_upper or "WARN" in line_upper:
+                warning_count += 1
+            elif "INFO" in line_upper:
+                info_count += 1
+            elif "DEBUG" in line_upper:
+                debug_count += 1
+            else:
+                other_count += 1
+
+        self.error_count_label.setText(f"ERROR: {error_count}")
+        self.warning_count_label.setText(f"WARNING: {warning_count}")
+        self.info_count_label.setText(f"INFO: {info_count}")
 
     def _search_logs(self) -> None:
         """Search for text in the current log."""
@@ -508,27 +538,35 @@ class LogViewerDialog(QDialog):
             self.search_results_label.setText("No results found")
             self.clear_search_btn.setEnabled(False)
 
-    def _highlight_search_result(self) -> None:
-        """Highlight the current search result."""
-        if not self.search_results or self.current_search_index < 0:
+    def _apply_search(self) -> None:
+        """Apply current search to the displayed filtered content."""
+        search_text = self.search_input.text().strip()
+        if not search_text:
             return
 
-        # Get the line number of current result
-        line_num = self.search_results[self.current_search_index]
+        # Get the current displayed content (filtered)
+        displayed_content = self.log_view.toPlainText()
+        if not displayed_content:
+            return
 
-        # Scroll to that line (approximate)
-        cursor = self.log_view.textCursor()
-        cursor.setPosition(0)
+        # Clear previous search results
+        self.search_results.clear()
+        self.current_search_index = -1
 
-        # Move to the approximate position (rough calculation)
-        lines = self.log_content.split('\n')
-        position = 0
-        for i in range(min(line_num, len(lines))):
-            position += len(lines[i]) + 1  # +1 for newline
+        # Find all occurrences in the displayed content
+        lines = displayed_content.split('\n')
+        for i, line in enumerate(lines):
+            if search_text.lower() in line.lower():
+                self.search_results.append(i)
 
-        cursor.setPosition(position)
-        self.log_view.setTextCursor(cursor)
-        self.log_view.ensureCursorVisible()
+        if self.search_results:
+            self.current_search_index = 0
+            self.search_results_label.setText(f"Found {len(self.search_results)} results")
+            self.clear_search_btn.setEnabled(True)
+            self._highlight_search_result()
+        else:
+            self.search_results_label.setText("No results found")
+            self.clear_search_btn.setEnabled(False)
 
     def _next_search_result(self) -> None:
         """Go to next search result."""
@@ -614,9 +652,62 @@ class LogViewerDialog(QDialog):
 
     def _get_filtered_content(self) -> str:
         """Get the currently filtered content for export."""
-        # This would return the filtered content based on current filters
-        # For now, return the raw content
-        return self.log_content
+        if not self.log_content:
+            return ""
+
+        lines = self.log_content.split('\n')
+        filtered_lines = []
+
+        # Check if any filter is enabled
+        any_filter_enabled = any(self.level_filters.values())
+
+        for line in lines:
+            show_line = False
+
+            if not any_filter_enabled:
+                # If no filters are enabled, show all lines
+                show_line = True
+            else:
+                # Check each filter condition
+                if "ERROR" in line.upper() and self.level_filters["ERROR"]:
+                    show_line = True
+                if ("WARNING" in line.upper() or "WARN" in line.upper()) and self.level_filters["WARNING"]:
+                    show_line = True
+                if "INFO" in line.upper() and self.level_filters["INFO"]:
+                    show_line = True
+                if "DEBUG" in line.upper() and self.level_filters["DEBUG"]:
+                    show_line = True
+                if self.level_filters["OTHER"]:
+                    # Show lines that don't match any level filter
+                    if not any(level in line.upper() for level in ["ERROR", "WARNING", "WARN", "INFO", "DEBUG"]):
+                        show_line = True
+
+            if show_line:
+                filtered_lines.append(line)
+
+        return '\n'.join(filtered_lines)
+
+    def _highlight_search_result(self) -> None:
+        """Highlight the current search result."""
+        if not self.search_results or self.current_search_index < 0:
+            return
+
+        # Get the line number of current result
+        line_num = self.search_results[self.current_search_index]
+
+        # Scroll to that line (approximate)
+        cursor = self.log_view.textCursor()
+        cursor.setPosition(0)
+
+        # Move to the approximate position (rough calculation)
+        lines = self.log_content.split('\n')
+        position = 0
+        for i in range(min(line_num, len(lines))):
+            position += len(lines[i]) + 1  # +1 for newline
+
+        cursor.setPosition(position)
+        self.log_view.setTextCursor(cursor)
+        self.log_view.ensureCursorVisible()
 
     def closeEvent(self, event) -> None:
         """Handle dialog close event."""
