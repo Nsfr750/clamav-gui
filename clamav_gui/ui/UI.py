@@ -3,9 +3,9 @@ Advanced main window base class for ClamAV GUI full mode functionality.
 """
 import logging
 import os
-from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QTabWidget, QStatusBar
+from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QTabWidget, QStatusBar, QMessageBox
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QIcon, QTextCursor
 
 from clamav_gui.ui.menu import ClamAVMenuBar
 from clamav_gui.ui.settings import AppSettings
@@ -431,7 +431,7 @@ class ClamAVMainWindow(QMainWindow):
         self.db_output.append(text)
         # Scroll to bottom
         cursor = self.db_output.textCursor()
-        cursor.movePosition(cursor.End)
+        cursor.movePosition(QTextCursor.End)
         self.db_output.setTextCursor(cursor)
 
     def db_update_finished(self, exit_code, exit_status):
@@ -463,13 +463,13 @@ class ClamAVMainWindow(QMainWindow):
                 # Get database info
                 db_info = self.virus_db_updater.get_database_info()
 
-                if 'error' in db_info:
+                if 'error' in db_info and db_info['error']:
                     self.db_version_label.setText(self.tr("Error"))
                     self.db_signatures_label.setText(self.tr("Error"))
                     self.db_last_update_label.setText(f"Error: {db_info['error']}")
                 else:
                     self.db_version_label.setText(db_info.get('version', self.tr('Unknown')))
-                    self.db_signatures_label.setText(str(db_info.get('signature_count', self.tr('Unknown'))))
+                    self.db_signatures_label.setText(str(db_info.get('signatures', self.tr('Unknown'))))
                     self.db_last_update_label.setText(db_info.get('build_time', self.tr('Unknown')))
 
         except Exception as e:

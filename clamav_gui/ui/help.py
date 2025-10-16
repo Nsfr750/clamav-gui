@@ -279,56 +279,88 @@ class HelpDialog(QDialog):
             "help.content.it",
             """
             <h1>Guida GUI ClamAV</h1>
-            
+
             <h2>Guida introduttiva</h2>
             <p>Benvenuto in ClamAV GUI, un'interfaccia intuitiva per il motore antivirus ClamAV.</p>
-            
+
             <h3>Scansione rapida</h3>
             <p>Esegui una scansione rapida delle posizioni comuni alla ricerca di malware.</p>
             <ul>
                 <li>Fare clic sul pulsante <b>Scansione rapida</b> per avviare una scansione rapida del sistema.</li>
-
                 <li>Questa scansione controlla le posizioni critiche del sistema in cui è più frequente trovare malware.</li>
             </ul>
-            
+
             <h3>Scansione completa</h3>
             <p>Esegue una scansione approfondita dell'intero sistema.</p>
             <ul>
                 <li>Fare clic sul pulsante <b>Scansione completa</b> per eseguire la scansione di tutti i file presenti nel sistema.</li>
                 <li>L'operazione potrebbe richiedere del tempo a seconda delle dimensioni del sistema.</li>
             </ul>
-            
+
             <h3>Scansione personalizzata</h3>
             <p>Eseguire la scansione di file o directory specifici a scelta.</p>
             <ul>
                 <li>Fare clic su <b>Scansione personalizzata</b> e selezionare i file o le cartelle che si desidera scansionare.</li>
                 <li>Utilizzare il browser dei file per navigare fino alla posizione desiderata.</li>
             </ul>
-            
+
+            <h2>Funzionalità avanzate (Versione 1.2.0)</h2>
+
+            <h3>Visualizzatore log avanzato</h3>
+            <p>Visualizza e analizza i log dell'applicazione con funzionalità avanzate.</p>
+            <ul>
+                <li>Accedi tramite <b>Aiuto → Visualizza log</b> o la scheda Visualizzatore log dedicata.</li>
+                <li><b>Funzione di ricerca</b>: Cerca nei log con evidenziazione in tempo reale.</li>
+                <li><b>Filtri</b>: Filtra i log per livello (ERROR, WARNING, INFO, DEBUG) o mostra tutte le voci.</li>
+                <li><b>Codifica colori</b>: Diversi colori per diversi livelli di log per una facile identificazione.</li>
+                <li><b>Statistiche</b>: Visualizza le statistiche dei log incluse conteggi errori e informazioni sui file.</li>
+                <li><b>Esporta</b>: Esporta i log filtrati per analisi esterne.</li>
+            </ul>
+
+            <h3>Editor di configurazione</h3>
+            <p>Modifica i file di configurazione di ClamAV direttamente nell'applicazione.</p>
+            <ul>
+                <li>Accedi tramite la scheda <b>Editor configurazione</b>.</li>
+                <li>Modifica <b>clamd.conf</b>, <b>freshclam.conf</b> e altri file di configurazione.</li>
+                <li>Evidenziazione sintassi e validazione per i file di configurazione.</li>
+                <li>Modifica sicura con funzionalità di backup e ripristino.</li>
+            </ul>
+
+            <h3>Menu scansione avanzata</h3>
+            <p>Accedi alle funzionalità di scansione avanzate tramite il sistema di menu migliorato.</p>
+            <ul>
+                <li><b>Scansione intelligente</b>: Utilizza database hash per saltare file sicuri scansionati in precedenza.</li>
+                <li><b>Rilevamento minacce ML</b>: Analisi basata su IA per il rilevamento avanzato di minacce.</li>
+                <li><b>Scansione email</b>: Scansione dedicata per file email (formati .eml, .msg).</li>
+                <li><b>Analisi batch</b>: Elabora più file simultaneamente.</li>
+                <li><b>Scansione rete</b>: Scansiona unità di rete e posizioni remote.</li>
+            </ul>
+
             <h2>Aggiornamenti del database dei virus</h2>
             <p>Mantenere aggiornate le definizioni dei virus per una protezione ottimale.</p>
             <ul>
                 <li>Fai clic su <b>Aggiorna</b> per scaricare le definizioni dei virus più recenti.</li>
                 <li>Abilita gli aggiornamenti automatici in Impostazioni per una protezione continua.</li>
             </ul>
-            
+
             <h2>Quarantena</h2>
             <p>Gestisci i file che sono stati identificati come potenziali minacce.</p>
             <ul>
                 <li>Visualizza i file in quarantena nella sezione <b>Quarantena</b>.</li>
                 <li>Ripristina i falsi positivi o elimina le minacce confermate.</li>
             </ul>
-	    <h2>Impostazioni</h2>
+
+            <h2>Impostazioni</h2>
             <p>Personalizza l'interfaccia grafica di ClamAV in base alle tue esigenze.</p>
             <ul>
                 <li>Configura le opzioni di scansione e le esclusioni.</li>
                 <li>Imposta le scansioni pianificate.</li>
                 <li>Modifica le impostazioni di aggiornamento.</li>
             </ul>
-            
+
             <h2>Hai bisogno di ulteriore assistenza?</h2>
             <p>Visita il <a href="https://www.clamav.net/">sito web di ClamAV</a> per ulteriori informazioni e documentazione.</p>
-            
+
             """
         )
     
@@ -338,45 +370,77 @@ class HelpDialog(QDialog):
             "help.content.en",
             """
             <h1>ClamAV GUI Help</h1>
-            
+
             <h2>Getting Started</h2>
             <p>Welcome to ClamAV GUI, a user-friendly interface for the ClamAV antivirus engine.</p>
-            
+
             <h3>Quick Scan</h3>
             <p>Quickly scan common locations for malware.</p>
             <ul>
                 <li>Click the <b>Quick Scan</b> button to start a quick system scan.</li>
                 <li>This scan checks critical system locations where malware is commonly found.</li>
             </ul>
-            
+
             <h3>Full Scan</h3>
             <p>Perform a thorough scan of your entire system.</p>
             <ul>
                 <li>Click the <b>Full Scan</b> button to scan all files on your system.</li>
                 <li>This may take a while depending on your system size.</li>
             </ul>
-            
+
             <h3>Custom Scan</h3>
             <p>Scan specific files or directories of your choice.</p>
             <ul>
                 <li>Click <b>Custom Scan</b> and select the files or folders you want to scan.</li>
                 <li>Use the file browser to navigate to your desired location.</li>
             </ul>
-            
+
+            <h2>Advanced Features (Version 1.2.0)</h2>
+
+            <h3>Enhanced Log Viewer</h3>
+            <p>View and analyze application logs with advanced features.</p>
+            <ul>
+                <li>Access via <b>Help → View Logs</b> or the dedicated Log Viewer tab.</li>
+                <li><b>Search Functionality</b>: Search through logs with real-time highlighting.</li>
+                <li><b>Filtering</b>: Filter logs by level (ERROR, WARNING, INFO, DEBUG) or show all entries.</li>
+                <li><b>Color Coding</b>: Different colors for different log levels for easy identification.</li>
+                <li><b>Statistics</b>: View log statistics including error counts and file information.</li>
+                <li><b>Export</b>: Export filtered logs for external analysis.</li>
+            </ul>
+
+            <h3>Configuration Editor</h3>
+            <p>Edit ClamAV configuration files directly within the application.</p>
+            <ul>
+                <li>Access via the <b>Config Editor</b> tab.</li>
+                <li>Edit <b>clamd.conf</b>, <b>freshclam.conf</b>, and other configuration files.</li>
+                <li>Syntax highlighting and validation for configuration files.</li>
+                <li>Safe editing with backup and restore capabilities.</li>
+            </ul>
+
+            <h3>Advanced Scanning Menu</h3>
+            <p>Access advanced scanning features through the enhanced menu system.</p>
+            <ul>
+                <li><b>Smart Scanning</b>: Uses hash databases to skip previously scanned safe files.</li>
+                <li><b>ML Threat Detection</b>: AI-powered analysis for advanced threat detection.</li>
+                <li><b>Email Scanning</b>: Dedicated scanning for email files (.eml, .msg formats).</li>
+                <li><b>Batch Analysis</b>: Process multiple files simultaneously.</li>
+                <li><b>Network Scanning</b>: Scan network drives and remote locations.</li>
+            </ul>
+
             <h2>Virus Database Updates</h2>
             <p>Keep your virus definitions up to date for optimal protection.</p>
             <ul>
                 <li>Click <b>Update</b> to download the latest virus definitions.</li>
                 <li>Enable automatic updates in Settings for continuous protection.</li>
             </ul>
-            
+
             <h2>Quarantine</h2>
             <p>Manage files that have been identified as potential threats.</p>
             <ul>
                 <li>View quarantined files in the <b>Quarantine</b> section.</li>
                 <li>Restore false positives or delete confirmed threats.</li>
             </ul>
-            
+
             <h2>Settings</h2>
             <p>Customize ClamAV GUI to suit your needs.</p>
             <ul>
@@ -384,7 +448,7 @@ class HelpDialog(QDialog):
                 <li>Set up scheduled scans.</li>
                 <li>Adjust update settings.</li>
             </ul>
-            
+
             <h2>Need More Help?</h2>
             <p>Visit the <a href="https://www.clamav.net/">ClamAV website</a> for more information and documentation.</p>
             """

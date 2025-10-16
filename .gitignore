@@ -179,6 +179,19 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# Mixed
 TXT
 pyinstaller.py
 version_info.py
+version_info.txt
+nuitka_compiler.py
+ClamAV-GUI.spec
+firma.bat
+Makefile
+pytest.ini
+run_tests.py
+step_by_step_import.py
+tests/
+
+

@@ -8,8 +8,9 @@ The ClamAV GUI is a Windows-based graphical user interface for the ClamAV antivi
 
 | Version | Supported          | Security Updates |
 | ------- | ------------------ | ---------------- |
-| 1.1.x   | :white_check_mark: | Active           |
-| 1.0.x   | :white_check_mark: | Until 1.2.0      |
+| 1.2.x   | :white_check_mark: | Active           |
+| 1.1.x   | :white_check_mark: | Until 1.3.0      |
+| 1.0.x   | :x:                | None             |
 | < 1.0   | :x:                | None             |
 
 ## Reporting a Vulnerability
@@ -18,7 +19,7 @@ We take the security of our software seriously. If you discover a security vulne
 
 ### How to Report
 
-Please report security vulnerabilities by emailing us at [security@clamav-gui.org](mailto:security@clamav-gui.org) or directly to the maintainer [Nsfr750](mailto:nsfr750@yandex.com).
+Please report security vulnerabilities by emailing directly to the maintainer [Nsfr750](mailto:nsfr750@yandex.com).
 
 **Important**: Please do not create public GitHub issues for security vulnerabilities. Use the email contacts above instead.
 
@@ -49,6 +50,27 @@ Once received, we will:
 4. **Test** the fix thoroughly
 5. **Release** a security update
 6. **Publish** a security advisory
+
+### Version 1.2.0 Security Improvements
+
+#### Enhanced Log Viewer Security
+
+- **Secure Log Data Handling**: The enhanced log viewer processes log data locally without external transmission
+- **Input Sanitization**: All log content is properly sanitized before display to prevent injection attacks
+- **Access Control**: Log viewer respects file system permissions and only displays accessible log files
+- **Search Function Security**: Search functionality uses safe string operations to prevent regex injection
+
+#### Configuration Editor Security
+
+- **Path Validation**: Configuration file paths are validated to prevent directory traversal attacks
+- **Safe File Operations**: File editing operations include proper error handling and atomic writes
+- **Permission Checks**: Editor verifies write permissions before attempting file modifications
+
+#### Advanced Scanning Features Security
+
+- **Network Path Security**: Network drive scanning validates UNC paths and handles access errors gracefully
+- **Resource Management**: Proper cleanup of temporary resources during advanced scanning operations
+- **Input Validation**: Enhanced validation of scan parameters and file paths
 
 ## Security Considerations
 
@@ -237,4 +259,4 @@ For sensitive communications, you may use our PGP key (available upon request).
 
 ---
 
-*This security policy was last updated on October 12, 2025.*
+*This security policy was last updated on October 16, 2025.*

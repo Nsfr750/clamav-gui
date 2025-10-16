@@ -140,26 +140,69 @@ class StatusTab(QWidget):
                                    capture_output=True, text=True, timeout=10)
 
             if process.returncode == 0:
-                output = process.stdout
-                # Parse version information from output
-                lines = output.strip().split('\n')
+                output = process.stdout.strip()
+                lines = output.split('\n')
+
                 if lines:
-                    # First line usually contains version info
-                    first_line = lines[0]
+                    # Parse the version output - typical format:
+                    # "ClamAV 1.3.0/26987/Mon Jan 15 08:30:00 2024"
+
+                    # First line contains main version info
+                    first_line = lines[0].strip()
                     if 'ClamAV' in first_line:
+                        # Extract main version
                         parts = first_line.split()
                         for i, part in enumerate(parts):
-                            if part.startswith('/') and 'ClamAV' in ' '.join(parts[i:i+2]):
-                                info['version'] = parts[i+1] if i+1 < len(parts) else 'Unknown'
+                            if 'ClamAV' in part and i + 1 < len(parts):
+                                # Version is typically the next part after "ClamAV"
+                                version_part = parts[i + 1]
+                                if '/' in version_part:
+                                    # Format: "1.3.0/26987/Mon Jan 15 08:30:00 2024"
+                                    version_components = version_part.split('/')
+                                    if len(version_components) >= 1:
+                                        info['engine_version'] = version_components[0]  # "1.3.0"
+                                        if len(version_components) >= 2:
+                                            # Build number (signature count)
+                                            build_num = version_components[1]
+                                            if build_num.isdigit():
+                                                info['version'] = f"ClamAV {version_components[0]} (Build {build_num})"
+                                            else:
+                                                info['version'] = f"ClamAV {version_components[0]}"
+                                        if len(version_components) >= 3:
+                                            # Build date
+                                            info['build_date'] = version_components[2]
+                                    else:
+                                        info['version'] = f"ClamAV {version_part}"
+                                else:
+                                    info['version'] = f"ClamAV {version_part}"
                                 break
 
-                    # Look for engine version
-                    for line in lines:
-                        if 'ClamAV' in line and '/' in line:
-                            # Extract version from something like "ClamAV 0.103.8/26887/Mon"
-                            version_part = line.split('/')[-2] if '/' in line else 'Unknown'
-                            if version_part and version_part.replace('.', '').isdigit():
-                                info['engine_version'] = version_part
+                    # Look for platform information in subsequent lines
+                    for line in lines[1:]:
+                        line = line.strip().lower()
+                        if 'platform' in line or 'compiled' in line or 'built' in line:
+                            # Extract platform info
+                            if 'windows' in line:
+                                info['platform'] = 'Windows'
+                            elif 'linux' in line:
+                                info['platform'] = 'Linux'
+                            elif 'darwin' in line or 'macos' in line:
+                                info['platform'] = 'macOS'
+                            elif 'freebsd' in line:
+                                info['platform'] = 'FreeBSD'
+                            else:
+                                info['platform'] = 'Unknown'
+
+                        # Also check for build date in the line
+                        if any(month in line for month in ['jan', 'feb', 'mar', 'apr', 'may', 'jun',
+                                                         'jul', 'aug', 'sep', 'oct', 'nov', 'dec']):
+                            # This line might contain build date
+                            date_parts = line.split()
+                            for part in date_parts:
+                                if any(month in part.lower() for month in ['jan', 'feb', 'mar', 'apr', 'may', 'jun',
+                                                                         'jul', 'aug', 'sep', 'oct', 'nov', 'dec']):
+                                    info['build_date'] = part
+                                    break
 
                 if info['version'] == 'ClamAV not found - Please install ClamAV':
                     info['version'] = f"ClamAV found: {clamscan_path}"
@@ -188,106 +231,39 @@ class StatusTab(QWidget):
         }
 
         try:
-            # Get database directory path
-            app_data = os.getenv('APPDATA')
-            if app_data:
-                clamav_dir = os.path.join(app_data, 'ClamAV')
-                db_dir = os.path.join(clamav_dir, 'database')
+            # Try multiple methods to find ClamAV database directory
+            db_dir = self._find_database_directory()
+
+            if db_dir and os.path.exists(db_dir):
                 info['database_path'] = db_dir
 
                 # Check for database files
-                if os.path.exists(db_dir):
-                    db_files = [f for f in os.listdir(db_dir) if f.endswith('.cvd') or f.endswith('.cld')]
-                    if db_files:
-                        # Try to get signature count using sigtool if available
-                        try:
-                            sigtool_path = self._find_sigtool()
-                            if sigtool_path:
-                                # Use sigtool to get database info
-                                process = subprocess.run([sigtool_path, '--info'],
-                                                       capture_output=True, text=True, timeout=10,
-                                                       cwd=db_dir)
+                db_files = [f for f in os.listdir(db_dir) if f.endswith('.cvd') or f.endswith('.cld')]
+                if db_files:
+                    # Try to get signature count using multiple methods
+                    sig_count = self._get_signature_count(db_dir, db_files)
+                    if sig_count:
+                        info['total_signatures'] = str(sig_count)
 
-                                if process.returncode == 0:
-                                    output = process.stdout
-                                    # Parse signature count from sigtool output
-                                    for line in output.split('\n'):
-                                        if 'signatures' in line.lower():
-                                            # Extract number from something like "Total signatures: 8500000"
-                                            parts = line.split(':')
-                                            if len(parts) > 1:
-                                                sig_count = parts[1].strip().split()[0]
-                                                if sig_count.isdigit():
-                                                    info['total_signatures'] = sig_count
+                    # Get database version from file names or info
+                    db_version = self._get_database_version(db_dir, db_files)
+                    if db_version:
+                        info['database_version'] = db_version
 
-                        except (subprocess.TimeoutExpired, subprocess.CalledProcessError):
-                            pass
+                    # Get last update time
+                    last_update = self._get_last_update_time(db_dir, db_files)
+                    if last_update:
+                        info['last_update'] = last_update.strftime('%Y-%m-%d %H:%M:%S')
 
-                        # Fallback: count signatures using clamscan
-                        if info['total_signatures'] == 'Database not accessible':
-                            try:
-                                clamscan_path = self.parent.clamscan_path.text().strip() if hasattr(self.parent, 'clamscan_path') else 'clamscan'
-                                if not clamscan_path:
-                                    clamscan_path = 'clamscan'
-
-                                # Count signatures using grep
-                                process = subprocess.run([clamscan_path, '--list-sigs'],
-                                                       capture_output=True, text=True, timeout=30,
-                                                       cwd=db_dir)
-
-                                if process.returncode == 0:
-                                    sig_count = len([line for line in process.stdout.split('\n') if line.strip()])
-                                    if sig_count > 0:
-                                        info['total_signatures'] = str(sig_count)
-
-                            except (subprocess.TimeoutExpired, subprocess.CalledProcessError):
-                                pass
-
-                        # Get database version from file names or info
-                        try:
-                            # Try to read CVD header for version info
-                            for db_file in db_files:
-                                if db_file.endswith('.cvd'):
-                                    db_path = os.path.join(db_dir, db_file)
-                                    try:
-                                        with open(db_path, 'rb') as f:
-                                            # CVD format has version info in header
-                                            header = f.read(512)
-                                            # Look for version string in header
-                                            header_str = header.decode('latin-1', errors='ignore')
-                                            if 'ClamAV-VDB:' in header_str:
-                                                # Extract version from CVD header
-                                                version_start = header_str.find('ClamAV-VDB:') + 11
-                                                version_end = header_str.find('\0', version_start)
-                                                if version_end > version_start:
-                                                    version = header_str[version_start:version_end].strip()
-                                                    info['database_version'] = version
-                                                    break
-                                    except:
-                                        pass
-
-                            # Fallback: use file modification time as last update
-                            if db_files:
-                                db_path = os.path.join(db_dir, db_files[0])
-                                last_update = datetime.fromtimestamp(os.path.getmtime(db_path))
-                                info['last_update'] = last_update.strftime('%Y-%m-%d %H:%M:%S')
-
-                        except Exception as e:
-                            logger.warning(f"Could not read database version: {e}")
-
-                    else:
-                        info['total_signatures'] = 'No database files found'
-                        info['database_version'] = 'No database files found'
-                        info['last_update'] = 'No database files found'
                 else:
-                    info['total_signatures'] = 'Database directory not found'
-                    info['database_version'] = 'Database directory not found'
-                    info['last_update'] = 'Database directory not found'
+                    info['total_signatures'] = 'No database files found'
+                    info['database_version'] = 'No database files found'
+                    info['last_update'] = 'No database files found'
             else:
-                info['database_path'] = 'APPDATA environment variable not set'
-                info['total_signatures'] = 'Cannot determine database location'
-                info['database_version'] = 'Cannot determine database location'
-                info['last_update'] = 'Cannot determine database location'
+                info['database_path'] = 'Database directory not found'
+                info['total_signatures'] = 'Database directory not found'
+                info['database_version'] = 'Database directory not found'
+                info['last_update'] = 'Database directory not found'
 
         except Exception as e:
             logger.error(f"Error getting database info: {e}")
@@ -297,15 +273,201 @@ class StatusTab(QWidget):
 
         return info
 
-    def _find_sigtool(self):
-        """Find the sigtool executable."""
-        possible_paths = [
-            self.parent.clamscan_path.text().strip().replace('clamscan', 'sigtool') if hasattr(self.parent, 'clamscan_path') else 'sigtool',
-            'sigtool'
+    def _find_database_directory(self):
+        """Find the ClamAV database directory using multiple methods."""
+        # Method 1: Check common Windows installation paths
+        common_paths = [
+            r'C:\Program Files\ClamAV\database',
+            r'C:\Program Files (x86)\ClamAV\database',
+            r'C:\ClamAV\database',
         ]
 
-        for path in possible_paths:
-            if path and os.path.exists(path):
+        for path in common_paths:
+            if os.path.exists(path):
+                return path
+
+        # Method 2: Check APPDATA if it exists (for user-specific installations)
+        try:
+            app_data = os.getenv('APPDATA')
+            if app_data:
+                user_paths = [
+                    os.path.join(app_data, 'ClamAV', 'database'),
+                    os.path.join(app_data, '.clamav', 'database'),
+                ]
+                for path in user_paths:
+                    if os.path.exists(path):
+                        return path
+        except Exception:
+            pass
+
+        # Method 3: Try to detect from clamscan location if available
+        try:
+            clamscan_path = getattr(self.parent, 'clamscan_path', None)
+            if clamscan_path and hasattr(clamscan_path, 'text'):
+                clamscan_dir = os.path.dirname(clamscan_path.text().strip())
+                if clamscan_dir and clamscan_dir != '.':
+                    # Assume database is in same directory or subdirectory
+                    possible_db_paths = [
+                        os.path.join(clamscan_dir, 'database'),
+                        os.path.join(os.path.dirname(clamscan_dir), 'database'),
+                    ]
+                    for path in possible_db_paths:
+                        if os.path.exists(path):
+                            return path
+        except Exception:
+            pass
+
+        return None
+
+    def _get_signature_count(self, db_dir, db_files):
+        """Get signature count using multiple methods."""
+        # Method 1: Try sigtool if available
+        try:
+            sigtool_path = self._find_sigtool()
+            if sigtool_path:
+                process = subprocess.run([sigtool_path, '--info'],
+                                       capture_output=True, text=True, timeout=10,
+                                       cwd=db_dir)
+                if process.returncode == 0:
+                    for line in process.stdout.split('\n'):
+                        if 'signatures' in line.lower():
+                            parts = line.split(':')
+                            if len(parts) > 1:
+                                sig_count = parts[1].strip().split()[0]
+                                if sig_count.isdigit():
+                                    return int(sig_count)
+        except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
+            pass
+
+        # Method 2: Try clamscan --list-sigs (more reliable but slower)
+        try:
+            clamscan_path = self.parent.clamscan_path.text().strip() if hasattr(self.parent, 'clamscan_path') else 'clamscan'
+            if not clamscan_path or clamscan_path == 'clamscan':
+                # Try to find clamscan in PATH
+                clamscan_path = self._find_clamscan_executable()
+
+            if clamscan_path and os.path.exists(clamscan_path):
+                process = subprocess.run([clamscan_path, '--list-sigs'],
+                                       capture_output=True, text=True, timeout=30,
+                                       cwd=db_dir)
+                if process.returncode == 0:
+                    sig_count = len([line for line in process.stdout.split('\n') if line.strip()])
+                    if sig_count > 0:
+                        return sig_count
+        except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
+            pass
+
+        # Method 3: Count files as rough estimate
+        total_files = len([f for f in db_files if f.endswith('.cvd') or f.endswith('.cld')])
+        if total_files > 0:
+            # Rough estimate: each CVD file typically contains ~1M signatures
+            return total_files * 1000000
+
+        return None
+
+    def _get_database_version(self, db_dir, db_files):
+        """Get database version from CVD files."""
+        for db_file in db_files:
+            if db_file.endswith('.cvd'):
+                db_path = os.path.join(db_dir, db_file)
+                try:
+                    with open(db_path, 'rb') as f:
+                        # CVD format has version info in header
+                        header = f.read(512)
+                        header_str = header.decode('latin-1', errors='ignore')
+                        if 'ClamAV-VDB:' in header_str:
+                            version_start = header_str.find('ClamAV-VDB:') + 11
+                            version_end = header_str.find('\0', version_start)
+                            if version_end > version_start:
+                                version = header_str[version_start:version_end].strip()
+                                return version
+                except (IOError, OSError):
+                    continue
+
+        # Fallback: extract version from filename
+        for db_file in db_files:
+            if '.cvd' in db_file or '.cld' in db_file:
+                # Extract version from filename like "daily.cvd" or "main.cvd"
+                name_part = db_file.replace('.cvd', '').replace('.cld', '')
+                if name_part and not name_part.isdigit():
+                    return name_part
+
+        return None
+
+    def _get_last_update_time(self, db_dir, db_files):
+        """Get the last update time from the most recently modified database file."""
+        if not db_files:
+            return None
+
+        latest_time = 0
+        latest_file = None
+
+        for db_file in db_files:
+            db_path = os.path.join(db_dir, db_file)
+            try:
+                mod_time = os.path.getmtime(db_path)
+                if mod_time > latest_time:
+                    latest_time = mod_time
+                    latest_file = db_path
+            except (OSError, IOError):
+                continue
+
+        if latest_file:
+            return datetime.fromtimestamp(latest_time)
+
+        return None
+
+    def _find_clamscan_executable(self):
+        """Find clamscan executable in common locations or PATH."""
+        # Check if it's in PATH
+        try:
+            subprocess.run(['clamscan', '--version'],
+                         capture_output=True, timeout=5)
+            return 'clamscan'
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            pass
+
+        # Check common installation paths
+        common_paths = [
+            r'C:\Program Files\ClamAV\clamscan.exe',
+            r'C:\Program Files (x86)\ClamAV\clamscan.exe',
+            r'C:\ClamAV\clamscan.exe',
+        ]
+
+        for path in common_paths:
+            if os.path.exists(path):
+                return path
+
+        return None
+
+    def _find_sigtool(self):
+        """Find the sigtool executable."""
+        # First try to derive from clamscan path if available
+        if hasattr(self.parent, 'clamscan_path') and self.parent.clamscan_path:
+            clamscan_path = self.parent.clamscan_path.text().strip()
+            if clamscan_path and clamscan_path != 'clamscan':
+                sigtool_path = clamscan_path.replace('clamscan', 'sigtool')
+                if os.path.exists(sigtool_path):
+                    return sigtool_path
+
+        # Check common installation paths
+        common_paths = [
+            r'C:\Program Files\ClamAV\sigtool.exe',
+            r'C:\Program Files (x86)\ClamAV\sigtool.exe',
+            r'C:\ClamAV\sigtool.exe',
+            'sigtool'  # Check PATH
+        ]
+
+        for path in common_paths:
+            if path == 'sigtool':
+                # Check if in PATH
+                try:
+                    subprocess.run([path, '--version'],
+                                 capture_output=True, timeout=5)
+                    return path
+                except (FileNotFoundError, subprocess.TimeoutExpired):
+                    continue
+            elif os.path.exists(path):
                 return path
 
         return None
