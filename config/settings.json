@@ -1,6 +1,6 @@
 {
   "clamd_path": "C:\\Program Files\\ClamAV\\clamd.exe",
-  "freshclam_path": "C:/Program Files/ClamAV/freshclam.exe",
+  "freshclam_path": "C:\\Program Files\\ClamAV\\freshclam.exe",
   "clamscan_path": "C:\\Program Files\\ClamAV\\clamscan.exe",
   "scan_archives": false,
   "scan_heuristics": false,

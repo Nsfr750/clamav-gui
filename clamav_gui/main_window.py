@@ -1532,7 +1532,15 @@ Last activity:
         # Use error recovery for scan operations
         try:
             # Start the scan in a separate thread with error recovery
-            self.scan_thread = ScanThread(cmd, enable_smart_scanning=self.enable_smart_scanning.isChecked())
+            enable_smart = False
+            if hasattr(self, 'enable_smart_scanning') and self.enable_smart_scanning is not None:
+                if hasattr(self.enable_smart_scanning, 'isChecked'):
+                    enable_smart = self.enable_smart_scanning.isChecked()
+                else:
+                    # Fallback for boolean value
+                    enable_smart = bool(self.enable_smart_scanning)
+            
+            self.scan_thread = ScanThread(cmd, enable_smart_scanning=enable_smart)
             self.scan_thread.update_output.connect(self.update_scan_output)
             self.scan_thread.update_progress.connect(self.update_progress)
             self.scan_thread.update_stats.connect(self.update_scan_stats)
@@ -1837,7 +1845,8 @@ Last activity:
         if 'include_patterns' in scan_settings:
             self.include_patterns.setText(scan_settings['include_patterns'])
         if 'enable_smart_scanning' in scan_settings:
-            self.enable_smart_scanning.setChecked(scan_settings.get('enable_smart_scanning', False))
+            if hasattr(self, 'enable_smart_scanning') and self.enable_smart_scanning is not None:
+                self.enable_smart_scanning.setChecked(scan_settings.get('enable_smart_scanning', False))
         
     def _auto_quarantine_infected_files(self):
         """Automatically quarantine infected files found during scan."""
