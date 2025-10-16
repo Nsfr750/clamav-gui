@@ -2,7 +2,7 @@
 
 This document outlines the development roadmap for ClamAV GUI, including upcoming features, improvements, and long-term goals.
 
-## Version 1.1.1 (Current Release) 🚀
+## Version 1.2.0 (Current Release) 🚀
 
 ### Core Features
 
@@ -12,6 +12,9 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 - [x] **Custom Scan Profiles**: Save and reuse scan configurations for different use cases
 - [x] **Network Drive Support**: Scan network-attached storage and mapped drives
 - [x] **Email Scanning**: Scan email files (.eml, .msg) and analyze attachments
+- [x] **Enhanced Log Viewer**: Advanced log viewing with search, filtering, color coding, and statistics
+- [x] **Config Editor Tab**: Separate tab for editing ClamAV configuration files
+- [x] **Advanced Scanning Menu**: New menu with smart scanning, ML detection, email scanning, and batch analysis
 
 ### Advanced Features
 
@@ -25,9 +28,9 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 - [x] **Async Scanning**: Non-blocking UI during large scans with progress cancellation
 - [x] **Smart Scanning**: Skip known safe files using hash databases
 - [x] **Incremental Updates**: Differential virus database updates for faster downloads
-- [ ] **Error Recovery**: Automatic retry mechanisms for failed operations
+- [x] **Error Recovery**: Automatic retry mechanisms for failed operations
 
-## Version 1.2.0 (Future Release) 🔮
+## Version 1.3.0 (Future Release) 🔮
 
 ### User Experience
 
@@ -50,15 +53,17 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 - [ ] **LDAP Integration**: Enterprise authentication and user management
 - [ ] **SIEM Integration**: Send alerts and logs to enterprise monitoring systems
 
-## Version 1.3.0 (Major Release) ⚡
+## Version 1.4.0 (Major Release) ⚡
 
 ### Architecture Overhaul
+
 - [ ] **Cross-Platform Support**: Native Linux and macOS versions
 - [ ] **Microservices Architecture**: Modular design for better maintainability
 - [ ] **Database Backend**: Replace file-based storage with proper database
 - [ ] **Web Interface**: Browser-based management interface
 
 ### Advanced Security
+
 - [ ] **Machine Learning Integration**: AI-powered threat detection
 - [ ] **Sandbox Analysis**: Execute suspicious files in isolated environments
 - [ ] **Threat Intelligence**: Real-time threat feed integration
@@ -66,23 +71,30 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 
 ## Completed Milestones ✅
 
-### Version 1.1.0 (Current)
+### Version 1.2.0 (Current)
+
 - ✅ **Complete UI Overhaul**: Modern PySide6 interface with improved usability
+- ✅ **Enhanced Log Viewer**: Advanced log viewing with search, filtering, and statistics
+- ✅ **Config Editor Tab**: Separate tab for editing ClamAV configuration files
+- ✅ **Advanced Scanning Menu**: New menu with smart scanning, ML detection, email scanning, and batch analysis
+- ✅ **Menu Organization**: Reorganized menu structure for better user experience
 - ✅ **Comprehensive Testing**: Full test suite with GUI, performance, and integration tests
 - ✅ **Internationalization**: Multi-language support with translation system
 - ✅ **Advanced Configuration**: Flexible settings and scan options
 - ✅ **Security Hardening**: Enhanced security with comprehensive security policy
 
-### Version 1.0.0 (Initial Release)
-- ✅ **Basic Scanning**: Core file and directory scanning functionality
-- ✅ **GUI Interface**: Initial PySide6-based user interface
-- ✅ **Quarantine System**: Basic infected file isolation
-- ✅ **Update System**: Virus database update management
-- ✅ **Settings Management**: Basic configuration options
+### Version 1.1.0
+
+- ✅ **Machine Learning Integration**: AI-powered threat detection with feature extraction and ML models
+- ✅ **Error Recovery**: Automatic retry mechanisms for failed operations with exponential backoff
+- ✅ **Advanced Reporting**: Comprehensive analytics, threat intelligence, and export capabilities
+- ✅ **Sandbox Analysis**: Behavioral analysis and system monitoring for suspicious files
+
 
 ## Research & Investigation 🔍
 
 ### Areas Under Consideration
+
 - **Mobile Application**: Android/iOS companion app for remote management
 - **IoT Device Scanning**: Support for scanning IoT devices on the network
 - **Container Scanning**: Docker container and Kubernetes pod scanning

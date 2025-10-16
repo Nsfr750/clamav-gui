@@ -28,6 +28,7 @@ from clamav_gui.ui.menu import ClamAVMenuBar
 from clamav_gui.ui.about import AboutDialog
 from clamav_gui.ui.sponsor import SponsorDialog
 from clamav_gui.ui.status_tab import StatusTab
+from clamav_gui.ui.conf_editor_tab import ConfigEditorTab
 from clamav_gui.utils.virus_db import VirusDBUpdater
 
 # Import language manager
@@ -44,6 +45,9 @@ from clamav_gui.utils.quarantine_manager import QuarantineManager
 
 # Import enhanced database updater
 from clamav_gui.utils.enhanced_db_updater import EnhancedVirusDBUpdater, EnhancedUpdateThread
+
+# Import scan thread for file scanning
+from clamav_gui.utils.scan_thread import ScanThread
 
 # Import hash database for smart scanning
 from clamav_gui.utils.hash_database import HashDatabase
@@ -80,9 +84,10 @@ class ClamAVGUI(ClamAVMainWindow):
         self.hash_database = HashDatabase()
         self.clamav_validator = ClamAVValidator()
         self.scan_report_generator = ScanReportGenerator()
-        self.quarantine_manager = QuarantineManager()
-        self.error_recovery = ErrorRecoveryManager()
-        self.network_recovery = NetworkErrorRecovery()
+        # Quarantine manager will be initialized later after dependencies are set up
+        # Note: ErrorRecoveryManager and NetworkErrorRecovery classes don't exist yet
+        # self.error_recovery = ErrorRecoveryManager()
+        # self.network_recovery = NetworkErrorRecovery()
         self.advanced_reporting = AdvancedReporting()
         self.ml_detector = MLThreatDetector()
         self.sandbox_analyzer = MLSandboxAnalyzer()
@@ -115,6 +120,14 @@ class ClamAVGUI(ClamAVMainWindow):
         self.help_menu = None
         self.language_menu = None
         
+        # Initialize quarantine manager after all dependencies are set up
+        try:
+            self.quarantine_manager = QuarantineManager()
+            logger.info("Quarantine manager initialized successfully")
+        except Exception as e:
+            logger.error(f"Failed to initialize quarantine manager: {e}")
+            self.quarantine_manager = None
+        
         # Initialize UI
         self.init_ui()
         
@@ -144,16 +157,20 @@ class ClamAVGUI(ClamAVMainWindow):
         main_layout.addWidget(self.tabs)
         
         # Add tabs
+        self.home_tab = self.create_home_tab()
         self.scan_tab = self.create_scan_tab()
         self.email_scan_tab = self.create_email_scan_tab()
+        self.virus_db_tab = self.create_virus_db_tab()
         self.update_tab = self.create_update_tab()
         self.settings_tab = self.create_settings_tab()
         self.quarantine_tab = self.create_quarantine_tab()
         self.config_editor_tab = self.create_config_editor_tab()
         self.status_tab = StatusTab(self)
         
+        self.tabs.addTab(self.home_tab, self.tr("Home"))
         self.tabs.addTab(self.scan_tab, self.tr("Scan"))
         self.tabs.addTab(self.email_scan_tab, self.tr("Email Scan"))
+        self.tabs.addTab(self.virus_db_tab, self.tr("VirusDB"))
         self.tabs.addTab(self.update_tab, self.tr("Update"))
         self.tabs.addTab(self.settings_tab, self.tr("Settings"))
         self.tabs.addTab(self.quarantine_tab, self.tr("Quarantine"))
@@ -366,13 +383,15 @@ class ClamAVGUI(ClamAVMainWindow):
             
             # Update tab names
             if hasattr(self, 'tabs'):
-                self.tabs.setTabText(0, self.tr("Scan"))
-                self.tabs.setTabText(1, self.tr("Email Scan"))
-                self.tabs.setTabText(2, self.tr("Update"))
-                self.tabs.setTabText(3, self.tr("Settings"))
-                self.tabs.setTabText(4, self.tr("Quarantine"))
-                self.tabs.setTabText(5, self.tr("Config Editor"))
-                self.tabs.setTabText(6, self.tr("Status"))
+                self.tabs.setTabText(0, self.tr("Home"))
+                self.tabs.setTabText(1, self.tr("Scan"))
+                self.tabs.setTabText(2, self.tr("Email Scan"))
+                self.tabs.setTabText(3, self.tr("VirusDB"))
+                self.tabs.setTabText(4, self.tr("Update"))
+                self.tabs.setTabText(5, self.tr("Settings"))
+                self.tabs.setTabText(6, self.tr("Quarantine"))
+                self.tabs.setTabText(7, self.tr("Config Editor"))
+                self.tabs.setTabText(8, self.tr("Status"))
             
             # Update status bar
             if hasattr(self, 'status_bar'):
@@ -386,8 +405,19 @@ class ClamAVGUI(ClamAVMainWindow):
         from . import __version__
         check_for_updates(parent=self, current_version=__version__, force_check=force_check)
     
-    # Add the rest of the existing methods from the original file
-    # ... (create_scan_tab, create_update_tab, create_settings_tab, etc.)
+    def create_home_tab(self):
+        """Create the home tab using HomeTab class."""
+        try:
+            from clamav_gui.ui.home_tab import HomeTab
+            return HomeTab(self)
+        except ImportError as e:
+            logger.warning(f"Could not import HomeTab: {e}")
+            # Fallback to simple home tab
+            from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+            tab = QWidget()
+            layout = QVBoxLayout(tab)
+            layout.addWidget(QLabel(self.tr("Home tab not available")))
+            return tab
     
     def create_scan_tab(self):
         """Create the scan tab."""
@@ -709,79 +739,30 @@ class ClamAVGUI(ClamAVMainWindow):
         return tab
     
     def create_quarantine_tab(self):
-        """Create the quarantine management tab."""
-        tab = QWidget()
-        layout = QVBoxLayout(tab)
-        
-        # Quarantine statistics
-        stats_group = QGroupBox(self.tr("Quarantine Statistics"))
-        stats_layout = QVBoxLayout()
-        
-        self.quarantine_stats_text = QTextEdit()
-        self.quarantine_stats_text.setReadOnly(True)
-        self.quarantine_stats_text.setMaximumHeight(150)
-        stats_layout.addWidget(self.quarantine_stats_text)
-        
-        refresh_btn = QPushButton(self.tr("Refresh Stats"))
-        refresh_btn.clicked.connect(self.refresh_quarantine_stats)
-        stats_layout.addWidget(refresh_btn)
-        
-        stats_group.setLayout(stats_layout)
-        
-        # Quarantine file list
-        files_group = QGroupBox(self.tr("Quarantined Files"))
-        files_layout = QVBoxLayout()
-        
-        self.quarantine_files_list = QListWidget()
-        self.quarantine_files_list.setSelectionMode(QAbstractItemView.MultiSelection)
-        files_layout.addWidget(self.quarantine_files_list)
-        
-        # File management buttons
-        file_btn_layout = QHBoxLayout()
-        
-        restore_btn = QPushButton(self.tr("Restore Selected"))
-        restore_btn.clicked.connect(self.restore_selected_files)
-        file_btn_layout.addWidget(restore_btn)
-        
-        delete_btn = QPushButton(self.tr("Delete Selected"))
-        delete_btn.clicked.connect(self.delete_selected_files)
-        file_btn_layout.addWidget(delete_btn)
-        
-        # Bulk operations
-        bulk_btn_layout = QHBoxLayout()
-        
-        restore_all_btn = QPushButton(self.tr("Restore All"))
-        restore_all_btn.clicked.connect(self.restore_all_files)
-        bulk_btn_layout.addWidget(restore_all_btn)
-        
-        delete_all_btn = QPushButton(self.tr("Delete All"))
-        delete_all_btn.clicked.connect(self.delete_all_files)
-        bulk_btn_layout.addWidget(delete_all_btn)
-        
-        cleanup_btn = QPushButton(self.tr("Cleanup (30+ days)"))
-        cleanup_btn.clicked.connect(self.cleanup_old_files)
-        bulk_btn_layout.addWidget(cleanup_btn)
-        
-        files_layout.addLayout(file_btn_layout)
-        files_layout.addLayout(bulk_btn_layout)
-        
-        export_btn = QPushButton(self.tr("Export List"))
-        export_btn.clicked.connect(self.export_quarantine_list)
-        file_btn_layout.addWidget(export_btn)
-        
-        # Add to main layout
-        layout.addWidget(stats_group)
-        layout.addWidget(files_group)
-        
-        # Initial refresh
-        self.refresh_quarantine_stats()
-        self.refresh_quarantine_files()
-        
-        return tab
+        """Create the quarantine tab using QuarantineTab class."""
+        try:
+            from clamav_gui.ui.quarantine_tab import QuarantineTab
+            tab = QuarantineTab(self)
+            # Set the quarantine manager reference
+            if hasattr(self, 'quarantine_manager') and self.quarantine_manager:
+                tab.set_quarantine_manager(self.quarantine_manager)
+            return tab
+        except ImportError as e:
+            logger.warning(f"Could not import QuarantineTab: {e}")
+            # Fallback to simple quarantine tab
+            from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+            tab = QWidget()
+            layout = QVBoxLayout(tab)
+            layout.addWidget(QLabel(self.tr("Quarantine tab not available")))
+            return tab
     
     def refresh_quarantine_stats(self):
         """Refresh the quarantine statistics display."""
         try:
+            if not self.quarantine_manager:
+                self.quarantine_stats_text.setPlainText("Quarantine manager not initialized")
+                return
+
             stats = self.quarantine_manager.get_quarantine_stats()
             
             stats_text = f"""
@@ -801,11 +782,18 @@ Last activity:
             self.quarantine_stats_text.setPlainText(stats_text.strip())
             
         except Exception as e:
-            self.quarantine_stats_text.setPlainText(f"Error loading quarantine statistics: {str(e)}")
+            error_msg = f"Error loading quarantine statistics: {str(e)}"
+            logger.error(error_msg)
+            self.quarantine_stats_text.setPlainText(error_msg)
     
     def refresh_quarantine_files(self):
         """Refresh the list of quarantined files."""
         try:
+            if not self.quarantine_manager:
+                self.quarantine_files_list.clear()
+                self.quarantine_files_list.addItem("Quarantine manager not initialized")
+                return
+
             self.quarantine_files_list.clear()
             quarantined_files = self.quarantine_manager.list_quarantined_files()
             
@@ -1239,93 +1227,18 @@ Last activity:
             )
     
     def create_config_editor_tab(self):
-        tab = QWidget()
-        layout = QVBoxLayout(tab)
-        
-        # Config editor
-        config_group = QGroupBox(self.tr("Configuration Editor"))
-        config_layout = QVBoxLayout()
-        
-        self.config_editor = QPlainTextEdit()
-        config_layout.addWidget(self.config_editor)
-        
-        # Create Reports menu
-        reports_menu = menu_bar.addMenu(self.tr("&Reports"))
-
-        # Add reporting actions
-        generate_report_action = QAction(self.tr("Generate Scan Report"), self)
-        generate_report_action.triggered.connect(self.generate_scan_report)
-        reports_menu.addAction(generate_report_action)
-
-        generate_analytics_action = QAction(self.tr("Generate Analytics Report"), self)
-        generate_analytics_action.triggered.connect(self.generate_analytics_report)
-        reports_menu.addAction(generate_analytics_action)
-
-        threat_intelligence_action = QAction(self.tr("Threat Intelligence Report"), self)
-        threat_intelligence_action.triggered.connect(self.generate_threat_intelligence_report)
-        reports_menu.addAction(threat_intelligence_action)
-
-        reports_menu.addSeparator()
-
-        export_report_action = QAction(self.tr("Export Current Report"), self)
-        export_report_action.triggered.connect(self.export_current_report)
-        reports_menu.addAction(export_report_action)
-
-        # Create ML Analysis menu
-        ml_menu = menu_bar.addMenu(self.tr("&ML Analysis"))
-
-        # Add ML analysis actions
-        analyze_file_action = QAction(self.tr("Analyze File with ML"), self)
-        analyze_file_action.triggered.connect(self.analyze_file_with_ml)
-        ml_menu.addAction(analyze_file_action)
-
-        batch_analyze_action = QAction(self.tr("Batch ML Analysis"), self)
-        batch_analyze_action.triggered.connect(self.batch_analyze_files)
-        ml_menu.addAction(batch_analyze_action)
-
-        train_model_action = QAction(self.tr("Train ML Model"), self)
-        train_model_action.triggered.connect(self.train_ml_model)
-        ml_menu.addAction(train_model_action)
-
-        ml_menu.addSeparator()
-
-        ml_info_action = QAction(self.tr("ML Model Info"), self)
-        ml_info_action.triggered.connect(self.show_ml_model_info)
-        ml_menu.addAction(ml_info_action)
-
-        # Create Sandbox Analysis menu
-        sandbox_menu = menu_bar.addMenu(self.tr("&Sandbox Analysis"))
-
-        # Add sandbox analysis actions
-        sandbox_analyze_action = QAction(self.tr("Analyze File in Sandbox"), self)
-        sandbox_analyze_action.triggered.connect(self.sandbox_analyze_file)
-        sandbox_menu.addAction(sandbox_analyze_action)
-
-        batch_sandbox_action = QAction(self.tr("Batch Sandbox Analysis"), self)
-        batch_sandbox_action.triggered.connect(self.batch_sandbox_analysis)
-        sandbox_menu.addAction(batch_sandbox_action)
-
-        sandbox_menu.addSeparator()
-
-        sandbox_capabilities_action = QAction(self.tr("Sandbox Capabilities"), self)
-        sandbox_capabilities_action.triggered.connect(self.show_sandbox_capabilities)
-        sandbox_menu.addAction(sandbox_capabilities_action)
-
-        # Buttons
-        btn_layout = QHBoxLayout()
-        
-        load_btn = QPushButton(self.tr("Load Config"))
-        load_btn.clicked.connect(self.load_config)
-        btn_layout.addWidget(load_btn)
-        
-        save_btn = QPushButton(self.tr("Save Config"))
-        save_btn.clicked.connect(self.save_config)
-        btn_layout.addWidget(save_btn)
-        
-        config_layout.addLayout(btn_layout)
-        config_group.setLayout(config_layout)
-        
-        return tab
+        """Create the config editor tab using ConfigEditorTab class."""
+        try:
+            tab = ConfigEditorTab(self)
+            return tab
+        except ImportError as e:
+            logger.warning(f"Could not import ConfigEditorTab: {e}")
+            # Fallback to simple config editor tab
+            from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+            tab = QWidget()
+            layout = QVBoxLayout(tab)
+            layout.addWidget(QLabel(self.tr("Config Editor tab not available")))
+            return tab
 
     # Add the rest of the original methods here
     def browse_target(self):
@@ -1695,36 +1608,46 @@ Last activity:
             
     def update_database(self):
         """Update the ClamAV virus database using enhanced updater with error recovery."""
-        # Disconnect any existing connections to avoid duplicates
-        if hasattr(self.virus_db_updater, 'signals'):
-            self.virus_db_updater.signals.disconnect_all()
-
-        # Use error recovery for database updates
         try:
-            # Use enhanced update thread with error recovery
-            self.update_thread = EnhancedUpdateThread(self.virus_db_updater)
-            self.update_thread.update_output.connect(self.update_update_output)
-            self.update_thread.update_progress.connect(self.update_progress)
-            self.update_thread.finished.connect(self.update_finished)
+            # Disconnect any existing connections to avoid duplicates
+            if hasattr(self, 'virus_db_updater') and hasattr(self.virus_db_updater, 'signals'):
+                try:
+                    self.virus_db_updater.signals.disconnect_all()
+                except:
+                    pass
 
-            # Clear and update UI
-            self.update_output.clear()
+            # Use error recovery for database updates
+            try:
+                # Use enhanced update thread with error recovery
+                self.update_thread = EnhancedUpdateThread(self.virus_db_updater)
+                self.update_thread.update_output.connect(self.update_update_output)
+                self.update_thread.update_progress.connect(self.update_progress)
+                self.update_thread.finished.connect(self.update_finished)
 
-            # Get freshclam path from settings if available
-            freshclam_path = None
-            if hasattr(self, 'freshclam_path') and self.freshclam_path.text().strip():
-                freshclam_path = self.freshclam_path.text().strip()
+                # Clear and update UI if we have an update output widget
+                if hasattr(self, 'update_output'):
+                    self.update_output.clear()
 
-            if freshclam_path:
-                self.virus_db_updater = EnhancedVirusDBUpdater(freshclam_path)
+                # Get freshclam path from settings if available
+                freshclam_path = None
+                if hasattr(self, 'freshclam_path') and self.freshclam_path.text().strip():
+                    freshclam_path = self.freshclam_path.text().strip()
 
-            # Start the enhanced update
-            self.update_thread.start()
+                if freshclam_path:
+                    self.virus_db_updater = EnhancedVirusDBUpdater(freshclam_path)
+
+                # Start the enhanced update
+                self.update_thread.start()
+
+            except Exception as thread_error:
+                logger.error(f"Error creating update thread: {thread_error}")
+                QMessageBox.critical(self, self.tr("Update Error"),
+                                   self.tr(f"Failed to create update thread: {str(thread_error)}"))
 
         except Exception as e:
             logger.error(f"Error starting database update: {e}")
             QMessageBox.critical(self, self.tr("Update Error"),
-                               self.tr(f"Failed to start database update: {str(e)}"))
+                               self.tr(f"Failed to start database update: {str(e)}\n\nPlease check that ClamAV is installed and configured correctly."))
     
     def update_progress(self, value):
         """Update the progress bar with the current value."""
@@ -1753,22 +1676,41 @@ Last activity:
     
     def update_finished(self, success, message):
         """Handle update completion."""
-        if success:
-            self.status_bar.showMessage(self.tr("Database updated successfully"))
-            if hasattr(self, 'progress'):
-                self.progress.setValue(100)
-            QMessageBox.information(self, self.tr("Success"),
-                                 self.tr(f"Virus database updated successfully.\n\n{message}"))
+        try:
+            if success:
+                self.status_bar.showMessage(self.tr("Database updated successfully"))
+                if hasattr(self, 'progress'):
+                    self.progress.setValue(100)
 
-            # Clean up old backups
-            try:
-                self.virus_db_updater.cleanup_old_backups(7)  # Keep 7 days of backups
-            except:
-                pass
-        else:
-            self.status_bar.showMessage(self.tr("Database update failed"))
-            QMessageBox.warning(self, self.tr("Warning"),
-                             self.tr(f"Virus database update failed. Please check the logs for details.\n\n{message}"))
+                # Show success message with details
+                QMessageBox.information(self, self.tr("Success"),
+                                       self.tr(f"Virus database updated successfully.\n\n{message}"))
+
+                # Clean up old backups
+                try:
+                    if hasattr(self, 'virus_db_updater') and self.virus_db_updater:
+                        self.virus_db_updater.cleanup_old_backups(7)  # Keep 7 days of backups
+                except Exception as cleanup_error:
+                    logger.warning(f"Failed to cleanup old backups: {cleanup_error}")
+            else:
+                self.status_bar.showMessage(self.tr("Database update failed"))
+
+                # Provide more specific error information
+                error_details = message
+                if "timeout" in message.lower():
+                    error_details += "\n\nThe update timed out. This might be due to network issues or a slow connection."
+                elif "not found" in message.lower():
+                    error_details += "\n\nClamAV or freshclam might not be installed or not in the system PATH."
+                elif "permission" in message.lower() or "access" in message.lower():
+                    error_details += "\n\nThere might be permission issues accessing the database directory."
+
+                QMessageBox.warning(self, self.tr("Database Update Failed"),
+                                   self.tr(f"Virus database update failed.\n\nError details: {error_details}\n\nPlease check the logs for more information."))
+
+        except Exception as e:
+            logger.error(f"Error in update_finished handler: {e}")
+            QMessageBox.critical(self, self.tr("Update Error"),
+                               self.tr(f"An error occurred while processing the update result: {str(e)}"))
     
     def save_settings(self):
         """Save the application settings."""

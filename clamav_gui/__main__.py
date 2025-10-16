@@ -17,7 +17,7 @@ try:
     from PySide6.QtGui import QIcon
     
     # Now that PySide6 is imported, we can import our modules that might use it
-    from clamav_gui.ui.main_ui import MainUIWindow
+    from clamav_gui.main_window import ClamAVGUI
     from clamav_gui.lang.lang_manager import SimpleLanguageManager
     from clamav_gui import __version__
     from clamav_gui.ui.updates_ui import check_for_updates
@@ -99,8 +99,8 @@ def main():
         # Set up the application
         app, lang_manager = setup_application()
         
-        # Create and show main window (minimal, reliable UI)
-        window = MainUIWindow(lang_manager)
+        # Create and show main window (ClamAVGUI with full mode functionality)
+        window = ClamAVGUI(lang_manager)
         window.show()
         
         # Check for updates (non-blocking)

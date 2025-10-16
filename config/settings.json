@@ -1,0 +1,5 @@
+{
+  "clamd_path": "/usr/sbin/clamd",
+  "freshclam_path": "/usr/bin/freshclam",
+  "clamscan_path": "/usr/bin/clamscan"
+}

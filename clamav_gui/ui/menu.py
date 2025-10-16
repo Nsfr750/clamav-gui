@@ -31,6 +31,7 @@ class ClamAVMenuBar(QMenuBar):
         # Initialize menu references
         self.file_menu = None
         self.tools_menu = None
+        self.advanced_scan_menu = None
         self.help_menu = None
         self.language_menu = None
         
@@ -73,11 +74,43 @@ class ClamAVMenuBar(QMenuBar):
         self.tools_menu.addAction(self.check_updates_action)
         self.tools_menu.addSeparator()
 
-        # Help menu
-        self.help_menu = self.addMenu(self.tr("&Help"))
+        # Advanced scanning functions menu
+        self.advanced_scan_menu = self.addMenu(self.tr("Advanced Functions"))
+        if self.advanced_scan_menu is None:
+            self.advanced_scan_menu = QMenu(self.tr("&Advanced Functions"), self)
+            self.addMenu(self.advanced_scan_menu)
+
+        # Smart scanning action
+        self.smart_scan_action = QAction(self.tr("&Smart Scanning"), self)
+        self.smart_scan_action.triggered.connect(self.show_smart_scanning)
+        self.advanced_scan_menu.addAction(self.smart_scan_action)
+
+        # ML threat detection action
+        self.ml_detection_action = QAction(self.tr("ML &Threat Detection"), self)
+        self.ml_detection_action.triggered.connect(self.show_ml_detection)
+        self.advanced_scan_menu.addAction(self.ml_detection_action)
+
+        # Email scanning action
+        self.email_scan_action = QAction(self.tr("&Email Scanning"), self)
+        self.email_scan_action.triggered.connect(self.show_email_scanning)
+        self.advanced_scan_menu.addAction(self.email_scan_action)
+
+        # Batch analysis action
+        self.batch_analysis_action = QAction(self.tr("&Batch Analysis"), self)
+        self.batch_analysis_action.triggered.connect(self.show_batch_analysis)
+        self.advanced_scan_menu.addAction(self.batch_analysis_action)
+
+        self.advanced_scan_menu.addSeparator()
+
+        # Network scanning action
+        self.network_scan_action = QAction(self.tr("&Network Scanning"), self)
+        self.network_scan_action.triggered.connect(self.show_network_scanning)
+        self.advanced_scan_menu.addAction(self.network_scan_action)
+
+        # Help menu - moved to be added last (rightmost position)
+        self.help_menu = QMenu(self.tr("&Help"), self)
         if self.help_menu is None:
             self.help_menu = QMenu(self.tr("&Help"), self)
-            self.addMenu(self.help_menu)
         
         # Help action
         self.help_action = QAction(self.tr("&Help"), self)
@@ -108,12 +141,20 @@ class ClamAVMenuBar(QMenuBar):
         if self.help_menu is not None:
             self.help_menu.addAction(self.view_logs_action)
         
-        # Add language menu to menu bar after it's fully initialized
+        # Add language menu to menu bar
         if self.language_menu is not None:
             try:
                 self.addMenu(self.language_menu)
             except Exception:
                 pass
+                
+        # Add Help menu to the rightmost position (last)
+        if self.help_menu is not None:
+            try:
+                self.addMenu(self.help_menu)
+            except Exception:
+                pass
+        
         # Import here to avoid circular imports
         try:
             from .updates_ui import UpdatesDialog
@@ -228,6 +269,8 @@ class ClamAVMenuBar(QMenuBar):
                 self.file_menu.setTitle(getattr(self.lang_manager, 'tr', lambda x: x)("menu.file") or "&File")
             if hasattr(self, 'tools_menu') and self.is_widget_valid(self.tools_menu):
                 self.tools_menu.setTitle(getattr(self.lang_manager, 'tr', lambda x: x)("menu.tools") or "&Tools")
+            if hasattr(self, 'advanced_scan_menu') and self.is_widget_valid(self.advanced_scan_menu):
+                self.advanced_scan_menu.setTitle(getattr(self.lang_manager, 'tr', lambda x: x)("menu.advanced_scan") or "Funzioni &avanzate scansione")
             if hasattr(self, 'help_menu') and self.is_widget_valid(self.help_menu):
                 self.help_menu.setTitle(getattr(self.lang_manager, 'tr', lambda x: x)("menu.help") or "&Help")
             if hasattr(self, 'language_menu') and self.is_widget_valid(self.language_menu):
@@ -236,6 +279,11 @@ class ClamAVMenuBar(QMenuBar):
             # Update menu actions
             safe_set_text(getattr(self, 'exit_action', None), self.lang_manager.tr("E&xit") or "E&xit")
             safe_set_text(getattr(self, 'check_updates_action', None), self.lang_manager.tr("Check for &Updates...") or "Check for &Updates...")
+            safe_set_text(getattr(self, 'smart_scan_action', None), self.lang_manager.tr("&Smart Scanning") or "&Smart Scanning")
+            safe_set_text(getattr(self, 'ml_detection_action', None), self.lang_manager.tr("ML &Threat Detection") or "ML &Threat Detection")
+            safe_set_text(getattr(self, 'email_scan_action', None), self.lang_manager.tr("&Email Scanning") or "&Email Scanning")
+            safe_set_text(getattr(self, 'batch_analysis_action', None), self.lang_manager.tr("&Batch Analysis") or "&Batch Analysis")
+            safe_set_text(getattr(self, 'network_scan_action', None), self.lang_manager.tr("&Network Scanning") or "&Network Scanning")
             safe_set_text(getattr(self, 'help_action', None), self.lang_manager.tr("&Help") or "&Help")
             safe_set_text(getattr(self, 'about_action', None), self.lang_manager.tr("&About") or "&About")
             safe_set_text(getattr(self, 'sponsor_action', None), self.lang_manager.tr("&Sponsor") or "&Sponsor")
@@ -553,10 +601,15 @@ class ClamAVMenuBar(QMenuBar):
                     # Update tab names if they exist
                     if hasattr(self, 'tabs') and hasattr(self.tabs, 'setTabText'):
                         try:
-                            self.tabs.setTabText(0, self.tr("Scan"))
-                            self.tabs.setTabText(1, self.tr("Update"))
-                            self.tabs.setTabText(2, self.tr("Settings"))
-                            self.tabs.setTabText(3, self.tr("Config Editor"))
+                            self.tabs.setTabText(0, self.tr("Home"))
+                            self.tabs.setTabText(1, self.tr("Scan"))
+                            self.tabs.setTabText(2, self.tr("Email Scan"))
+                            self.tabs.setTabText(3, self.tr("VirusDB"))
+                            self.tabs.setTabText(4, self.tr("Update"))
+                            self.tabs.setTabText(5, self.tr("Settings"))
+                            self.tabs.setTabText(6, self.tr("Quarantine"))
+                            self.tabs.setTabText(7, self.tr("Config Editor"))
+                            self.tabs.setTabText(8, self.tr("Status"))
                         except Exception as e:
                             logger.error(f"Error updating tab names: {e}")
                     
@@ -575,11 +628,62 @@ class ClamAVMenuBar(QMenuBar):
         except Exception as e:
             logger.error(f"Unexpected error in on_language_selected: {e}", exc_info=True)
 
-    def __del__(self):
-        """Cleanup resources when the object is being destroyed."""
-        # Disconnect all signals to prevent memory leaks
-        if hasattr(self, 'language_menu') and hasattr(self.language_menu, 'blockSignals'):
-            try:
-                self.language_menu.blockSignals(True)
-            except RuntimeError:
-                pass
+    def show_smart_scanning(self):
+        """Show the smart scanning dialog."""
+        try:
+            QMessageBox.information(
+                self,
+                self.tr("Smart Scanning"),
+                self.tr("Smart scanning functionality will be available in a future update.\n\n"
+                      "This feature will use hash databases to skip files that have been previously scanned and confirmed safe.")
+            )
+        except Exception as e:
+            logger.error(f"Error showing smart scanning dialog: {e}")
+
+    def show_ml_detection(self):
+        """Show the ML threat detection dialog."""
+        try:
+            QMessageBox.information(
+                self,
+                self.tr("ML Threat Detection"),
+                self.tr("Machine Learning threat detection will be available in a future update.\n\n"
+                      "This feature will use AI models to detect suspicious files based on behavioral analysis.")
+            )
+        except Exception as e:
+            logger.error(f"Error showing ML detection dialog: {e}")
+
+    def show_email_scanning(self):
+        """Show the email scanning dialog."""
+        try:
+            QMessageBox.information(
+                self,
+                self.tr("Email Scanning"),
+                self.tr("Email scanning functionality is available in the Email Scan tab.\n\n"
+                      "Switch to the 'Email Scan' tab to scan email files for threats.")
+            )
+        except Exception as e:
+            logger.error(f"Error showing email scanning dialog: {e}")
+
+    def show_batch_analysis(self):
+        """Show the batch analysis dialog."""
+        try:
+            QMessageBox.information(
+                self,
+                self.tr("Batch Analysis"),
+                self.tr("Batch analysis functionality will be available in a future update.\n\n"
+                      "This feature will allow you to analyze multiple files simultaneously.")
+            )
+        except Exception as e:
+            logger.error(f"Error showing batch analysis dialog: {e}")
+
+    def show_network_scanning(self):
+        """Show the network scanning dialog."""
+        try:
+            QMessageBox.information(
+                self,
+                self.tr("Network Scanning"),
+                self.tr("Network scanning functionality will be available in a future update.\n\n"
+                      "This feature will allow you to scan network shares and remote locations.")
+            )
+        except Exception as e:
+            logger.error(f"Error showing network scanning dialog: {e}")

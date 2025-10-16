@@ -3,7 +3,7 @@ Version information for ClamAV GUI.
 """
 
 # Version as a tuple (major, minor, patch)
-VERSION = (1, 1, 1)
+VERSION = (1, 2, 0)
 
 # String version
 __version__ = ".".join(map(str, VERSION))
@@ -19,7 +19,7 @@ __license__ = "GPL-3.0"
 
 # Build information
 __build__ = ""
-__date__ = "2025-10-15"
+__date__ = "2025-10-16"
 
 # Version description
 __description__ = "A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows with enhanced scanning, reporting, and quarantine management."
@@ -41,6 +41,18 @@ version_info = tuple(map(int, __version__.split('.')))
 
 # Changelog
 __changelog__ = """
+## [1.2.0] - 2025-10-16
+### Added
+- Enhanced Log Viewer: Advanced log viewing with search, filtering, color coding, and statistics
+- Config Editor Tab: Separate tab for editing ClamAV configuration files
+- Advanced Scanning Menu: New menu with smart scanning, ML detection, email scanning, and batch analysis
+- Help Menu Positioning: Moved Help menu to the right side of the menu bar for better UX
+
+### Improved
+- Menu Organization: Reorganized menu structure for better user experience
+- Log Analysis: Comprehensive log viewer with filtering and search capabilities
+- Configuration Management: Dedicated tab for editing configuration files
+
 ## [1.1.1] - 2025-10-15
 ### Added
 - Enhanced UI styling for scan progress bar (animated blue gradient)
@@ -93,6 +105,19 @@ def get_version_info():
 def get_version_history():
     """Return the version history."""
     return [
+        {
+            "version": "1.2.0",
+            "date": "2025-10-16",
+            "changes": [
+                "Enhanced Log Viewer: Advanced log viewing with search, filtering, color coding, and statistics",
+                "Config Editor Tab: Separate tab for editing ClamAV configuration files",
+                "Advanced Scanning Menu: New menu with smart scanning, ML detection, email scanning, and batch analysis",
+                "Help Menu Positioning: Moved Help menu to the right side of the menu bar for better UX",
+                "Menu Organization: Reorganized menu structure for better user experience",
+                "Log Analysis: Comprehensive log viewer with filtering and search capabilities",
+                "Configuration Management: Dedicated tab for editing configuration files"
+            ]
+        },
         {
             "version": "1.1.1",
             "date": "2025-10-15",

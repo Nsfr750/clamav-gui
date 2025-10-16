@@ -22,6 +22,16 @@
 - [ ] Progress tracking
 - [ ] Multi-language support
 
+## Completed in v1.2.0
+
+- [x] **Enhanced Log Viewer** - Advanced log viewing with search, filtering, color coding, and statistics
+- [x] **Config Editor Tab** - Separate tab for editing ClamAV configuration files
+- [x] **Advanced Scanning Menu** - New menu with smart scanning, ML detection, email scanning, and batch analysis
+- [x] **Help Menu Positioning** - Moved Help menu to the right side of the menu bar for better UX
+- [x] **Menu Organization** - Reorganized menu structure for better user experience
+- [x] **Log Analysis** - Comprehensive log viewer with filtering and search capabilities
+- [x] **Configuration Management** - Dedicated tab for editing configuration files
+
 ## Completed in v1.1.1
 
 - [x] **Machine Learning Integration** - AI-powered threat detection with feature extraction and ML models

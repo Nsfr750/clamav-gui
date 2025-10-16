@@ -27,43 +27,32 @@ class StatusTab(QWidget):
         """Initialize the user interface."""
         layout = QVBoxLayout(self)
 
-        # Status information group
-        status_group = QGroupBox(self.tr("ClamAV Status"))
-        status_layout = QVBoxLayout()
+        # ClamAV Information group
+        info_group = QGroupBox(self.tr("ClamAV Information"))
+        info_layout = QVBoxLayout()
 
-        # Status information display
-        self.status_info_text = QTextEdit()
-        self.status_info_text.setReadOnly(True)
-        self.status_info_text.setMaximumHeight(200)
-        status_layout.addWidget(self.status_info_text)
+        # Information display
+        self.info_text = QTextEdit()
+        self.info_text.setReadOnly(True)
+        self.info_text.setMaximumHeight(300)
+        info_layout.addWidget(self.info_text)
 
-        # Refresh button
+        # Action buttons layout (side by side)
+        buttons_layout = QHBoxLayout()
+
         refresh_btn = QPushButton(self.tr("Refresh Status"))
         refresh_btn.clicked.connect(self.refresh_status_info)
-        status_layout.addWidget(refresh_btn)
+        buttons_layout.addWidget(refresh_btn)
 
-        status_group.setLayout(status_layout)
-
-        # Virus database information group
-        db_group = QGroupBox(self.tr("Virus Database"))
-        db_layout = QVBoxLayout()
-
-        # Database information display
-        self.db_info_text = QTextEdit()
-        self.db_info_text.setReadOnly(True)
-        self.db_info_text.setMaximumHeight(150)
-        db_layout.addWidget(self.db_info_text)
-
-        # Update database button
         update_db_btn = QPushButton(self.tr("Update Database"))
         update_db_btn.clicked.connect(self.update_database)
-        db_layout.addWidget(update_db_btn)
+        buttons_layout.addWidget(update_db_btn)
 
-        db_group.setLayout(db_layout)
+        info_layout.addLayout(buttons_layout)
+        info_group.setLayout(info_layout)
 
-        # Add groups to main layout
-        layout.addWidget(status_group)
-        layout.addWidget(db_group)
+        # Add group to main layout
+        layout.addWidget(info_group)
         layout.addStretch()
 
         # Schedule initial refresh after a short delay to ensure controls are initialized
@@ -72,9 +61,9 @@ class StatusTab(QWidget):
     def refresh_status_info(self):
         """Refresh and display ClamAV status information."""
         try:
-            # Check if controls exist before using them
-            if not hasattr(self, 'status_info_text') or not hasattr(self, 'db_info_text'):
-                logger.warning("Status controls not initialized yet")
+            # Check if control exists before using it
+            if not hasattr(self, 'info_text'):
+                logger.warning("Info control not initialized yet")
                 return
 
             # Get ClamAV version
@@ -83,34 +72,47 @@ class StatusTab(QWidget):
             # Get virus database information
             db_info = self._get_database_info()
 
-            # Format status information
-            status_text = f"""
-ClamAV System Status:
-===================
+            # Get system information
+            system_info = self._get_system_info()
 
-Version Information:
-  ClamAV Version: {version_info.get('version', 'Unknown')}
-  Engine Version: {version_info.get('engine_version', 'Unknown')}
+            # Get ClamAV paths from settings
+            clamav_paths = self._get_clamav_paths()
 
-Database Information:
-  Database Path: {db_info.get('database_path', 'Unknown')}
-  Total Signatures: {db_info.get('total_signatures', 'Unknown')}
-  Database Version: {db_info.get('database_version', 'Unknown')}
-  Last Update: {db_info.get('last_update', 'Unknown')}
+            # Format information in a clean, organized way
+            info_text = f"""ClamAV Information:
+==================
 
-System Information:
-  Platform: {version_info.get('platform', 'Unknown')}
-  Build Date: {version_info.get('build_date', 'Unknown')}
+📋 Version Information:
+   • ClamAV Version: {version_info.get('version', 'Unknown')}
+   • Engine Version: {version_info.get('engine_version', 'Unknown')}
+   • Platform: {version_info.get('platform', 'Unknown')}
+   • Build Date: {version_info.get('build_date', 'Unknown')}
+
+🗃️ Database Information:
+   • Database Path: {db_info.get('database_path', 'Unknown')}
+   • Total Signatures: {db_info.get('total_signatures', 'Unknown')}
+   • Database Version: {db_info.get('database_version', 'Unknown')}
+   • Last Update: {db_info.get('last_update', 'Unknown')}
+
+💻 System Information:
+   • Operating System: {system_info.get('os_version', 'Unknown')}
+   • Python Version: {system_info.get('python_version', 'Unknown')}
+   • App Version: {system_info.get('app_version', 'Unknown')}
+
+🔧 ClamAV Paths:
+   • ClamScan Path: {clamav_paths.get('clamscan_path', 'Not configured')}
+   • FreshClam Path: {clamav_paths.get('freshclam_path', 'Not configured')}
+   • ClamD Path: {clamav_paths.get('clamd_path', 'Not configured')}
+
+🔄 Status: {'✅ Up to date' if db_info.get('total_signatures', '0').isdigit() and int(db_info['total_signatures']) > 0 else '⚠️ Database may need update'}
 """
-            self.status_info_text.setPlainText(status_text.strip())
 
-            # Update database information separately
-            self._update_database_info_display()
+            self.info_text.setPlainText(info_text.strip())
 
         except Exception as e:
-            error_msg = f"Error retrieving ClamAV status: {str(e)}"
-            if hasattr(self, 'status_info_text'):
-                self.status_info_text.setPlainText(error_msg)
+            error_msg = f"❌ Error retrieving ClamAV status: {str(e)}"
+            if hasattr(self, 'info_text'):
+                self.info_text.setPlainText(error_msg)
             logger.error(error_msg)
 
     def _get_clamav_version(self):
@@ -308,38 +310,162 @@ System Information:
 
         return None
 
-    def _update_database_info_display(self):
-        """Update the database information display with current data."""
+    def _get_system_info(self):
+        """Get system information including OS, Python, and app version."""
+        info = {
+            'app_version': 'Unknown',
+            'os_version': 'Unknown',
+            'python_version': 'Unknown'            
+        }
+
         try:
-            # Check if control exists before using it
-            if not hasattr(self, 'db_info_text'):
-                logger.warning("Database info control not initialized yet")
-                return
+            # Get OS version
+            try:
+                import platform
+                info['os_version'] = platform.platform()
+            except Exception:
+                pass
 
-            db_info = self._get_database_info()
+            # Get Python version
+            try:
+                import sys
+                info['python_version'] = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+            except Exception:
+                pass
 
-            db_text = f"""
-Virus Database Information:
-========================
-
-Total Signatures: {db_info.get('total_signatures', 'Unknown')}
-Database Version: {db_info.get('database_version', 'Unknown')}
-Database Path: {db_info.get('database_path', 'Unknown')}
-Last Update: {db_info.get('last_update', 'Unknown')}
-
-Status: {'Up to date' if db_info.get('total_signatures', '0').isdigit() and int(db_info['total_signatures']) > 0 else 'Database may need update'}
-"""
-            self.db_info_text.setPlainText(db_text.strip())
+            # Get app version
+            try:
+                from clamav_gui import __version__
+                info['app_version'] = __version__
+            except Exception:
+                pass
 
         except Exception as e:
-            if hasattr(self, 'db_info_text'):
-                self.db_info_text.setPlainText(f"Error updating database information: {str(e)}")
-            logger.error(f"Error in _update_database_info_display: {e}")
+            logger.error(f"Error getting system info: {e}")
+
+        return info
+
+    def _get_clamav_paths(self):
+        """Get ClamAV executable paths from settings."""
+        paths = {
+            'clamscan_path': 'Not configured',
+            'freshclam_path': 'Not configured',
+            'clamd_path': 'Not configured'
+        }
+
+        try:
+            # Get paths from parent settings if available
+            if hasattr(self.parent, 'current_settings') and self.parent.current_settings:
+                settings = self.parent.current_settings
+                paths['clamscan_path'] = settings.get('clamscan_path', 'Not configured')
+                paths['freshclam_path'] = settings.get('freshclam_path', 'Not configured')
+                paths['clamd_path'] = settings.get('clamd_path', 'Not configured')
+            elif hasattr(self.parent, 'settings') and self.parent.settings:
+                # Fallback to load settings
+                settings = self.parent.settings.load_settings() or {}
+                paths['clamscan_path'] = settings.get('clamscan_path', 'Not configured')
+                paths['freshclam_path'] = settings.get('freshclam_path', 'Not configured')
+                paths['clamd_path'] = settings.get('clamd_path', 'Not configured')
+
+        except Exception as e:
+            logger.error(f"Error getting ClamAV paths: {e}")
+
+        return paths
 
     def update_database(self):
         """Update the ClamAV virus database."""
-        if hasattr(self.parent, 'update_database'):
+        try:
+            # Check if parent has the update_database method
+            if not hasattr(self.parent, 'update_database'):
+                error_msg = (
+                    "❌ Update Database Not Available\n\n"
+                    "The 'Update Database' functionality requires the full ClamAV GUI application.\n\n"
+                    "Possible solutions:\n"
+                    "• Use the 'Virus DB' tab instead (if available)\n"
+                    "• Run 'freshclam' manually from command line\n"
+                    "• Check if ClamAV is properly installed and configured\n"
+                    "• Use the main ClamAV GUI application instead of this simplified version"
+                )
+                QMessageBox.warning(self, self.tr("Update Database Unavailable"), error_msg)
+                return
+
+            # Check if virus database updater is available
+            if not hasattr(self.parent, 'virus_db_updater') or not self.parent.virus_db_updater:
+                error_msg = (
+                    "❌ Database Updater Not Initialized\n\n"
+                    "The virus database updater is not properly initialized.\n\n"
+                    "Please check that ClamAV is installed and configured correctly."
+                )
+                QMessageBox.warning(self, self.tr("Updater Not Ready"), error_msg)
+                return
+
+            # Show progress dialog
+            self.progress_dialog = QMessageBox(self)
+            self.progress_dialog.setWindowTitle(self.tr("Database Update"))
+            self.progress_dialog.setText(self.tr("Starting database update..."))
+            self.progress_dialog.setStandardButtons(QMessageBox.NoButton)
+            self.progress_dialog.setModal(True)
+
+            # Create update output widget
+            self.update_output_widget = QTextEdit()
+            self.update_output_widget.setMaximumHeight(200)
+            self.update_output_widget.setReadOnly(True)
+
+            # Custom layout for progress dialog
+            layout = QVBoxLayout()
+            layout.addWidget(self.update_output_widget)
+            layout.setContentsMargins(10, 10, 10, 10)
+
+            # Create a container widget for the layout
+            container = QWidget()
+            container.setLayout(layout)
+
+            # Add container to the message box layout
+            main_layout = self.progress_dialog.layout()
+            if main_layout:
+                main_layout.addWidget(container, 1, 0)  # Add to second row, first column
+
+            self.progress_dialog.show()
+
+            # Connect to parent's update signals if they exist
+            if hasattr(self.parent, 'update_update_output'):
+                self.parent.update_update_output = self.update_update_output
+
+            # Call parent's update method
             self.parent.update_database()
-        else:
-            QMessageBox.warning(self, self.tr("Error"),
-                              self.tr("Update database method not available in main window"))
+
+        except Exception as e:
+            error_msg = f"❌ Update Failed\n\nError starting database update: {str(e)}\n\nPlease check the logs for more details."
+            QMessageBox.critical(self, self.tr("Update Error"), error_msg)
+            logger.error(f"Error in StatusTab.update_database: {e}")
+
+    def update_update_output(self, text):
+        """Update the progress dialog with new text."""
+        if hasattr(self, 'update_output_widget') and self.update_output_widget:
+            self.update_output_widget.append(text)
+            # Scroll to bottom
+            scrollbar = self.update_output_widget.verticalScrollBar()
+            scrollbar.setValue(scrollbar.maximum())
+
+            # Update progress dialog text
+            if hasattr(self, 'progress_dialog') and self.progress_dialog:
+                # Extract status from text for better user feedback
+                if "completed" in text.lower() or "success" in text.lower():
+                    self.progress_dialog.setText(self.tr("Update completed successfully!"))
+                elif "failed" in text.lower() or "error" in text.lower():
+                    self.progress_dialog.setText(self.tr("Update failed. Check output below."))
+                else:
+                    self.progress_dialog.setText(self.tr("Updating database..."))
+
+            # Process events to keep UI responsive
+            QtWidgets.QApplication.processEvents()
+
+    def closeEvent(self, event):
+        """Handle close event to clean up resources."""
+        # Clean up any running update threads
+        if hasattr(self.parent, 'update_thread') and self.parent.update_thread:
+            if self.parent.update_thread.isRunning():
+                self.parent.update_thread.terminate()
+                self.parent.update_thread.wait(3000)  # Wait up to 3 seconds
+
+        event.accept()

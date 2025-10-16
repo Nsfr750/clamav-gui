@@ -23,7 +23,7 @@ logger = logging.getLogger("PyInstaller-Compiler")
 
 # Constants
 PROJECT_NAME = "ClamAV-GUI"
-VERSION = "1.1.1"  # Will be updated from version.py
+VERSION = "1.2.0"  # Will be updated from version.py
 IS_WINDOWS = platform.system() == "Windows"
 
 # Paths

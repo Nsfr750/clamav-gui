@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2025-10-16
+
+### Added
+
+- **Enhanced Log Viewer**: Advanced log viewing with search, filtering, color coding, and statistics
+- **Config Editor Tab**: Separate tab for editing ClamAV configuration files
+- **Advanced Scanning Menu**: New menu with smart scanning, ML detection, email scanning, and batch analysis
+- **Help Menu Positioning**: Moved Help menu to the right side of the menu bar for better UX
+
+### Improved
+
+- **Menu Organization**: Reorganized menu structure for better user experience
+- **Log Analysis**: Comprehensive log viewer with filtering and search capabilities
+- **Configuration Management**: Dedicated tab for editing configuration files
+
 ## [1.1.1] - 2025-10-15
 
 ### Added

@@ -1,78 +1,92 @@
 # ClamAV GUI Project Structure
 
-This document describes the current structure of the ClamAV GUI project as of version 1.1.1.
+This document describes the current structure of the ClamAV GUI project as of version 1.2.0.
 
 ## Directory Structure
 
 ```
 clamav-gui/
-├── .github/                    # GitHub-specific files
+├── .github/                      \# GitHub-specific files
 │   └── workflows/
-│       └── test.yml           # CI/CD pipeline configuration
-├── assets/                     # Static assets (icons, images, etc.)
-├── build/                      # Build artifacts and temporary files
-├── clamav_gui/                 # Main application package
-│   ├── __init__.py             # Package initialization
-│   ├── __main__.py             # Entry point when run as a module
-│   ├── main_window.py          # Main window implementation
-│   ├── version.py              # Version information and management
-│   ├── lang/                   # Internationalization system
-│   │   ├── __init__.py         # Language package initialization
-│   │   ├── en_US.py            # English (US) translations
-│   │   ├── it_IT.py            # Italian translations
-│   │   └── lang_manager.py     # Language management and switching
-│   ├── ui/                     # User interface components
-│   │   ├── __init__.py         # UI package initialization
-│   │   ├── about.py            # About dialog implementation
-│   │   ├── help.py             # Help documentation viewer
-│   │   ├── menu.py             # Application menu bar
-│   │   ├── settings.py         # Settings and preferences dialog
-│   │   ├── sponsor.py          # Sponsor information dialog
-│   │   └── updates_dialog.py   # Update notification dialog
-│   └── utils/                  # Utility modules and helpers
-│       ├── __init__.py         # Utils package initialization
-│       ├── clamav_validator.py # ClamAV installation validation
-│       ├── quarantine_manager.py # Quarantine file management
-│       ├── scan_report.py      # Scan result reporting
-│       ├── updates.py          # Application update checking
-│       └── virus_db.py         # Virus database management
-├── config/                     # Configuration templates
-├── dist/                       # Distribution packages
-├── docs/                       # Documentation files
-│   ├── CODE_OF_CONDUCT.md      # Community guidelines
-│   ├── CONTRIBUTING.md         # Contribution guidelines
-│   ├── REQUIREMENTS.md         # System requirements and setup
-│   ├── ROADMAP.md              # Development roadmap
-│   ├── SECURITY.md             # Security policy
-│   ├── STRUCT.md               # Project structure (this file)
-│   └── USER_GUIDE.md           # User documentation
-├── logs/                       # Application runtime logs
-├── tests/                      # Test suite
-│   ├── __init__.py             # Test package initialization
-│   ├── conftest.py             # Test fixtures and configuration
-│   ├── test_clamav_isolation.py # ClamAV interaction testing
-│   ├── test_gui_integration.py # GUI component testing
-│   ├── test_lang_manager.py    # Language management testing
-│   ├── test_main.py            # Main application testing
-│   ├── test_performance.py     # Performance and benchmark testing
+│       └── test.yml              \# CI/CD pipeline configuration
+├── assets/                       \# Static assets (icons, images, etc.)
+├── build/                        \# Build artifacts and temporary files
+├── clamav_gui/                   \# Main application package
+│   ├── __init__.py               \# Package initialization
+│   ├── __main__.py               \# Entry point when run as a module
+│   ├── main_window.py            \# Main window implementation
+│   ├── version.py                \# Version information and management
+│   ├── lang/                     \# Internationalization system
+│   │   ├── __init__.py           \# Language package initialization
+│   │   ├── en_US.py              \# English (US) translations
+│   │   ├── it_IT.py              \# Italian translations
+│   │   └── lang_manager.py       \# Language management and switching
+│   ├── ui/                       \# User interface components
+│   │   ├── __init__.py           \# UI package initialization
+│   │   ├── about.py              \# About dialog implementation
+│   │   ├── conf_editor_tab.py    \# Config Editor tab (NEW in 1.2.0)
+│   │   ├── help.py               \# Help documentation viewer
+│   │   ├── home_tab.py           \# Home tab implementation (NEW in 1.2.0)
+│   │   ├── menu.py               \# Application menu bar
+│   │   ├── quarantine_tab.py     \# Quarantine management tab (NEW in 1.2.0)
+│   │   ├── scan_tab.py           \# File scanning tab (NEW in 1.2.0)
+│   │   ├── settings.py           \# Settings and preferences dialog
+│   │   ├── sponsor.py            \# Sponsor information dialog
+│   │   ├── status_tab.py         \# Status monitoring tab (NEW in 1.2.0)
+│   │   └── updates_dialog.py     \# Update notification dialog
+│   └── utils/                    \# Utility modules and helpers
+│       ├── __init__.py           \# Utils package initialization
+│       ├── advanced_reporting.py \# Advanced reporting and analytics
+│       ├── clamav_validator.py   \# ClamAV installation validation
+│       ├── enhanced_db_updater.py # Enhanced database updater (NEW in 1.2.0)
+│       ├── error_recovery.py     \# Error recovery and retry mechanisms
+│       ├── hash_database.py      \# Smart scanning hash database
+│       ├── ml_threat_detector.py \# ML threat detection system
+│       ├── network_scanner.py    \# Network drive scanning utilities
+│       ├── quarantine_manager.py \# Quarantine file management
+│       ├── sandbox_analyzer.py   \# Sandbox analysis system
+│       ├── scan_report.py        \# Scan result reporting
+│       ├── scan_thread.py        \# Async scanning thread management
+│       ├── updates.py            \# Application update checking
+│       ├── version.py            \# Version utilities and management
+│       └── virus_db.py           \# Virus database management
+├── config/                       \# Configuration templates
+├── dist/                         \# Distribution packages
+├── docs/                          # Documentation files
+│   ├── CODE_OF_CONDUCT.md         # Community guidelines
+│   ├── CONTRIBUTING.md            # Contribution guidelines
+│   ├── REQUIREMENTS.md            # System requirements and setup
+│   ├── ROADMAP.md                 # Development roadmap
+│   ├── SECURITY.md                # Security policy
+│   ├── STRUCT.md                  # Project structure (this file)
+│   └── USER_GUIDE.md              # User documentation
+├── logs/                          # Application runtime logs
+├── tests/                         # Test suite
+│   ├── __init__.py                # Test package initialization
+│   ├── conftest.py                # Test fixtures and configuration
+│   ├── test_clamav_isolation.py   # ClamAV interaction testing
+│   ├── test_gui_integration.py    # GUI component testing
+│   ├── test_lang_manager.py       # Language management testing
+│   ├── test_main.py               # Main application testing
+│   ├── test_performance.py        # Performance and benchmark testing
 │   ├── test_quarantine_manager.py # Quarantine management testing
-│   └── test_version.py         # Version module testing
-├── .coveragerc                 # Coverage configuration
-├── .gitignore                  # Git ignore patterns
-├── .pytest.ini                 # Pytest configuration
-├── CHANGELOG.md                # Version history and changes
-├── LICENSE                     # GPLv3 License
-├── Makefile                    # Build and test automation
-├── README.md                   # Project overview and setup
-├── TO_DO.md                    # Development tasks and ideas
-├── build.py                    # Build script for executables
-├── clean_pycache.py            # Python cache cleanup utility
-├── nuitka_compiler.py          # Nuitka compilation script
-├── pytest.ini                 # Pytest configuration (alternative)
-├── requirements.txt            # Runtime dependencies
-├── run_tests.py               # Test runner script
-├── setup.py                    # Package installation script
-└── version_info.txt            # Version metadata
+│   └── test_version.py            # Version module testing
+├── .coveragerc                    # Coverage configuration
+├── .gitignore                     # Git ignore patterns
+├── .pytest.ini                    # Pytest configuration
+├── CHANGELOG.md                   # Version history and changes
+├── LICENSE                        # GPLv3 License
+├── Makefile                       # Build and test automation
+├── README.md                      # Project overview and setup
+├── TO_DO.md                       # Development tasks and ideas
+├── build.py                       # Build script for executables
+├── clean_pycache.py               # Python cache cleanup utility
+├── nuitka_compiler.py             # Nuitka compilation script
+├── pytest.ini                     # Pytest configuration (alternative)
+├── requirements.txt               # Runtime dependencies
+├── run_tests.py                   # Test runner script
+├── setup.py                       # Package installation script
+└── version_info.txt               # Version metadata
 ```
 
 ## Core Components
@@ -86,12 +100,17 @@ clamav-gui/
 ### User Interface System
 
 - **`ui/` Package**: Complete UI component architecture
-  - **`menu.py`**: Application menu bar with File, Tools, Help menus
+  - **`menu.py`**: Application menu bar with File, Tools, Advanced Scanning, Language, Help menus
   - **`about.py`**: About dialog with version and system information
   - **`help.py`**: Help documentation browser
   - **`settings.py`**: Configuration and preferences management
   - **`sponsor.py`**: Support and donation information
   - **`updates_dialog.py`**: Update notification and installation
+  - **`conf_editor_tab.py`**: Configuration file editor tab (NEW in 1.2.0)
+  - **`home_tab.py`**: Home dashboard tab (NEW in 1.2.0)
+  - **`scan_tab.py`**: File scanning interface tab (NEW in 1.2.0)
+  - **`status_tab.py`**: System status monitoring tab (NEW in 1.2.0)
+  - **`quarantine_tab.py`**: Quarantine management interface tab (NEW in 1.2.0)
 
 ### Internationalization
 
@@ -112,6 +131,10 @@ clamav-gui/
   - **`advanced_reporting.py`**: Comprehensive analytics and threat intelligence
   - **`ml_threat_detector.py`**: AI-powered threat detection with ML models
   - **`sandbox_analyzer.py`**: Behavioral analysis and system monitoring
+  - **`hash_database.py`**: Smart scanning hash database (NEW in 1.2.0)
+  - **`scan_thread.py`**: Async scanning thread management (NEW in 1.2.0)
+  - **`network_scanner.py`**: Network drive scanning utilities (NEW in 1.2.0)
+  - **`enhanced_db_updater.py`**: Enhanced database updater (NEW in 1.2.0)
 
 ## Testing Infrastructure
 
@@ -201,12 +224,12 @@ clamav-gui/
 
 ### Code Metrics (Approximate)
 
-- **Total Lines of Code**: ~15,000+ lines across all Python files
-- **Main Application**: ~5,000 lines in core modules
-- **UI Components**: ~3,000 lines across dialog and window implementations
-- **Utilities**: ~2,000 lines in helper modules and managers
-- **Tests**: ~3,000 lines across comprehensive test suite
-- **Documentation**: ~2,000+ lines across all documentation files
+- **Total Lines of Code**: ~20,000+ lines across all Python files (increased with new tab architecture)
+- **Main Application**: ~6,000 lines in core modules (expanded with new utilities)
+- **UI Components**: ~4,000 lines across dialog and window implementations (new tab-based architecture)
+- **Utilities**: ~3,000 lines in helper modules and managers (added 4 new utility modules)
+- **Tests**: ~4,000 lines across comprehensive test suite (expanded test coverage)
+- **Documentation**: ~3,000+ lines across all documentation files (updated for new features)
 
 ### Build Artifacts
 
@@ -233,4 +256,4 @@ The codebase is designed with extension points for:
 
 ---
 
-*This structure document reflects the ClamAV GUI project as of version 1.1.1 and is updated as the project evolves.*
+*This structure document reflects the ClamAV GUI project as of version 1.2.0 and is updated as the project evolves with the new tab-based architecture and enhanced functionality.*
