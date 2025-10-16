@@ -21,7 +21,7 @@ try:
     # Check if all required components exist
     required_components = [
         'log_list', 'log_view', 'search_input', 'search_btn',
-        'error_filter', 'warning_filter', 'info_filter', 'debug_filter',
+        'filter_combo',  # New dropdown filter instead of individual checkboxes
         'auto_refresh_cb', 'refresh_interval', 'file_path_label',
         'error_count_label', 'warning_count_label', 'info_count_label'
     ]
