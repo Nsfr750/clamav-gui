@@ -193,6 +193,7 @@ Optimize scan performance:
 #### Application Won't Start
 
 **Solution**:
+
 - Check if all dependencies are installed: `pip install -r requirements.txt`
 - Verify Python version: `python --version` (should be 3.10+)
 - Check for conflicting antivirus software
@@ -200,6 +201,7 @@ Optimize scan performance:
 #### ClamAV Not Found
 
 **Solution**:
+
 1. Install ClamAV from official sources
 2. Add ClamAV to system PATH
 3. Configure paths in Settings tab
@@ -208,6 +210,7 @@ Optimize scan performance:
 #### Scan Hangs or Freezes
 
 **Solution**:
+
 1. Check for large files that might be causing timeouts
 2. Reduce max file size in settings
 3. Try scanning smaller directories first
@@ -216,6 +219,7 @@ Optimize scan performance:
 #### GUI Display Issues
 
 **Solution**:
+
 1. Update PySide6: `pip install --upgrade PySide6`
 2. Check display resolution settings
 3. Try running with different Qt backend
@@ -223,24 +227,29 @@ Optimize scan performance:
 ### Getting Help
 
 #### Documentation
+
 - This user guide in the `docs/` folder
 - Online documentation on GitHub
 
 #### Community Support
+
 - **GitHub Issues**: [Bug Reports & Feature Requests](https://github.com/Nsfr750/clamav-gui/issues)
 - **GitHub Discussions**: [General Questions](https://github.com/Nsfr750/clamav-gui/discussions)
 
 #### Direct Support
+
 - **Email**: [Nsfr750](mailto:nsfr750@yandex.com)
 - **Response Time**: Within 48 hours
 
 ### Logs and Debugging
 
 Application logs are stored in:
+
 - **Windows**: `%APPDATA%\ClamAV GUI\logs\`
 - **Runtime logs**: Check the console output when running from source
 
 For detailed debugging:
+
 ```bash
 # Run with debug logging
 python -c "import logging; logging.basicConfig(level=logging.DEBUG); import clamav_gui"
@@ -255,6 +264,7 @@ Yes, ClamAV GUI is open source software licensed under GPLv3. It performs all sc
 ### Does it work without ClamAV installed?
 
 Basic functionality requires ClamAV. You can install ClamAV from:
+
 - Official ClamAV website
 - Windows package managers
 - Pre-configured paths in Settings
@@ -312,6 +322,7 @@ python -m clamav_gui --version
 ### Configuration Files
 
 Advanced users can edit configuration files directly:
+
 - **Settings**: Stored in `%APPDATA%\ClamAV GUI\settings.json`
 - **Logs**: Available in `%APPDATA%\ClamAV GUI\logs\`
 
@@ -347,7 +358,6 @@ If ClamAV GUI helps keep your system secure, consider supporting the development
 ---
 
 *This user guide was last updated for ClamAV GUI version 1.2.0. For the latest version, visit the [GitHub repository](https://github.com/Nsfr750/clamav-gui).*
-
 
 ### Quick Reference
 
