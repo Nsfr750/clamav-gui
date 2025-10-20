@@ -41,9 +41,7 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 
 ### Additional Advanced Features
 
-- [ ] **Cloud Integration**: Sync quarantine data and scan history across devices
 - [ ] **API Endpoints**: REST API for integration with other security tools
-- [ ] **Plugin System**: Extensible architecture for custom scan modules
 - [ ] **Advanced Reporting**: Detailed analytics and threat intelligence reports
 
 ### Enterprise Features
@@ -64,7 +62,6 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 
 ### Advanced Security
 
-- [ ] **Machine Learning Integration**: AI-powered threat detection
 - [ ] **Sandbox Analysis**: Execute suspicious files in isolated environments
 - [ ] **Threat Intelligence**: Real-time threat feed integration
 - [ ] **Zero-Trust Architecture**: Enhanced security model with strict access controls
@@ -81,6 +78,7 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 - ✅ **Comprehensive Testing**: Full test suite with GUI, performance, and integration tests
 - ✅ **Internationalization**: Multi-language support with translation system
 - ✅ **Advanced Configuration**: Flexible settings and scan options
+- ✅ **Machine Learning Integration**: AI-powered threat detection
 - ✅ **Security Hardening**: Enhanced security with comprehensive security policy
 
 ### Version 1.1.0
