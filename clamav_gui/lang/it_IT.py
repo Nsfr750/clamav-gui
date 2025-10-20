@@ -46,9 +46,16 @@ TRANSLATIONS = {
         "AI-powered threat detection and analysis": "Rilevamento e analisi minacce basato su IA",
         "Scan email files and attachments for threats": "Scansiona file email e allegati per minacce",
         "Scan multiple files and directories simultaneously": "Scansiona più file e directory simultaneamente",
-        "Scan network shares and remote locations": "Scansiona condivisioni di rete e posizioni remote",
-
-        # Batch Analysis tab
+        # Help dialog strings
+        "help.window_title": "Aiuto GUI ClamAV",
+        "common.close": "Chiudi",
+        "help.init_success": "Finestra di aiuto inizializzata correttamente",
+        "help.init_error": "Errore nell'inizializzazione della finestra di aiuto: {error}",
+        "help.language_changed": "UI ritradotta in {language}",
+        "help.translation_error": "Errore nella ritraduzione UI: {error}",
+        "help.language_switched": "Lingua cambiata in {language}",
+        "help.language_switch_error": "Errore nel cambio lingua: {error}",
+        "help.link_open_error": "Errore nell'apertura del link {url}: {error}",
         "Items to Analyze": "Elementi da Analizzare",
         "Enter file/directory path or use browse button...": "Inserisci percorso file/directory o usa il pulsante sfoglia...",
         "Browse": "Sfoglia",

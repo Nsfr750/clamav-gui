@@ -46,6 +46,7 @@ TRANSLATIONS = {
         "AI-powered threat detection and analysis": "AI-powered threat detection and analysis",
         "Scan email files and attachments for threats": "Scan email files and attachments for threats",
         "Scan multiple files and directories simultaneously": "Scan multiple files and directories simultaneously",
+        "Scan network shares and remote locations": "Scan network shares and remote locations",
         # Batch Analysis tab
         "Items to Analyze": "Items to Analyze",
         "Enter file/directory path or use browse button...": "Enter file/directory path or use browse button...",
@@ -341,18 +342,23 @@ TRANSLATIONS = {
         "dialog.confirm_restore": "Are you sure you want to restore",
         "dialog.confirm_delete": "Are you sure you want to permanently delete",
         "dialog.cannot_undo": "This action cannot be undone.",
-        "dialog.infected_warning": "Warning: This file was detected as infected and may be dangerous.",
-        "dialog.infected_warning_multiple": "Warning: These files were detected as infected and may be dangerous.",
-        "dialog.files_to_restore": "Files to restore:",
-        "dialog.files_to_delete": "Files to delete:",
-        "dialog.and_more": "... and {} more",
-        "dialog.id_not_found": "Could not determine ID for {}",
 
         # Tab availability messages
         "tab.not_available": "Quarantine tab not available",
         "tab.config_not_available": "Config Editor tab not available",
+        
+        # Help dialog strings
+        "help.window_title": "ClamAV GUI Help",
+        "common.close": "Close",
+        "help.init_success": "Help dialog initialized successfully",
+        "help.init_error": "Error initializing help dialog: {error}",
+        "help.language_changed": "UI retranslated to {language}",
+        "help.translation_error": "Error retranslating UI: {error}",
+        "help.language_switched": "Language switched to {language}",
+        "help.language_switch_error": "Error switching language: {error}",
+        "help.link_open_error": "Error opening link {url}: {error}",
     }
-}    
+}
 
 # Available languages - keep only those with actual translations
 AVAILABLE_LANGUAGES = {

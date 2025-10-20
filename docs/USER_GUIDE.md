@@ -29,23 +29,27 @@ Welcome to ClamAV GUI! This comprehensive guide will help you get started with u
 #### Method 1: From Source (Recommended)
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/Nsfr750/clamav-gui.git
    cd clamav-gui
    ```
 
 2. **Create virtual environment**:
+
    ```bash
    python -m venv venv
    venv\Scripts\activate
    ```
 
 3. **Install dependencies**:
+
    ```bash
    pip install -r requirements.txt
    ```
 
 4. **Run the application**:
+
    ```bash
    python -m clamav_gui
    ```
@@ -60,16 +64,25 @@ When you launch ClamAV GUI, you'll see the main window with a tabbed interface:
 
 ### Tabs Overview
 
-- **Scan**: File and directory scanning interface
+- **Home**: Welcome screen with quick access to common functions
+- **Scan**: File and directory scanning interface with advanced options
+- **Email Scan**: Dedicated interface for scanning email files (.eml, .msg)
+- **Batch Analysis**: Advanced batch scanning with multiple file processing
 - **Update**: Virus database update management
 - **Settings**: Application configuration and preferences
-- **Quarantine**: Manage quarantined files
-- **Config Editor**: Advanced configuration editing
+- **Quarantine**: Manage quarantined files and restoration
+- **Config Editor**: Advanced configuration file editing
+- **Status**: System status monitoring and diagnostics
 
 ### Menu Bar
 
 - **File > Exit**: Close the application
 - **Tools > Check for Updates**: Check for application updates
+- **Advanced Functions > Smart Scanning**: Use hash databases for efficient file scanning
+- **Advanced Functions > ML Threat Detection**: AI-powered threat detection and analysis
+- **Advanced Functions > Email Scanning**: Scan email files and attachments for threats
+- **Advanced Functions > Batch Analysis**: Scan multiple files and directories simultaneously
+- **Advanced Functions > Network Scanning**: Scan network shares and remote locations
 - **Help > Documentation**: Open this user guide
 - **Help > About**: Show version and system information
 - **Language**: Switch between supported languages (English, Italian)
@@ -135,6 +148,7 @@ If automatic updates fail:
 1. **Check internet connection**
 2. **Verify ClamAV installation**
 3. **Try updating from command line**:
+
    ```bash
    freshclam
    ```

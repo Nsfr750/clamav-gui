@@ -13,6 +13,8 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QFont, QColor, QPixmap
 
+from clamav_gui.version import VERSION
+
 logger = logging.getLogger(__name__)
 
 
@@ -54,12 +56,15 @@ class HomeTab(QWidget):
         # Right column: Welcome text
         welcome_layout = QVBoxLayout()
         welcome_group = QGroupBox(self.tr("Welcome to ClamAV GUI"))
-        welcome_text_layout = QVBoxLayout()
+        welcome_group.setStyleSheet("QGroupBox { margin: 10px; }")
+        welcome_text_layout = QVBoxLayout() 
 
         welcome_text = QLabel(self.tr(
             "Welcome to ClamAV GUI - Your comprehensive antivirus solution\n\n"
-            "Protect your system with real-time scanning, advanced threat detection, "
-            "and comprehensive security management."
+            "Protect your system with:\n"
+            "- real-time scanning\n"
+            "- advanced threat detection\n"
+            "- comprehensive security management."
         ))
         welcome_text.setWordWrap(True)
         welcome_text.setStyleSheet("""

@@ -4,14 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [1.2.0] - 2025-10-16
 
-### Added
+### New Features Added
 
 - **Enhanced Log Viewer**: Advanced log viewing with search, filtering, color coding, and statistics
 - **Config Editor Tab**: Separate tab for editing ClamAV configuration files
 - **Advanced Scanning Menu**: New menu with smart scanning, ML detection, email scanning, and batch analysis
 - **Help Menu Positioning**: Moved Help menu to the right side of the menu bar for better UX
 
-### Improved
+### Enhancements and Improvements
 
 - **Menu Organization**: Reorganized menu structure for better user experience
 - **Log Analysis**: Comprehensive log viewer with filtering and search capabilities
@@ -19,13 +19,13 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.1] - 2025-10-15
 
-### Added
+### New UI Features Added
 
 - **Enhanced UI Styling**: Improved scan progress bar with animated blue gradient visualization
 - **Color-coded Action Buttons**: Green "Start Scan" and red "Stop Scan" buttons with hover effects for better user experience
 - **Visual Feedback Improvements**: Better visual consistency across scan interface with modern styling
 
-### Improved
+### UI Enhancements and Improvements
 
 - **Progress Bar Visualization**: Enhanced animated progress indicators with gradient effects
 - **Button Design**: Color-coded action buttons for improved user interface clarity
@@ -33,7 +33,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.0] - 2025-10-12
 
-### Added
+### Major Features Added
 
 - **Machine Learning Integration**: AI-powered threat detection with feature extraction and ML models for advanced threat analysis beyond traditional signatures
 - **Error Recovery System**: Automatic retry mechanisms for failed operations with exponential backoff strategies for different error types (network, file access, database, scan interruptions)
@@ -51,7 +51,7 @@ All notable changes to this project will be documented in this file.
 - **Extended Configuration Options**: Added performance settings (max file size, scan time limits), file pattern filtering (include/exclude), and advanced scan options
 - **Real-time Statistics**: Enhanced progress tracking and scan statistics display throughout the application
 
-### Improved
+### Core Improvements
 
 - **User Experience**: Better error messages, user feedback, and status reporting throughout the application
 - **Robustness**: Enhanced handling of corrupted or incomplete metadata files
@@ -60,7 +60,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.0.0] - 2025-09-25
 
-### Added
+### Initial Release Features
 
 - Initial release of ClamAV GUI
 - Basic scanning and updating functionality

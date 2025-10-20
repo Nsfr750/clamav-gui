@@ -39,7 +39,7 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 - [ ] **Accessibility Improvements**: WCAG 2.1 compliance for users with disabilities
 - [ ] **Mobile-Responsive Design**: Better experience on high-DPI displays and tablets
 
-### Advanced Features
+### Additional Advanced Features
 
 - [ ] **Cloud Integration**: Sync quarantine data and scan history across devices
 - [ ] **API Endpoints**: REST API for integration with other security tools
@@ -90,7 +90,6 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 - ✅ **Advanced Reporting**: Comprehensive analytics, threat intelligence, and export capabilities
 - ✅ **Sandbox Analysis**: Behavioral analysis and system monitoring for suspicious files
 
-
 ## Research & Investigation 🔍
 
 ### Areas Under Consideration
@@ -102,6 +101,7 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 - **Browser Extension**: Web browser security scanning extension
 
 ### Technical Debt
+
 - **Code Modernization**: Update legacy code patterns and dependencies
 - **Performance Optimization**: Identify and resolve performance bottlenecks
 - **Documentation Enhancement**: Comprehensive API and developer documentation
@@ -112,12 +112,14 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 We welcome community contributions! Here are some areas where external contributors can make a significant impact:
 
 ### Easy Entry Points
+
 - **Localization**: Translate the interface to new languages
 - **Documentation**: Improve user guides and API documentation
 - **Bug Fixes**: Address reported issues and edge cases
 - **UI Polish**: Improve visual design and user experience
 
 ### Advanced Contributions
+
 - **New Scan Modules**: Develop specialized scanning capabilities
 - **Performance Improvements**: Optimize scanning algorithms and UI responsiveness
 - **Platform Support**: Help port to Linux or macOS
@@ -126,17 +128,20 @@ We welcome community contributions! Here are some areas where external contribut
 ## How to Get Involved
 
 ### For Users
+
 - **Test Beta Releases**: Help test new features before release
 - **Report Issues**: Use GitHub Issues for bug reports and feature requests
 - **Provide Feedback**: Participate in user experience surveys and discussions
 
 ### For Developers
+
 - **Contribute Code**: Follow our [CONTRIBUTING.md](CONTRIBUTING.md) guidelines
 - **Improve Tests**: Enhance our comprehensive test suite
 - **Write Documentation**: Help expand our documentation
 - **Review PRs**: Help review community contributions
 
 ### For Organizations
+
 - **Sponsor Development**: Support ongoing development and maintenance
 - **Feature Requests**: Request enterprise-specific features
 - **Partnership Opportunities**: Collaborate on security research and development
@@ -150,6 +155,7 @@ We follow [Semantic Versioning](https://semver.org/) principles:
 - **Patch Version (x.y.Z)**: Bug fixes, security updates, minor improvements
 
 ### Release Cadence
+
 - **Patch Releases**: As needed for security fixes and critical bugs
 - **Minor Releases**: Every 2-3 months with new features
 - **Major Releases**: Every 6-12 months with significant changes
@@ -157,16 +163,19 @@ We follow [Semantic Versioning](https://semver.org/) principles:
 ## Success Metrics
 
 ### User Adoption
+
 - **Downloads**: Track installation and usage statistics
 - **Active Users**: Monitor daily/monthly active users
 - **Geographic Distribution**: Understand global user base
 
 ### Quality Metrics
+
 - **Test Coverage**: Maintain >90% test coverage
 - **Bug Reports**: Track and resolve user-reported issues
 - **Performance Benchmarks**: Monitor application performance over time
 
 ### Community Health
+
 - **Contributors**: Track number of active contributors
 - **Response Time**: Average time to respond to issues and PRs
 - **Documentation Usage**: Monitor documentation access and feedback
@@ -174,11 +183,13 @@ We follow [Semantic Versioning](https://semver.org/) principles:
 ## Risk Management
 
 ### Technical Risks
+
 - **Dependency Updates**: Breaking changes in PySide6 or other dependencies
 - **Platform Changes**: Windows API changes affecting functionality
 - **Security Vulnerabilities**: New threats requiring rapid response
 
 ### Mitigation Strategies
+
 - **Regular Updates**: Keep dependencies current and tested
 - **Comprehensive Testing**: Extensive test suite catches issues early
 - **Security Monitoring**: Active monitoring for vulnerabilities
@@ -186,4 +197,6 @@ We follow [Semantic Versioning](https://semver.org/) principles:
 
 ---
 
-*This roadmap is continuously updated based on community feedback, technical requirements, and market needs. Last updated: October 15, 2025*
+## Footer
+
+This roadmap is continuously updated based on community feedback, technical requirements, and market needs. Last updated: October 15, 2025

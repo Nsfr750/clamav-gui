@@ -27,15 +27,20 @@ Before you begin contributing, ensure you have:
 
 1. **Fork the repository** on GitHub
 2. **Clone your fork** to your local machine:
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/clamav-gui.git
    cd clamav-gui
    ```
+
 3. **Add the upstream remote**:
+
    ```bash
    git remote add upstream https://github.com/Nsfr750/clamav-gui.git
    ```
+
 4. **Create a new branch**
+
    ```bash
    git checkout -b feature/your-feature-name
    # or
@@ -143,7 +148,7 @@ python -m pytest tests/test_lang_manager.py
 
 ### Test Structure
 
-```
+```plaintext
 tests/
 ├── test_unit_*.py          # Unit tests
 ├── test_integration_*.py   # Integration tests
@@ -176,7 +181,8 @@ docs/fix-typos
 - **Reference Issues**: Include issue numbers when applicable (#123)
 
 Example commit messages:
-```
+
+```markdown
 feat: Add scheduled scan functionality
 
 - Implement daily/weekly scan scheduling
