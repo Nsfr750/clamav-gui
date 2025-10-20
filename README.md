@@ -6,6 +6,8 @@
 ![License](https://img.shields.io/badge/License-GPLv3-blue)
 [![Issues](https://img.shields.io/github/issues/Nsfr750/clamav-gui)](https://github.com/Nsfr750/clamav-gui/issues)
 
+![ss](clamav_gui/ui/img/ss.png)
+
 A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows.
 
 ## Features
