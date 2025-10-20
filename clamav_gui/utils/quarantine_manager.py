@@ -35,8 +35,19 @@ class QuarantineManager:
         """Ensure the quarantine directory exists."""
         try:
             os.makedirs(self.quarantine_dir, exist_ok=True)
-        except Exception as e:
+            # Test write permissions by creating a test file
+            test_file = os.path.join(self.quarantine_dir, '.quarantine_test')
+            with open(test_file, 'w') as f:
+                f.write('test')
+            os.remove(test_file)
+        except PermissionError:
+            logger.error(f"Permission denied creating quarantine directory: {self.quarantine_dir}")
+            raise PermissionError(f"Cannot create quarantine directory due to permission issues: {self.quarantine_dir}")
+        except OSError as e:
             logger.error(f"Failed to create quarantine directory: {e}")
+            raise OSError(f"Cannot create quarantine directory: {e}")
+        except Exception as e:
+            logger.error(f"Unexpected error creating quarantine directory: {e}")
             raise
 
     def _load_metadata(self) -> Dict:

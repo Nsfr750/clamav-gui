@@ -141,9 +141,42 @@ class ClamAVGUI(ClamAVMainWindow):
         try:
             self.quarantine_manager = QuarantineManager()
             logger.info("Quarantine manager initialized successfully")
+        except PermissionError as e:
+            logger.error(f"Permission error initializing quarantine manager: {e}")
+            logger.info("Attempting to initialize with fallback directory...")
+            try:
+                # Try with a fallback directory in the app directory
+                app_dir = os.path.dirname(os.path.dirname(__file__))
+                fallback_dir = os.path.join(app_dir, 'quarantine')
+                self.quarantine_manager = QuarantineManager(fallback_dir)
+                logger.info(f"Quarantine manager initialized with fallback directory: {fallback_dir}")
+            except Exception as e2:
+                logger.error(f"Failed to initialize quarantine manager with fallback: {e2}")
+                self.quarantine_manager = None
+        except OSError as e:
+            logger.error(f"OS error initializing quarantine manager: {e}")
+            logger.info("Attempting to initialize with fallback directory...")
+            try:
+                # Try with a fallback directory in the app directory
+                app_dir = os.path.dirname(os.path.dirname(__file__))
+                fallback_dir = os.path.join(app_dir, 'quarantine')
+                self.quarantine_manager = QuarantineManager(fallback_dir)
+                logger.info(f"Quarantine manager initialized with fallback directory: {fallback_dir}")
+            except Exception as e2:
+                logger.error(f"Failed to initialize quarantine manager with fallback: {e2}")
+                self.quarantine_manager = None
         except Exception as e:
-            logger.error(f"Failed to initialize quarantine manager: {e}")
-            self.quarantine_manager = None
+            logger.error(f"Unexpected error initializing quarantine manager: {e}")
+            logger.info("Attempting to initialize with fallback directory...")
+            try:
+                # Try with a fallback directory in the app directory
+                app_dir = os.path.dirname(os.path.dirname(__file__))
+                fallback_dir = os.path.join(app_dir, 'quarantine')
+                self.quarantine_manager = QuarantineManager(fallback_dir)
+                logger.info(f"Quarantine manager initialized with fallback directory: {fallback_dir}")
+            except Exception as e2:
+                logger.error(f"Failed to initialize quarantine manager with fallback: {e2}")
+                self.quarantine_manager = None
         
         # Initialize UI
         self.init_ui()
@@ -158,6 +191,9 @@ class ClamAVGUI(ClamAVMainWindow):
             self.start_menu_diagnostics()
         except Exception as e:
             logger.warning(f"Menu diagnostics init failed: {e}")
+        
+        # Check quarantine manager status and show warning if needed
+        QTimer.singleShot(1000, self.check_quarantine_manager_status)  # Delay to allow UI to load
     
     def init_ui(self):
         """Initialize the user interface."""
@@ -228,8 +264,21 @@ class ClamAVGUI(ClamAVMainWindow):
         self.menu_bar.sponsor_requested.connect(self.show_sponsor)
         self.menu_bar.update_check_requested.connect(lambda: self.check_for_updates(force_check=True))
         
-        # Set up the language menu
-        self.setup_language_menu()
+    def check_quarantine_manager_status(self):
+        """Check if quarantine manager is properly initialized and show status."""
+        if not self.quarantine_manager:
+            QMessageBox.information(
+                self,
+                self.tr("Quarantine Manager Status"),
+                self.tr("The quarantine manager could not be initialized.\n\n"
+                       "This may be due to:\n"
+                       "• Permission issues with the Documents folder\n"
+                       "• Insufficient disk space\n"
+                       "• System restrictions\n\n"
+                       "Quarantine functionality will be limited until this issue is resolved.")
+            )
+            return False
+        return True
 
     def start_menu_diagnostics(self):
         self._menu_diag_count = 0
