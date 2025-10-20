@@ -193,12 +193,11 @@ class ClamAVMainWindow(QMainWindow):
         except ImportError:
             self.home_tab = self.create_home_tab()
 
-        # Create status tab using StatusTab class if available
-        try:
-            from clamav_gui.ui.status_tab import StatusTab
-            self.status_tab = StatusTab(self)
-        except ImportError:
-            self.status_tab = self.create_status_tab()
+        # Create advanced scanning tabs
+        self.smart_scanning_tab = self.create_smart_scanning_tab()
+        self.batch_analysis_tab = self.create_batch_analysis_tab()
+        self.ml_detection_tab = self.create_ml_detection_tab()
+        self.net_scan_tab = self.create_net_scan_tab()
 
         # Add tabs to the tab widget
         if self.tabs:
@@ -208,9 +207,10 @@ class ClamAVMainWindow(QMainWindow):
             self.tabs.addTab(self.virus_db_tab, self.tr("VirusDB"))
             self.tabs.addTab(self.update_tab, self.tr("Update"))
             self.tabs.addTab(self.settings_tab, self.tr("Settings"))
-            self.tabs.addTab(self.quarantine_tab, self.tr("Quarantine"))
-            self.tabs.addTab(self.config_editor_tab, self.tr("Config Editor"))
-            self.tabs.addTab(self.status_tab, self.tr("Status"))
+            self.tabs.addTab(self.smart_scanning_tab, self.tr("Smart Scanning"))
+            self.tabs.addTab(self.batch_analysis_tab, self.tr("Batch Analysis"))
+            self.tabs.addTab(self.ml_detection_tab, self.tr("ML Detection"))
+            self.tabs.addTab(self.net_scan_tab, self.tr("Network Scan"))
 
     def create_home_tab(self):
         """Create the home tab. Override in subclasses for custom implementation."""
@@ -504,17 +504,56 @@ class ClamAVMainWindow(QMainWindow):
             layout.addWidget(QLabel(self.tr("Scan functionality not implemented in base class")))
             return tab
 
-    def create_email_scan_tab(self):
-        """Create the email scan tab using the actual EmailScanTab implementation."""
+    def create_smart_scanning_tab(self):
+        """Create the smart scanning tab using the actual SmartScanningTab implementation."""
         try:
-            from clamav_gui.ui.email_scan_tab import EmailScanTab
-            return EmailScanTab(self)
+            from clamav_gui.ui.smart_scanning_tab import SmartScanningTab
+            return SmartScanningTab(self)
         except ImportError:
-            # Fallback to placeholder if EmailScanTab is not available
+            # Fallback to placeholder if SmartScanningTab is not available
             from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
             tab = QWidget()
             layout = QVBoxLayout(tab)
-            layout.addWidget(QLabel(self.tr("Email scan not implemented in base class")))
+            layout.addWidget(QLabel(self.tr("Smart scanning not implemented in base class")))
+            return tab
+
+    def create_batch_analysis_tab(self):
+        """Create the batch analysis tab using the actual BatchAnalysisTab implementation."""
+        try:
+            from clamav_gui.ui.batch_analysis_tab import BatchAnalysisTab
+            return BatchAnalysisTab(self)
+        except ImportError:
+            # Fallback to placeholder if BatchAnalysisTab is not available
+            from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+            tab = QWidget()
+            layout = QVBoxLayout(tab)
+            layout.addWidget(QLabel(self.tr("Batch analysis not implemented in base class")))
+            return tab
+
+    def create_ml_detection_tab(self):
+        """Create the ML detection tab using the actual MLDetectionTab implementation."""
+        try:
+            from clamav_gui.ui.ml_detection_tab import MLDetectionTab
+            return MLDetectionTab(self)
+        except ImportError:
+            # Fallback to placeholder if MLDetectionTab is not available
+            from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+            tab = QWidget()
+            layout = QVBoxLayout(tab)
+            layout.addWidget(QLabel(self.tr("ML detection not implemented in base class")))
+            return tab
+
+    def create_net_scan_tab(self):
+        """Create the network scan tab using the actual NetScanTab implementation."""
+        try:
+            from clamav_gui.ui.net_scan_tab import NetScanTab
+            return NetScanTab(self)
+        except ImportError:
+            # Fallback to placeholder if NetScanTab is not available
+            from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+            tab = QWidget()
+            layout = QVBoxLayout(tab)
+            layout.addWidget(QLabel(self.tr("Network scan not implemented in base class")))
             return tab
 
     def load_settings(self):
@@ -576,9 +615,10 @@ class ClamAVMainWindow(QMainWindow):
                     ('virus_db_tab', self.tr("VirusDB")),
                     ('update_tab', self.tr("Update")),
                     ('settings_tab', self.tr("Settings")),
-                    ('quarantine_tab', self.tr("Quarantine")),
-                    ('config_editor_tab', self.tr("Config Editor")),
-                    ('status_tab', self.tr("Status"))
+                    ('smart_scanning_tab', self.tr("Smart Scanning")),
+                    ('batch_analysis_tab', self.tr("Batch Analysis")),
+                    ('ml_detection_tab', self.tr("ML Detection")),
+                    ('net_scan_tab', self.tr("Network Scan")),
                 ]
 
                 for i, (attr_name, tab_name) in enumerate(tab_methods):

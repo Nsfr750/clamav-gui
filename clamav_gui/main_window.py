@@ -25,10 +25,10 @@ from clamav_gui.ui.updates_ui import check_for_updates
 from clamav_gui.ui.settings import AppSettings
 from clamav_gui.ui.help import HelpDialog
 from clamav_gui.ui.menu import ClamAVMenuBar
-from clamav_gui.ui.about import AboutDialog
-from clamav_gui.ui.sponsor import SponsorDialog
 from clamav_gui.ui.status_tab import StatusTab
 from clamav_gui.ui.conf_editor_tab import ConfigEditorTab
+from clamav_gui.ui.home_tab import HomeTab
+from clamav_gui.ui.advanced_dialogs import NetworkPathDialog, MLDetectionDialog, SmartScanningDialog
 from clamav_gui.utils.virus_db import VirusDBUpdater
 
 # Import language manager
@@ -218,6 +218,8 @@ class ClamAVGUI(ClamAVMainWindow):
         self.settings_tab = self.create_settings_tab()
         self.quarantine_tab = self.create_quarantine_tab()
         self.config_editor_tab = self.create_config_editor_tab()
+        self.network_scan_tab = self.create_network_scan_tab()
+        self.ml_detection_tab = self.create_ml_detection_tab()
         self.status_tab = StatusTab(self)
         
         self.tabs.addTab(self.home_tab, self.tr("Home"))
@@ -228,6 +230,8 @@ class ClamAVGUI(ClamAVMainWindow):
         self.tabs.addTab(self.settings_tab, self.tr("Settings"))
         self.tabs.addTab(self.quarantine_tab, self.tr("Quarantine"))
         self.tabs.addTab(self.config_editor_tab, self.tr("Config Editor"))
+        self.tabs.addTab(self.network_scan_tab, self.tr("Network Scan"))
+        self.tabs.addTab(self.ml_detection_tab, self.tr("ML Detection"))
         self.tabs.addTab(self.status_tab, self.tr("Status"))
         
         # Status bar
@@ -457,7 +461,9 @@ class ClamAVGUI(ClamAVMainWindow):
                 self.tabs.setTabText(5, self.tr("Settings"))
                 self.tabs.setTabText(6, self.tr("Quarantine"))
                 self.tabs.setTabText(7, self.tr("Config Editor"))
-                self.tabs.setTabText(8, self.tr("Status"))
+                self.tabs.setTabText(8, self.tr("Network Scan"))
+                self.tabs.setTabText(9, self.tr("ML Detection"))
+                self.tabs.setTabText(10, self.tr("Status"))
             
             # Update status bar
             if hasattr(self, 'status_bar'):
@@ -474,7 +480,6 @@ class ClamAVGUI(ClamAVMainWindow):
     def create_home_tab(self):
         """Create the home tab using HomeTab class."""
         try:
-            from clamav_gui.ui.home_tab import HomeTab
             return HomeTab(self)
         except ImportError as e:
             logger.warning(f"Could not import HomeTab: {e}")
@@ -1304,6 +1309,34 @@ Last activity:
             tab = QWidget()
             layout = QVBoxLayout(tab)
             layout.addWidget(QLabel(self.tr("Config Editor tab not available")))
+            return tab
+
+    def create_network_scan_tab(self):
+        """Create the network scan tab using NetworkScanTab class."""
+        try:
+            from clamav_gui.ui.net_scan_tab import NetworkScanTab
+            return NetworkScanTab(self)
+        except ImportError as e:
+            logger.warning(f"Could not import NetworkScanTab: {e}")
+            # Fallback to simple network scan tab
+            from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+            tab = QWidget()
+            layout = QVBoxLayout(tab)
+            layout.addWidget(QLabel(self.tr("Network Scan tab not available")))
+            return tab
+
+    def create_ml_detection_tab(self):
+        """Create the ML detection tab using MLDetectionTab class."""
+        try:
+            from clamav_gui.ui.ml_detection_tab import MLDetectionTab
+            return MLDetectionTab(self)
+        except ImportError as e:
+            logger.warning(f"Could not import MLDetectionTab: {e}")
+            # Fallback to simple ML detection tab
+            from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+            tab = QWidget()
+            layout = QVBoxLayout(tab)
+            layout.addWidget(QLabel(self.tr("ML Detection tab not available")))
             return tab
 
     # Add the rest of the original methods here
@@ -3210,7 +3243,112 @@ class UpdateThread(QThread):
         """Handle process completion."""
         self.finished.emit(exit_code, exit_status)
     
-    def terminate(self):
-        """Terminate the process."""
-        if self.process and self.process.state() == QProcess.Running:
-            self.process.terminate()
+    def show_network_scanning(self):
+        """Show network scanning interface."""
+        try:
+            # Switch to scan tab and set network scanning mode
+            if hasattr(self, 'tabs'):
+                for i in range(self.tabs.count()):
+                    if self.tabs.tabText(i) == self.tr("Scan"):
+                        self.tabs.setCurrentIndex(i)
+                        break
+
+            # Set target to network path
+            if hasattr(self, 'target_input'):
+                network_dialog = NetworkPathDialog(self)
+                if network_dialog.exec() == QDialog.Accepted:
+                    selected_path = network_dialog.get_selected_path()
+                    if selected_path:
+                        self.target_input.setText(selected_path)
+                        self.add_activity_entry(f"Network scanning initiated for: {selected_path}")
+
+        except Exception as e:
+            logger.error(f"Error opening network scanning: {e}")
+            QMessageBox.critical(
+                self, self.tr("Network Scanning Error"),
+                self.tr(f"Failed to open network scanning interface:\n\n{str(e)}")
+            )
+
+    def show_batch_analysis(self):
+        """Show batch analysis interface."""
+        try:
+            # Switch to scan tab for batch file selection
+            if hasattr(self, 'tabs'):
+                for i in range(self.tabs.count()):
+                    if self.tabs.tabText(i) == self.tr("Scan"):
+                        self.tabs.setCurrentIndex(i)
+                        break
+
+            # Open file dialog for multiple file selection
+            file_names, _ = QFileDialog.getOpenFileNames(
+                self,
+                self.tr("Select Files for Batch Analysis"),
+                "",
+                "All Files (*);;Executable Files (*.exe *.dll);;Documents (*.pdf *.doc *.docx)"
+            )
+
+            if file_names:
+                # Set first file as target and show batch mode
+                if hasattr(self, 'target_input'):
+                    self.target_input.setText(f"{len(file_names)} files selected for batch analysis")
+
+                # Store batch files for processing
+                self.batch_files = file_names
+                self.add_activity_entry(f"Batch analysis initiated for {len(file_names)} files")
+
+                # Enable batch mode checkbox if it exists
+                if hasattr(self, 'batch_mode_checkbox'):
+                    self.batch_mode_checkbox.setChecked(True)
+
+        except Exception as e:
+            logger.error(f"Error opening batch analysis: {e}")
+            QMessageBox.critical(
+                self, self.tr("Batch Analysis Error"),
+                self.tr(f"Failed to open batch analysis interface:\n\n{str(e)}")
+            )
+
+    def show_ml_detection(self):
+        """Show ML threat detection interface."""
+        try:
+            # Check if ML detector is available
+            if not hasattr(self, 'ml_detector') or not self.ml_detector:
+                QMessageBox.information(
+                    self, self.tr("ML Detection Not Available"),
+                    self.tr("Machine Learning threat detection is not available.\n\n"
+                           "This feature requires additional ML libraries and trained models.")
+                )
+                return
+
+            # Switch to ML analysis tab or show ML dialog
+            ml_dialog = MLDetectionDialog(self.ml_detector, self)
+            ml_dialog.exec()
+
+        except Exception as e:
+            logger.error(f"Error opening ML detection: {e}")
+            QMessageBox.critical(
+                self, self.tr("ML Detection Error"),
+                self.tr(f"Failed to open ML detection interface:\n\n{str(e)}")
+            )
+
+    def show_smart_scanning(self):
+        """Show smart scanning interface and configuration."""
+        try:
+            # Check if hash database is available
+            if not hasattr(self, 'hash_database') or not self.hash_database:
+                QMessageBox.information(
+                    self, self.tr("Smart Scanning Not Available"),
+                    self.tr("Smart scanning requires a hash database.\n\n"
+                           "Please ensure the hash database is properly configured.")
+                )
+                return
+
+            # Show smart scanning configuration dialog
+            smart_dialog = SmartScanningDialog(self.hash_database, self)
+            smart_dialog.exec()
+
+        except Exception as e:
+            logger.error(f"Error opening smart scanning: {e}")
+            QMessageBox.critical(
+                self, self.tr("Smart Scanning Error"),
+                self.tr(f"Failed to open smart scanning interface:\n\n{str(e)}")
+            )

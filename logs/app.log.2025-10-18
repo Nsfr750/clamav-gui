@@ -1,0 +1,23 @@
+2025-10-18 15:25:00 - clamav_gui.utils.ml_threat_detector - WARNING - scikit-learn not available: No module named 'sklearn.exceptions'. ML features will be disabled.
+2025-10-18 15:25:00 - ClamAV-GUI - INFO - Logs directory: C:\Users\guara\Desktop\ClamAV-GUI\_internal\logs
+2025-10-18 15:25:00 - ClamAV-GUI - INFO - Application starting...
+2025-10-18 15:25:00 - ClamAV-GUI - WARNING - Icon not found at: C:\Users\guara\Desktop\ClamAV-GUI\assets\icon.png
+2025-10-18 15:25:00 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-18 15:25:00 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-18 15:25:00 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-18 15:25:00 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-18 15:25:00 - clamav_gui.lang.lang_manager - INFO - Language changed from en_US to it_IT
+2025-10-18 15:25:00 - ClamAV-GUI - INFO - Using system language: it_IT
+2025-10-18 15:25:00 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-18 15:25:00 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-18 15:25:00 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-18 15:25:00 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-18 15:25:00 - clamav_gui.ui.UI - WARNING - No application icon found in any of the expected locations
+2025-10-18 15:25:00 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-18 15:25:00 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-18 15:25:00 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-18 15:25:21 - clamav_gui.main_window - INFO - Starting scan with ClamAV at: ClamAV found at: C:\Program Files\ClamAV\clamscan.exe
+2025-10-18 15:25:21 - clamav_gui.main_window - INFO - Starting scan with ClamAV at: ClamAV found at: C:\Program Files\ClamAV\clamscan.exe
+2025-10-18 15:25:21 - clamav_gui.utils.scan_thread - INFO - Starting scan with command: C:\Program Files\ClamAV\clamscan.exe --database C:\Users\guara\AppData\Roaming\ClamAV\database -r -a --heuristic-alerts --max-filesize 100M --max-scantime 300 --exclude *.log --exclude *.tmp --exclude *.cache C:/Users/guara/Desktop/ClamAV-GUI/_internal --verbose --stdout
+2025-10-18 15:52:30 - clamav_gui.ui.settings - INFO - Settings saved to C:\Users\guara\Desktop\ClamAV-GUI\_internal\config\settings.json
+2025-10-18 15:52:32 - clamav_gui.ui.settings - INFO - Settings saved to C:\Users\guara\Desktop\ClamAV-GUI\_internal\config\settings.json

@@ -55,6 +55,7 @@ class ClamAVMenuBar(QMenuBar):
         # Add menu items
         self.exit_action = QAction(self.tr("E&xit"), self)
         self.exit_action.setShortcut("Ctrl+Q")
+        self.exit_action.setToolTip(self.tr("Exit the application"))
         try:
             from PySide6.QtWidgets import QApplication
             self.exit_action.triggered.connect(lambda: (self.parent().close() if self.parent() else QApplication.instance().quit()))
@@ -70,6 +71,7 @@ class ClamAVMenuBar(QMenuBar):
         
         # Check for updates action
         self.check_updates_action = QAction(self.tr("Check for &Updates..."), self)
+        self.check_updates_action.setToolTip(self.tr("Check for application updates"))
         self.check_updates_action.triggered.connect(self.check_for_updates)
         self.tools_menu.addAction(self.check_updates_action)
         self.tools_menu.addSeparator()
@@ -82,21 +84,29 @@ class ClamAVMenuBar(QMenuBar):
 
         # Smart scanning action
         self.smart_scan_action = QAction(self.tr("&Smart Scanning"), self)
+        self.smart_scan_action.setShortcut("Ctrl+Shift+S")
+        self.smart_scan_action.setToolTip(self.tr("Use hash databases for efficient file scanning"))
         self.smart_scan_action.triggered.connect(self.show_smart_scanning)
         self.advanced_scan_menu.addAction(self.smart_scan_action)
 
         # ML threat detection action
         self.ml_detection_action = QAction(self.tr("ML &Threat Detection"), self)
+        self.ml_detection_action.setShortcut("Ctrl+Shift+M")
+        self.ml_detection_action.setToolTip(self.tr("AI-powered threat detection and analysis"))
         self.ml_detection_action.triggered.connect(self.show_ml_detection)
         self.advanced_scan_menu.addAction(self.ml_detection_action)
 
         # Email scanning action
         self.email_scan_action = QAction(self.tr("&Email Scanning"), self)
+        self.email_scan_action.setShortcut("Ctrl+Shift+E")
+        self.email_scan_action.setToolTip(self.tr("Scan email files and attachments for threats"))
         self.email_scan_action.triggered.connect(self.show_email_scanning)
         self.advanced_scan_menu.addAction(self.email_scan_action)
 
         # Batch analysis action
         self.batch_analysis_action = QAction(self.tr("&Batch Analysis"), self)
+        self.batch_analysis_action.setShortcut("Ctrl+Shift+B")
+        self.batch_analysis_action.setToolTip(self.tr("Scan multiple files and directories simultaneously"))
         self.batch_analysis_action.triggered.connect(self.show_batch_analysis)
         self.advanced_scan_menu.addAction(self.batch_analysis_action)
 
@@ -104,6 +114,8 @@ class ClamAVMenuBar(QMenuBar):
 
         # Network scanning action
         self.network_scan_action = QAction(self.tr("&Network Scanning"), self)
+        self.network_scan_action.setShortcut("Ctrl+Shift+N")
+        self.network_scan_action.setToolTip(self.tr("Scan network shares and remote locations"))
         self.network_scan_action.triggered.connect(self.show_network_scanning)
         self.advanced_scan_menu.addAction(self.network_scan_action)
 
@@ -631,59 +643,49 @@ class ClamAVMenuBar(QMenuBar):
     def show_smart_scanning(self):
         """Show the smart scanning dialog."""
         try:
-            QMessageBox.information(
-                self,
-                self.tr("Smart Scanning"),
-                self.tr("Smart scanning functionality will be available in a future update.\n\n"
-                      "This feature will use hash databases to skip files that have been previously scanned and confirmed safe.")
-            )
+            from .smart_scanning_tab import SmartScanningTab
+            dialog = SmartScanningTab(self)
+            dialog.exec_()
         except Exception as e:
             logger.error(f"Error showing smart scanning dialog: {e}")
+            QMessageBox.critical(self, "Error", f"Failed to show smart scanning dialog: {str(e)}")
 
     def show_ml_detection(self):
         """Show the ML threat detection dialog."""
         try:
-            QMessageBox.information(
-                self,
-                self.tr("ML Threat Detection"),
-                self.tr("Machine Learning threat detection will be available in a future update.\n\n"
-                      "This feature will use AI models to detect suspicious files based on behavioral analysis.")
-            )
+            from .ml_detection_tab import MLDetectionTab
+            dialog = MLDetectionTab(self)
+            dialog.exec_()
         except Exception as e:
             logger.error(f"Error showing ML detection dialog: {e}")
+            QMessageBox.critical(self, "Error", f"Failed to show ML detection dialog: {str(e)}")
 
     def show_email_scanning(self):
         """Show the email scanning dialog."""
         try:
-            QMessageBox.information(
-                self,
-                self.tr("Email Scanning"),
-                self.tr("Email scanning functionality is available in the Email Scan tab.\n\n"
-                      "Switch to the 'Email Scan' tab to scan email files for threats.")
-            )
+            from .email_scan_tab import EmailScanTab
+            dialog = EmailScanTab(self)
+            dialog.exec_()
         except Exception as e:
             logger.error(f"Error showing email scanning dialog: {e}")
+            QMessageBox.critical(self, "Error", f"Failed to show email scanning dialog: {str(e)}")
 
     def show_batch_analysis(self):
         """Show the batch analysis dialog."""
         try:
-            QMessageBox.information(
-                self,
-                self.tr("Batch Analysis"),
-                self.tr("Batch analysis functionality will be available in a future update.\n\n"
-                      "This feature will allow you to analyze multiple files simultaneously.")
-            )
+            from .batch_analysis_tab import BatchAnalysisTab
+            dialog = BatchAnalysisTab(self)
+            dialog.exec_()
         except Exception as e:
             logger.error(f"Error showing batch analysis dialog: {e}")
+            QMessageBox.critical(self, "Error", f"Failed to show batch analysis dialog: {str(e)}")
 
     def show_network_scanning(self):
         """Show the network scanning dialog."""
         try:
-            QMessageBox.information(
-                self,
-                self.tr("Network Scanning"),
-                self.tr("Network scanning functionality will be available in a future update.\n\n"
-                      "This feature will allow you to scan network shares and remote locations.")
-            )
+            from .net_scan_tab import NetScanTab
+            dialog = NetScanTab(self)
+            dialog.exec_()
         except Exception as e:
             logger.error(f"Error showing network scanning dialog: {e}")
+            QMessageBox.critical(self, "Error", f"Failed to show network scanning dialog: {str(e)}")
