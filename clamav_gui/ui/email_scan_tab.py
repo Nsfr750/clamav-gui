@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QGroupBox, QLineEdit, QPushButton,
     QTextEdit, QProgressBar, QCheckBox, QMessageBox, QFileDialog,
     QListWidget, QListWidgetItem, QSplitter, QTreeWidget, QTreeWidgetItem,
-    QHeaderView, QTableWidget, QTableWidgetItem, QLabel, QComboBox
+    QHeaderView, QTableWidget, QTableWidgetItem, QLabel, QComboBox, QDialog, QDialogButtonBox
 )
 from PySide6.QtCore import Qt, QThread, Signal
 
@@ -107,11 +107,11 @@ class EmailScanWorker(QThread):
             return "ERROR", f"Scan error: {str(e)}"
 
 
-class EmailScanTab(QWidget):
-    """Email scanning tab widget."""
+class EmailScanTab(QDialog):
+    """Email scanning dialog for scanning email files and attachments."""
 
     def __init__(self, parent=None):
-        """Initialize the email scan tab.
+        """Initialize the email scan dialog.
 
         Args:
             parent: Parent widget (main window)
@@ -119,6 +119,12 @@ class EmailScanTab(QWidget):
         super().__init__(parent)
         self.parent = parent  # Reference to main window
         self.scan_worker = None
+
+        # Set dialog properties
+        self.setWindowTitle(self.tr("Email Scanning"))
+        self.setModal(True)
+        self.resize(900, 700)
+
         self.init_ui()
 
     def init_ui(self):
@@ -308,6 +314,38 @@ class EmailScanTab(QWidget):
 
         buttons_layout.addStretch()
         layout.addLayout(buttons_layout)
+
+        # Dialog buttons
+        self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.button_box.accepted.connect(self.accept)
+        self.button_box.rejected.connect(self.reject)
+        layout.addWidget(self.button_box)
+
+    def accept(self):
+        """Override accept to handle dialog closing."""
+        if (hasattr(self, 'scan_worker') and self.scan_worker and
+            self.scan_worker.isRunning()):
+            QMessageBox.warning(
+                self, self.tr("Scan in Progress"),
+                self.tr("Cannot close dialog while email scan is running. Please stop the scan first.")
+            )
+            return
+        super().accept()
+
+    def reject(self):
+        """Override reject to handle dialog closing."""
+        if (hasattr(self, 'scan_worker') and self.scan_worker and
+            self.scan_worker.isRunning()):
+            reply = QMessageBox.question(
+                self, self.tr("Scan in Progress"),
+                self.tr("Email scan is currently running. Do you want to stop it and close the dialog?"),
+                QMessageBox.Yes | QMessageBox.No
+            )
+            if reply == QMessageBox.Yes:
+                self.stop_email_scan()
+                super().reject()
+        else:
+            super().reject()
 
     def browse_email_files(self):
         """Browse for email files or directories."""

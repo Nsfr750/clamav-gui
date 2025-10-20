@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
     QListWidget, QListWidgetItem, QMessageBox, QFormLayout,
     QComboBox, QSpinBox, QTableWidget, QTableWidgetItem,
     QHeaderView, QAbstractItemView, QFileDialog, QSplitter,
-    QTreeWidget, QTreeWidgetItem, QTabWidget, QScrollArea
+    QTreeWidget, QTreeWidgetItem, QTabWidget, QScrollArea, QDialog, QDialogButtonBox
 )
 from PySide6.QtCore import Qt, Signal, QThread, QTimer
 from PySide6.QtGui import QFont, QPixmap, QIcon
@@ -70,11 +70,11 @@ class MLAnalysisThread(QThread):
             self.error_occurred.emit(f"ML analysis failed: {str(e)}")
 
 
-class MLDetectionTab(QWidget):
-    """ML Detection tab widget."""
+class MLDetectionTab(QDialog):
+    """ML Detection dialog for machine learning-based threat detection and analysis."""
 
     def __init__(self, parent=None):
-        """Initialize the ML detection tab.
+        """Initialize the ML detection dialog.
 
         Args:
             parent: Parent widget
@@ -84,6 +84,11 @@ class MLDetectionTab(QWidget):
         self.sandbox_analyzer = None
         self.analysis_thread = None
         self.analysis_results = []
+
+        # Set dialog properties
+        self.setWindowTitle(self.tr("ML Threat Detection"))
+        self.setModal(True)
+        self.resize(1000, 800)
 
         # Initialize UI
         self.init_ui()
@@ -292,9 +297,41 @@ class MLDetectionTab(QWidget):
 
         layout.addWidget(splitter)
 
+        # Dialog buttons
+        self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.button_box.accepted.connect(self.accept)
+        self.button_box.rejected.connect(self.reject)
+        layout.addWidget(self.button_box)
+
     def connect_signals(self):
         """Connect UI signals."""
         pass
+
+    def accept(self):
+        """Override accept to handle dialog closing."""
+        if (hasattr(self, 'analysis_thread') and self.analysis_thread and
+            self.analysis_thread.isRunning()):
+            QMessageBox.warning(
+                self, self.tr("Analysis in Progress"),
+                self.tr("Cannot close dialog while ML analysis is running. Please stop the analysis first.")
+            )
+            return
+        super().accept()
+
+    def reject(self):
+        """Override reject to handle dialog closing."""
+        if (hasattr(self, 'analysis_thread') and self.analysis_thread and
+            self.analysis_thread.isRunning()):
+            reply = QMessageBox.question(
+                self, self.tr("Analysis in Progress"),
+                self.tr("ML analysis is currently running. Do you want to stop it and close the dialog?"),
+                QMessageBox.Yes | QMessageBox.No
+            )
+            if reply == QMessageBox.Yes:
+                self.stop_ml_analysis()
+                super().reject()
+        else:
+            super().reject()
 
     def initialize_ml_components(self):
         """Initialize the ML components."""
