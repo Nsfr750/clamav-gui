@@ -226,28 +226,22 @@ class HomeTab(QWidget):
 
     def load_logo(self):
         """Load and display the application logo."""
-        # Try multiple possible logo file names and locations
-        possible_paths = [
-            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'assets', 'logo.png'),
-            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'assets', 'icon.png'),
-            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'assets', 'logo.ico'),
-            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'assets', 'icon.ico'),
-        ]
+        logo_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ui', 'img', 'logo.png')
 
-        for logo_path in possible_paths:
-            if os.path.exists(logo_path):
-                try:
-                    pixmap = QPixmap(logo_path)
-                    if not pixmap.isNull():
-                        # Scale the logo to a reasonable size for the left panel
-                        scaled_pixmap = pixmap.scaled(180, 180, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
-                        self.logo_label.setPixmap(scaled_pixmap)
-                        self.logo_label.setVisible(True)
-                        logger.info(f"Successfully loaded logo from: {logo_path}")
-                        return
-                except Exception as e:
-                    logger.warning(f"Failed to load logo from {logo_path}: {e}")
-                    continue
+        if os.path.exists(logo_path):
+            try:
+                pixmap = QPixmap(logo_path)
+                if not pixmap.isNull():
+                    # Scale the logo to a reasonable size for the left panel
+                    scaled_pixmap = pixmap.scaled(180, 180, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+                    self.logo_label.setPixmap(scaled_pixmap)
+                    self.logo_label.setVisible(True)
+                    logger.info(f"Successfully loaded logo from: {logo_path}")
+                    return
+                else:
+                    logger.warning(f"Logo file exists but could not be loaded: {logo_path}")
+            except Exception as e:
+                logger.warning(f"Failed to load logo from {logo_path}: {e}")
 
         # If no logo found, hide the label
         self.logo_label.setVisible(False)

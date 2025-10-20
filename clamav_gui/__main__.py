@@ -50,17 +50,26 @@ def setup_application():
     
     # Set application icon
     try:
-        # Try to load icon from assets folder
-        icon_path = Path(__file__).parent.parent / "assets" / "icon.png"
-        if icon_path.exists():
-            app_icon = QIcon(str(icon_path))
-            if not app_icon.isNull():
-                app.setWindowIcon(app_icon)
-                logger.info("Successfully loaded application icon")
-            else:
-                logger.warning("Failed to load application icon: Invalid image file")
-        else:
-            logger.warning(f"Icon not found at: {icon_path}")
+        # Try multiple possible icon locations
+        possible_icon_paths = [
+            # New location in ui/img/ folder
+            Path(__file__).parent / "ui" / "img" / "icon.png",
+            Path(__file__).parent / "ui" / "img" / "icon.ico",
+        ]
+
+        icon_loaded = False
+        for icon_path in possible_icon_paths:
+            if icon_path.exists():
+                app_icon = QIcon(str(icon_path))
+                if not app_icon.isNull():
+                    app.setWindowIcon(app_icon)
+                    logger.info(f"Successfully loaded application icon from: {icon_path}")
+                    icon_loaded = True
+                    break
+
+        if not icon_loaded:
+            logger.warning("No valid application icon found in any of the expected locations")
+
     except Exception as e:
         logger.warning(f"Failed to load application icon: {e}")
     
