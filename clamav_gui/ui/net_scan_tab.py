@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
     QPushButton, QTextEdit, QProgressBar, QCheckBox, QLabel,
     QListWidget, QListWidgetItem, QMessageBox, QFormLayout,
     QComboBox, QSpinBox, QTableWidget, QTableWidgetItem,
-    QHeaderView, QAbstractItemView
+    QHeaderView, QAbstractItemView, QDialog, QDialogButtonBox
 )
 from PySide6.QtCore import Qt, Signal, QTimer
 from PySide6.QtGui import QFont, QPixmap, QIcon
@@ -21,8 +21,8 @@ from clamav_gui.utils.network_scanner import NetworkScanner, NetworkScanThread
 logger = logging.getLogger(__name__)
 
 
-class NetworkScanTab(QWidget):
-    """Network scanning tab widget."""
+class NetworkScanTab(QDialog):
+    """Network scanning dialog for scanning network drives and UNC paths."""
 
     def __init__(self, parent=None):
         """Initialize the network scan tab.
@@ -34,6 +34,11 @@ class NetworkScanTab(QWidget):
         self.scanner = None
         self.scan_thread = None
         self.network_drives = []
+
+        # Set dialog properties
+        self.setWindowTitle(self.tr("Network Scanning"))
+        self.setModal(True)
+        self.resize(900, 700)
 
         # Initialize UI
         self.init_ui()
@@ -214,12 +219,46 @@ class NetworkScanTab(QWidget):
         layout.addWidget(self.scan_progress)
         layout.addLayout(button_layout)
 
+        # Dialog buttons
+        self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.button_box.accepted.connect(self.accept)
+        self.button_box.rejected.connect(self.reject)
+        layout.addWidget(self.button_box)
+
         # Initialize scanner
         self.initialize_scanner()
 
     def connect_signals(self):
         """Connect UI signals."""
         pass
+
+    def accept(self):
+        """Override accept to handle dialog closing."""
+        # Don't close if scan is in progress
+        if (hasattr(self, 'scan_thread') and self.scan_thread and
+            self.scan_thread.isRunning()):
+            QMessageBox.warning(
+                self, self.tr("Scan in Progress"),
+                self.tr("Cannot close dialog while network scan is running. Please stop the scan first.")
+            )
+            return
+        super().accept()
+
+    def reject(self):
+        """Override reject to handle dialog closing."""
+        # Don't close if scan is in progress
+        if (hasattr(self, 'scan_thread') and self.scan_thread and
+            self.scan_thread.isRunning()):
+            reply = QMessageBox.question(
+                self, self.tr("Scan in Progress"),
+                self.tr("Network scan is currently running. Do you want to stop it and close the dialog?"),
+                QMessageBox.Yes | QMessageBox.No
+            )
+            if reply == QMessageBox.Yes:
+                self.stop_network_scan()
+                super().reject()
+        else:
+            super().reject()
 
     def initialize_scanner(self):
         """Initialize the network scanner."""

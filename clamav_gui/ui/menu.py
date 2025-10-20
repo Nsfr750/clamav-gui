@@ -675,7 +675,7 @@ class ClamAVMenuBar(QMenuBar):
         try:
             from .batch_analysis_tab import BatchAnalysisTab
             dialog = BatchAnalysisTab(self)
-            dialog.exec_()
+            dialog.show()  # Show as modeless dialog instead of modal
         except Exception as e:
             logger.error(f"Error showing batch analysis dialog: {e}")
             QMessageBox.critical(self, "Error", f"Failed to show batch analysis dialog: {str(e)}")
@@ -683,8 +683,8 @@ class ClamAVMenuBar(QMenuBar):
     def show_network_scanning(self):
         """Show the network scanning dialog."""
         try:
-            from .net_scan_tab import NetScanTab
-            dialog = NetScanTab(self)
+            from .net_scan_tab import NetworkScanTab
+            dialog = NetworkScanTab(self)
             dialog.exec_()
         except Exception as e:
             logger.error(f"Error showing network scanning dialog: {e}")
