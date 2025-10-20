@@ -177,7 +177,7 @@ class ClamAVMainWindow(QMainWindow):
 
     def create_tabs(self):
         """Create all the tabs for the interface. Override in subclasses for custom tabs."""
-        # Create all tabs
+        # Create all tabs using actual implementations
         self.scan_tab = self.create_scan_tab()
         self.email_scan_tab = self.create_email_scan_tab()
         self.virus_db_tab = self.create_virus_db_tab()
@@ -479,28 +479,43 @@ class ClamAVMainWindow(QMainWindow):
             self.db_last_update_label.setText(f"Error: {str(e)}")
 
     def create_status_tab(self):
-        """Create the status tab. Override in subclasses for custom implementation."""
-        from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
-        tab = QWidget()
-        layout = QVBoxLayout(tab)
-        layout.addWidget(QLabel(self.tr("Status not implemented in base class")))
-        return tab
+        """Create the status tab using the actual StatusTab implementation."""
+        try:
+            from clamav_gui.ui.status_tab import StatusTab
+            return StatusTab(self)
+        except ImportError:
+            # Fallback to placeholder if StatusTab is not available
+            from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+            tab = QWidget()
+            layout = QVBoxLayout(tab)
+            layout.addWidget(QLabel(self.tr("Status not implemented in base class")))
+            return tab
 
     def create_scan_tab(self):
-        """Create the scan tab. Override in subclasses for custom implementation."""
-        from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
-        tab = QWidget()
-        layout = QVBoxLayout(tab)
-        layout.addWidget(QLabel(self.tr("Scan functionality not implemented in base class")))
-        return tab
+        """Create the scan tab using the actual ScanTab implementation."""
+        try:
+            from clamav_gui.ui.scan_tab import ScanTab
+            return ScanTab(self)
+        except ImportError:
+            # Fallback to placeholder if ScanTab is not available
+            from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+            tab = QWidget()
+            layout = QVBoxLayout(tab)
+            layout.addWidget(QLabel(self.tr("Scan functionality not implemented in base class")))
+            return tab
 
     def create_email_scan_tab(self):
-        """Create the email scan tab. Override in subclasses for custom implementation."""
-        from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
-        tab = QWidget()
-        layout = QVBoxLayout(tab)
-        layout.addWidget(QLabel(self.tr("Email scan not implemented in base class")))
-        return tab
+        """Create the email scan tab using the actual EmailScanTab implementation."""
+        try:
+            from clamav_gui.ui.email_scan_tab import EmailScanTab
+            return EmailScanTab(self)
+        except ImportError:
+            # Fallback to placeholder if EmailScanTab is not available
+            from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+            tab = QWidget()
+            layout = QVBoxLayout(tab)
+            layout.addWidget(QLabel(self.tr("Email scan not implemented in base class")))
+            return tab
 
     def load_settings(self):
         """Load application settings."""
@@ -1106,12 +1121,17 @@ class ClamAVMainWindow(QMainWindow):
         pass
 
     def create_quarantine_tab(self):
-        """Create the quarantine tab. Override in subclasses for custom implementation."""
-        from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
-        tab = QWidget()
-        layout = QVBoxLayout(tab)
-        layout.addWidget(QLabel(self.tr("Quarantine not implemented in base class")))
-        return tab
+        """Create the quarantine tab using the actual QuarantineTab implementation."""
+        try:
+            from clamav_gui.ui.quarantine_tab import QuarantineTab
+            return QuarantineTab(self)
+        except ImportError:
+            # Fallback to placeholder if QuarantineTab is not available
+            from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+            tab = QWidget()
+            layout = QVBoxLayout(tab)
+            layout.addWidget(QLabel(self.tr("Quarantine not implemented in base class")))
+            return tab
 
     def create_config_editor_tab(self):
         """Create the config editor tab with file editing capabilities."""

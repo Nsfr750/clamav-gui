@@ -1788,7 +1788,7 @@ Last activity:
             'max_scan_time': self.max_scan_time.text(),
             'exclude_patterns': self.exclude_patterns.text(),
             'include_patterns': self.include_patterns.text(),
-            'enable_smart_scanning': self.enable_smart_scanning.isChecked()
+            'enable_smart_scanning': self.enable_smart_scanning.isChecked() if hasattr(self.enable_smart_scanning, 'isChecked') else self.enable_smart_scanning
         }
         
         if self.settings.save_settings(settings):
@@ -1845,7 +1845,18 @@ Last activity:
         if 'include_patterns' in scan_settings:
             self.include_patterns.setText(scan_settings['include_patterns'])
         if 'enable_smart_scanning' in scan_settings:
-            if hasattr(self, 'enable_smart_scanning') and self.enable_smart_scanning is not None:
+            # Ensure enable_smart_scanning is a checkbox widget
+            if not hasattr(self, 'enable_smart_scanning') or self.enable_smart_scanning is None:
+                # Re-initialize the checkbox if it doesn't exist or is None
+                self.enable_smart_scanning = QCheckBox(self.tr("Enable smart scanning (skip known safe files)"))
+                self.enable_smart_scanning.setChecked(False)
+                self.enable_smart_scanning.setToolTip(self.tr("Use hash database to skip files that have been previously scanned and confirmed safe"))
+                # Add to the scan options layout if it exists
+                if hasattr(self, 'options_layout'):
+                    self.options_layout.addWidget(self.enable_smart_scanning)
+
+            # Now safely set the checkbox state
+            if hasattr(self.enable_smart_scanning, 'setChecked'):
                 self.enable_smart_scanning.setChecked(scan_settings.get('enable_smart_scanning', False))
         
     def _auto_quarantine_infected_files(self):

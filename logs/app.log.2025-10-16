@@ -1,0 +1,750 @@
+2025-10-16 11:27:42 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 11:27:43 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.0)
+2025-10-16 11:34:19 - clamav_gui.utils.ml_threat_detector - WARNING - scikit-learn not available. ML features will be disabled.
+2025-10-16 11:34:19 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 11:34:19 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 11:34:19 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 11:34:19 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 11:34:19 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 11:34:19 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 11:34:19 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 11:34:19 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 11:34:19 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 11:34:19 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 11:34:19 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 11:34:19 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 11:34:19 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 11:34:19 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 11:34:19 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 11:34:19 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 11:34:22 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 11:34:23 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.0)
+2025-10-16 11:34:43 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 11:34:43 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.0)
+2025-10-16 11:35:18 - clamav_gui.utils.ml_threat_detector - WARNING - scikit-learn not available. ML features will be disabled.
+2025-10-16 11:35:18 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 11:35:18 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 11:35:18 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 11:35:18 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 11:35:18 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 11:35:18 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 11:35:18 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 11:35:18 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 11:35:18 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 11:35:18 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 11:35:18 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 11:35:18 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 11:35:18 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 11:35:18 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 11:35:18 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 11:35:18 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 11:35:22 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 11:35:22 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.0)
+2025-10-16 11:39:23 - clamav_gui.utils.ml_threat_detector - WARNING - scikit-learn not available. ML features will be disabled.
+2025-10-16 11:39:23 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 11:39:23 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 11:39:23 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 11:39:23 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 11:39:23 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 11:39:23 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 11:39:23 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 11:39:23 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 11:39:23 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 11:39:23 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 11:39:23 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 11:39:23 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 11:39:23 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 11:39:23 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 11:39:23 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 11:39:23 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 11:39:26 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 11:39:27 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.0)
+2025-10-16 11:44:45 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 11:44:45 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 11:44:45 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 11:44:45 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 11:44:45 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 11:44:45 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 11:44:45 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 11:44:45 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 11:44:45 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 11:44:45 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 11:44:45 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 11:44:45 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 11:44:45 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 11:44:45 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 11:44:45 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 11:44:45 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 11:44:48 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 11:44:49 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.0)
+2025-10-16 11:51:09 - clamav_gui.utils.ml_threat_detector - WARNING - scikit-learn not available. ML features will be disabled.
+2025-10-16 11:51:09 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 11:51:09 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 11:51:09 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 11:51:09 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 11:51:09 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 11:51:09 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 11:51:09 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 11:51:09 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 11:51:09 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 11:51:09 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 11:51:09 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 11:51:09 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 11:51:09 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 11:51:09 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 11:51:09 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 11:51:09 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 11:51:12 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 11:51:13 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.0)
+2025-10-16 12:00:40 - clamav_gui.utils.ml_threat_detector - WARNING - scikit-learn not available. ML features will be disabled.
+2025-10-16 12:00:40 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 12:00:40 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 12:00:40 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 12:00:40 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:00:40 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:00:40 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:00:40 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:00:40 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 12:00:40 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:00:40 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:00:40 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:00:40 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:00:40 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 12:00:40 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 12:00:40 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 12:00:40 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 12:00:43 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 12:00:44 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.0)
+2025-10-16 12:02:08 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 12:02:08 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 12:02:08 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 12:02:08 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:02:08 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:02:08 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:02:08 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:02:08 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 12:02:08 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:02:08 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:02:08 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:02:08 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:02:08 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 12:02:08 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 12:02:08 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 12:02:08 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 12:02:11 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 12:02:11 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.0)
+2025-10-16 12:05:39 - clamav_gui.utils.ml_threat_detector - WARNING - scikit-learn not available. ML features will be disabled.
+2025-10-16 12:05:39 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 12:05:39 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 12:05:39 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 12:05:39 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:05:39 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:05:39 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:05:39 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:05:39 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 12:05:39 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:05:39 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:05:39 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:05:39 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:05:39 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 12:05:39 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 12:05:39 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 12:05:39 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 12:05:42 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 12:05:42 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.0)
+2025-10-16 12:09:33 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 12:09:33 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 12:09:33 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 12:09:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:09:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:09:33 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:09:33 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:09:33 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 12:09:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:09:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:09:33 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:09:33 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:09:33 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 12:09:33 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 12:09:33 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 12:09:33 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 12:09:36 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 12:09:37 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.0)
+2025-10-16 12:13:09 - clamav_gui.utils.ml_threat_detector - WARNING - scikit-learn not available. ML features will be disabled.
+2025-10-16 12:13:09 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 12:13:09 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 12:13:09 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 12:13:09 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:13:09 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:13:09 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:13:09 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:13:09 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 12:13:09 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:13:09 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:13:09 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:13:09 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:13:09 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 12:13:09 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 12:13:09 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 12:13:09 - ClamAV-GUI - CRITICAL - Critical error: 'PySide6.QtWidgets.QBoxLayout.addWidget' called with wrong argument types:
+  PySide6.QtWidgets.QBoxLayout.addWidget(QSpacerItem)
+Supported signatures:
+  PySide6.QtWidgets.QBoxLayout.addWidget(arg__1: PySide6.QtWidgets.QWidget, /, stretch: int | None = None, alignment: PySide6.QtCore.Qt.AlignmentFlag = Default(Qt.Alignment))
+Traceback (most recent call last):
+  File "X:\GitHub\clamav-gui\clamav_gui\__main__.py", line 103, in main
+    window = ClamAVGUI(lang_manager)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "X:\GitHub\clamav-gui\clamav_gui\main_window.py", line 2948, in __init__
+    super().__init__()
+  File "X:\GitHub\clamav-gui\clamav_gui\ui\UI.py", line 65, in __init__
+    self.init_ui()
+  File "X:\GitHub\clamav-gui\clamav_gui\main_window.py", line 150, in init_ui
+    self.home_tab = self.create_home_tab()
+                    ^^^^^^^^^^^^^^^^^^^^^^
+  File "X:\GitHub\clamav-gui\clamav_gui\main_window.py", line 402, in create_home_tab
+    return HomeTab(self)
+           ^^^^^^^^^^^^^
+  File "X:\GitHub\clamav-gui\clamav_gui\ui\home_tab.py", line 18, in __init__
+    self.init_ui()
+  File "X:\GitHub\clamav-gui\clamav_gui\ui\home_tab.py", line 55, in init_ui
+    actions.addWidget(spacer)
+TypeError: 'PySide6.QtWidgets.QBoxLayout.addWidget' called with wrong argument types:
+  PySide6.QtWidgets.QBoxLayout.addWidget(QSpacerItem)
+Supported signatures:
+  PySide6.QtWidgets.QBoxLayout.addWidget(arg__1: PySide6.QtWidgets.QWidget, /, stretch: int | None = None, alignment: PySide6.QtCore.Qt.AlignmentFlag = Default(Qt.Alignment))
+2025-10-16 12:16:18 - clamav_gui.utils.ml_threat_detector - WARNING - scikit-learn not available. ML features will be disabled.
+2025-10-16 12:16:18 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 12:16:18 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 12:16:18 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 12:16:18 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:16:18 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:16:18 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:16:18 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:16:18 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 12:16:18 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:16:18 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:16:18 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:16:18 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:16:18 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 12:16:18 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 12:16:18 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 12:16:19 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 12:16:19 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 12:16:19 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 12:16:22 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 12:16:22 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.1)
+2025-10-16 12:22:18 - clamav_gui.utils.ml_threat_detector - WARNING - scikit-learn not available. ML features will be disabled.
+2025-10-16 12:22:18 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 12:22:18 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 12:22:18 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 12:22:18 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:22:18 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:22:18 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:22:18 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:22:18 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 12:22:18 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:22:18 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:22:18 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:22:18 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:22:18 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 12:22:18 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 12:22:18 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 12:22:18 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 12:22:18 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 12:22:18 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 12:22:21 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 12:22:22 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.1)
+2025-10-16 12:24:44 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 12:26:46 - clamav_gui.utils.ml_threat_detector - WARNING - scikit-learn not available. ML features will be disabled.
+2025-10-16 12:26:46 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 12:26:46 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 12:26:46 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 12:26:46 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:26:46 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:26:46 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:26:46 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:26:46 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 12:26:46 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:26:46 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:26:46 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:26:46 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:26:46 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 12:26:46 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 12:26:46 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 12:26:47 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 12:26:47 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 12:26:47 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 12:26:50 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 12:26:50 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.1)
+2025-10-16 12:28:47 - clamav_gui.utils.ml_threat_detector - WARNING - scikit-learn not available. ML features will be disabled.
+2025-10-16 12:28:47 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 12:28:47 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 12:28:48 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 12:28:48 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:28:48 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:28:48 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:28:48 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:28:48 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 12:28:48 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 12:28:48 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 12:28:48 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 12:28:48 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 12:28:48 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 12:28:48 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 12:28:48 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 12:28:48 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 12:28:48 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 12:28:48 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 12:28:51 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 12:28:51 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.1)
+2025-10-16 14:26:17 - clamav_gui.utils.ml_threat_detector - WARNING - scikit-learn not available. ML features will be disabled.
+2025-10-16 14:26:17 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 14:26:17 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 14:26:17 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 14:26:17 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 14:26:17 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 14:26:17 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 14:26:17 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 14:26:17 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 14:26:17 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 14:26:17 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 14:26:17 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 14:26:17 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 14:26:17 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 14:26:17 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 14:26:17 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 14:26:17 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 14:26:17 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 14:26:17 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 14:26:20 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 14:26:21 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.1)
+2025-10-16 14:37:56 - clamav_gui.utils.ml_threat_detector - WARNING - scikit-learn not available. ML features will be disabled.
+2025-10-16 14:37:56 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 14:37:56 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 14:37:56 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 14:37:56 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 14:37:56 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 14:37:56 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 14:37:56 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 14:37:56 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 14:37:56 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 14:37:56 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 14:37:56 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 14:37:56 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 14:37:56 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 14:37:56 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 14:37:56 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 14:37:56 - clamav_gui.ui.settings - INFO - Loaded settings from x:\GitHub\clamav-gui\config\settings.json
+2025-10-16 14:37:56 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 14:37:56 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 14:37:59 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 14:38:00 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.1)
+2025-10-16 14:49:23 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 14:49:23 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 14:49:23 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 14:49:23 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 14:49:23 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 14:49:23 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 14:49:23 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 14:49:23 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 14:49:23 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 14:49:23 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 14:49:23 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 14:49:23 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 14:49:23 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 14:49:23 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 14:49:23 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 14:49:23 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 14:49:23 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 14:49:24 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 14:49:27 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 14:49:27 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.1)
+2025-10-16 14:51:36 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 14:51:36 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 14:51:36 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 14:51:36 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 14:51:36 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 14:51:36 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 14:51:36 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 14:51:36 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 14:51:36 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 14:51:36 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 14:51:36 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 14:51:36 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 14:51:36 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 14:51:36 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 14:51:36 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 14:51:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 14:51:37 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 14:51:37 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 14:51:40 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 14:51:40 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.1)
+2025-10-16 14:54:10 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 14:54:10 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 14:54:10 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 14:54:10 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 14:54:10 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 14:54:10 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 14:54:10 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 14:54:10 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 14:54:10 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 14:54:10 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 14:54:10 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 14:54:10 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 14:54:10 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 14:54:10 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 14:54:10 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 14:54:10 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 14:54:10 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 14:54:10 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 14:54:13 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 14:54:14 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.1)
+2025-10-16 17:12:49 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 17:12:49 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 17:12:49 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 17:12:49 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 17:12:49 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 17:12:49 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 17:12:49 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 17:12:49 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 17:12:49 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 17:12:49 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 17:12:49 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 17:12:49 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 17:12:49 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 17:12:49 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 17:12:49 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 17:12:49 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 17:12:49 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 17:12:49 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 17:12:52 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 17:12:53 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.1)
+2025-10-16 17:18:34 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 17:18:34 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 17:18:34 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 17:18:34 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 17:18:34 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 17:18:34 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 17:18:34 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 17:18:34 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 17:18:34 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 17:18:34 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 17:18:34 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 17:18:34 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 17:18:34 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 17:18:34 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 17:18:34 - clamav_gui.main_window - INFO - Menu count=4 titles=['&Language', '&File', '&Tools', '&Help']
+2025-10-16 17:18:34 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 17:18:34 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 17:18:34 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 17:18:37 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 17:18:38 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.1)
+2025-10-16 17:22:32 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 17:22:32 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 17:22:32 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 17:22:32 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 17:22:32 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 17:22:32 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 17:22:32 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 17:22:32 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 17:22:32 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 17:22:32 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 17:22:32 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 17:22:32 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 17:22:32 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 17:22:32 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 17:22:32 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Funzioni &avanzate scansione', '&Help']
+2025-10-16 17:22:32 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 17:22:32 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 17:22:32 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 17:22:35 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 17:22:36 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.1)
+2025-10-16 17:30:34 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 17:30:34 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 17:30:34 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 17:30:34 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 17:30:34 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 17:30:34 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 17:30:34 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 17:30:34 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 17:30:34 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 17:30:34 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 17:30:34 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 17:30:34 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 17:30:34 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 17:30:34 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 17:30:34 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-16 17:30:34 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 17:30:34 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 17:30:34 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 17:30:37 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 17:30:38 - clamav_gui.utils.updates - INFO - No updates available (current: 1.1.1, latest: 1.1.1)
+2025-10-16 17:31:57 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 17:31:57 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 17:31:57 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 17:31:57 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 18:49:43 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 18:49:43 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 18:49:43 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 18:49:43 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 18:49:43 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 18:49:43 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 18:49:43 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 18:49:43 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 18:49:43 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 18:49:43 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 18:49:43 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 18:49:43 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 18:49:43 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 18:49:43 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 18:49:43 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-16 18:49:43 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 18:49:43 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 18:49:43 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 18:49:46 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 18:49:47 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.0, latest: 1.1.1)
+2025-10-16 19:31:56 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-16 19:31:56 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 19:31:56 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 19:31:56 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 19:31:56 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 19:31:56 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 19:31:56 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 19:31:56 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 19:31:56 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 19:31:56 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 19:31:56 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 19:31:56 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 19:31:56 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 19:31:56 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 19:31:56 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 19:31:56 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-16 19:31:56 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 19:31:56 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 19:31:56 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 19:31:59 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 19:32:00 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.0, latest: 1.2.0)
+2025-10-16 19:32:07 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 19:32:08 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.0, latest: 1.2.0)
+2025-10-16 19:34:50 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-16 19:34:50 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 19:34:50 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 19:34:50 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 19:34:50 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 19:34:50 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 19:34:50 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 19:34:50 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 19:34:50 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 19:34:50 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 19:34:50 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 19:34:50 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 19:34:50 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 19:34:50 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 19:34:50 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 19:34:50 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-16 19:34:50 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 19:34:50 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 19:34:50 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 19:34:53 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 19:34:53 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.0, latest: 1.2.0)
+2025-10-16 20:11:07 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-16 20:11:07 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 20:11:07 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 20:11:07 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 20:11:07 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 20:11:07 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 20:11:07 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 20:11:07 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 20:11:07 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 20:11:07 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 20:11:07 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 20:11:07 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 20:11:07 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 20:11:07 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 20:11:07 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 20:11:07 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-16 20:11:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 20:11:07 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 20:11:07 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 20:11:10 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 20:11:11 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.0, latest: 1.2.0)
+2025-10-16 20:18:52 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-16 20:18:52 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 20:18:52 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 20:18:52 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 20:18:52 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 20:18:52 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 20:18:52 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 20:18:52 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 20:18:52 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 20:18:52 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 20:18:52 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 20:18:52 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 20:18:52 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 20:18:52 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 20:18:52 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 20:18:52 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-16 20:18:53 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 20:18:53 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 20:18:53 - clamav_gui.ui.status_tab - ERROR - Error getting database info: [WinError 2] Impossibile trovare il file specificato
+2025-10-16 20:18:56 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 20:18:56 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.0, latest: 1.2.0)
+2025-10-16 20:24:37 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-16 20:24:37 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 20:24:37 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 20:24:37 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 20:24:37 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 20:24:37 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 20:24:37 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 20:24:37 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 20:24:37 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 20:24:37 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 20:24:37 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 20:24:37 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 20:24:37 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 20:24:37 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 20:24:37 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 20:24:37 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-16 20:24:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 20:24:37 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 20:24:40 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 20:24:41 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.0, latest: 1.2.0)
+2025-10-16 20:27:40 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 20:27:40 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.0, latest: 1.2.0)
+2025-10-16 20:32:52 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 20:32:52 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 20:32:52 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 20:32:52 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 20:33:03 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 20:33:03 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 20:33:03 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 20:33:03 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 20:36:32 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-16 20:36:32 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 20:36:32 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 20:36:32 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 20:36:32 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 20:36:32 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 20:36:32 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 20:36:32 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 20:36:32 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 20:36:32 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 20:36:32 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 20:36:32 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 20:36:32 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 20:36:32 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 20:36:32 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 20:36:32 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-16 20:36:32 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 20:36:32 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 20:36:35 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 20:36:36 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.0, latest: 1.2.0)
+2025-10-16 20:37:42 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 20:37:42 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 20:37:42 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 20:37:42 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 20:45:27 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-16 20:45:27 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 20:45:27 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 20:45:27 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 20:45:27 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 20:45:27 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 20:45:27 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 20:45:27 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 20:45:27 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 20:45:27 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 20:45:27 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 20:45:27 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 20:45:27 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 20:45:27 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 20:45:27 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 20:45:27 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-16 20:45:27 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 20:45:27 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 20:45:30 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 20:45:31 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.0, latest: 1.2.0)
+2025-10-16 20:46:04 - clamav_gui.ui.settings - INFO - Settings saved to X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 20:46:22 - clamav_gui.ui.settings - INFO - Settings saved to X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 20:58:49 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-16 20:58:49 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 20:58:49 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 20:58:49 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 20:58:49 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 20:58:49 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 20:58:49 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 20:58:49 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 20:58:49 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 20:58:49 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 20:58:49 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 20:58:49 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 20:58:49 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 20:58:49 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 20:58:49 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 20:58:49 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-16 20:58:49 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 20:58:49 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 20:58:52 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 20:58:53 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.0, latest: 1.2.0)
+2025-10-16 21:11:24 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-16 21:11:24 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 21:11:24 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 21:11:24 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 21:11:24 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 21:11:24 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 21:11:24 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 21:11:24 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 21:11:24 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 21:11:24 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 21:11:24 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 21:11:24 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 21:11:24 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 21:11:24 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 21:11:24 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 21:11:24 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-16 21:11:24 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 21:11:24 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 21:11:27 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 21:11:28 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.0, latest: 1.2.0)
+2025-10-16 21:17:50 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-16 21:17:50 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 21:17:50 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 21:17:50 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 21:17:50 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 21:17:50 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 21:17:50 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 21:17:50 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 21:17:50 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 21:17:50 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 21:17:50 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 21:17:50 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 21:17:50 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 21:17:50 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 21:17:50 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 21:17:50 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-16 21:17:50 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 21:17:50 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 21:17:53 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 21:17:54 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.0, latest: 1.2.0)
+2025-10-16 21:20:55 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-16 21:20:55 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-16 21:20:55 - ClamAV-GUI - INFO - Application starting...
+2025-10-16 21:20:55 - ClamAV-GUI - INFO - Successfully loaded application icon
+2025-10-16 21:20:55 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 21:20:55 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 21:20:55 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 21:20:55 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 21:20:55 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-16 21:20:55 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-16 21:20:55 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-16 21:20:55 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-16 21:20:55 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-16 21:20:55 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: assets/icon.ico
+2025-10-16 21:20:55 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-16 21:20:55 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-16 21:20:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-16 21:20:55 - clamav_gui.ui.UI - ERROR - Error loading settings: 'ClamAVGUI' object has no attribute 'default_scan_archives'
+2025-10-16 21:20:58 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-16 21:20:59 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.0, latest: 1.2.0)
+2025-10-16 21:21:11 - clamav_gui.main_window - INFO - Starting scan with ClamAV at: ClamAV found at: C:\Program Files\ClamAV\clamscan.exe
+2025-10-16 21:21:11 - clamav_gui.main_window - INFO - Starting scan with ClamAV at: ClamAV found at: C:\Program Files\ClamAV\clamscan.exe
+2025-10-16 21:21:11 - clamav_gui.main_window - ERROR - Error starting scan: 'bool' object has no attribute 'isChecked'

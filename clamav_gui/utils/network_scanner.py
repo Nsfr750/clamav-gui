@@ -28,7 +28,7 @@ class NetworkScanner:
         """Validate if a network path is accessible.
 
         Args:
-            path: Network path to validate (UNC format like \\server\share)
+            path: Network path to validate (UNC format like \\\\server\\share)
 
         Returns:
             Tuple of (is_valid: bool, message: str)
@@ -41,7 +41,7 @@ class NetworkScanner:
             return False, f"Invalid UNC path format. Expected: \\\\server\\share, got: {path}"
 
         # Basic path validation
-        if len(path) < 5:  # Minimum \\\\x\y format
+        if len(path) < 5:  # Minimum \\\\x\\y format
             return False, "UNC path too short"
 
         try:
@@ -69,7 +69,7 @@ class NetworkScanner:
         """Scan a network drive or UNC path.
 
         Args:
-            network_path: UNC path to scan (e.g., \\server\share)
+            network_path: UNC path to scan (e.g., \\\\server\\share)
             options: Scan options dictionary
 
         Returns:
@@ -194,7 +194,7 @@ class NetworkScanner:
         """Map a network drive (Windows only).
 
         Args:
-            network_path: UNC path to map (e.g., \\server\share)
+            network_path: UNC path to map (e.g., \\\\server\\share)
             drive_letter: Drive letter to use (optional, will auto-assign if None)
 
         Returns:
