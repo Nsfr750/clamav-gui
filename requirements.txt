@@ -15,3 +15,9 @@ pyyaml>=6.0.2
 psutil>=5.9.0
 pyinstaller>=6.0.0
 pefile>=2023.2.7
+pyclamd>=0.4.0
+# pyclamav>=0.5.0; sys_platform != 'win32'  # Direct ClamAV bindings (Unix only)
+clamd>=1.0.2  # ClamAV daemon client (cross-platform)
+
+# Note: For Windows, ClamAV integration uses subprocess calls to clamscan.exe
+# Install ClamAV for Windows from: https://www.clamav.net/downloads

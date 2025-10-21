@@ -127,8 +127,47 @@ class AppCompiler:
                 # Return full path for command line
                 return str(icon_path)
 
-        print("⚠️  Nessuna icona trovata, procedendo senza icona")
-        return None
+    def _find_clamav_libraries(self):
+        """Cerca e restituisce i percorsi delle librerie ClamAV per il bundling."""
+        lib_paths = []
+
+        # Percorsi comuni per le librerie ClamAV su Windows
+        common_paths = [
+            "C:/Program Files/ClamAV/libclamav.dll",
+            "C:/Program Files (x86)/ClamAV/libclamav.dll",
+            "C:/ClamAV/libclamav.dll",
+        ]
+
+        for path in common_paths:
+            if os.path.exists(path):
+                print(f"🔍 Libreria ClamAV trovata: {path}")
+                lib_paths.append(path)
+            else:
+                print(f"🔍 Libreria ClamAV non trovata: {path}")
+
+        # Cerca anche nelle directory di sistema
+        try:
+            import glob
+            system_paths = [
+                "C:/Windows/System32/libclamav*.dll",
+                "C:/Windows/SysWOW64/libclamav*.dll",
+            ]
+
+            for pattern in system_paths:
+                found = glob.glob(pattern)
+                for path in found:
+                    if path not in lib_paths:
+                        lib_paths.append(path)
+                        print(f"🔍 Libreria ClamAV di sistema trovata: {path}")
+        except:
+            pass
+
+        if lib_paths:
+            print(f"✅ Trovate {len(lib_paths)} librerie ClamAV per il bundling")
+        else:
+            print("⚠️  Nessuna libreria ClamAV trovata - l'integrazione diretta potrebbe non funzionare")
+
+        return lib_paths
 
     def create_spec_file(self, debug=False, use_upx=True, onefile=True):
         """Crea il file .spec per PyInstaller."""
@@ -292,6 +331,12 @@ coll = COLLECT(
         img_dir = "clamav_gui/ui/img"
         if os.path.exists(img_dir):
             cmd.extend(["--add-data", f"{img_dir};{img_dir}"])
+
+        # Aggiungi supporto per librerie ClamAV se disponibili
+        clamav_lib_paths = self._find_clamav_libraries()
+        for lib_path in clamav_lib_paths:
+            if lib_path:
+                cmd.extend(["--add-binary", lib_path])
 
         # Aggiungi icona se disponibile
         icon_path = self.find_icon()

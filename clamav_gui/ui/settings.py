@@ -85,7 +85,8 @@ class AppSettings:
             'max_file_size': 100,  # MB
             'max_scan_time': 300,  # seconds
             'exclude_patterns': '*.log,*.tmp',
-            'include_patterns': '*'
+            'include_patterns': '*',
+            'scanner_type': 'integrated'  # integrated, external, auto
         }
 
         for key, default in qsettings_keys.items():
@@ -136,7 +137,7 @@ class AppSettings:
                     json_settings[key] = settings[key]
 
             # Include other settings
-            other_keys = ['auto_update', 'language', 'theme']
+            other_keys = ['auto_update', 'language', 'theme', 'scanner_type']
             for key in other_keys:
                 if key in settings:
                     json_settings[key] = settings[key]
@@ -183,6 +184,8 @@ class AppSettings:
                 self.settings.setValue('exclude_patterns', settings['exclude_patterns'])
             if 'include_patterns' in settings:
                 self.settings.setValue('include_patterns', settings['include_patterns'])
+            if 'scanner_type' in settings:
+                self.settings.setValue('scanner_type', settings['scanner_type'])
 
             # Sync settings
             self.settings.sync()

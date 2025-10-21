@@ -52,8 +52,8 @@ from clamav_gui.utils.scan_thread import ScanThread
 # Import hash database for smart scanning
 from clamav_gui.utils.hash_database import HashDatabase
 
-# Import advanced reporting system
-from clamav_gui.utils.advanced_reporting import AdvancedReporting
+# Import fallback manager for robust ClamAV integration
+from clamav_gui.utils.clamav_fallback_manager import ClamAVFallbackManager
 
 # Optional ML imports (only if needed and available)
 _ML_AVAILABLE = True
@@ -94,6 +94,12 @@ class ClamAVGUI(ClamAVMainWindow):
         # self.error_recovery = ErrorRecoveryManager()
         # self.network_recovery = NetworkErrorRecovery()
         self.advanced_reporting = AdvancedReporting()
+
+        # Initialize ClamAV manager for integrated scanning
+        self.clamav_manager = ClamAVManager()
+
+        # Initialize fallback manager for robust integration
+        self.fallback_manager = ClamAVFallbackManager()
 
         # Initialize ML components only if available
         self.ml_detector = None
@@ -521,12 +527,6 @@ class ClamAVGUI(ClamAVMainWindow):
         self.heuristic_scan.setChecked(True)
         options_layout.addWidget(self.heuristic_scan)
         
-        self.enable_smart_scanning = QCheckBox(self.tr("Enable smart scanning (skip known safe files)"))
-        self.enable_smart_scanning.setChecked(False)
-        self.enable_smart_scanning.setToolTip(self.tr("Use hash database to skip files that have been previously scanned and confirmed safe"))
-        options_layout.addWidget(self.enable_smart_scanning)
-        
-        # Advanced scan options
         self.scan_archives = QCheckBox(self.tr("Scan archives (zip, rar, etc.)"))
         self.scan_archives.setChecked(True)
         options_layout.addWidget(self.scan_archives)
@@ -535,6 +535,11 @@ class ClamAVGUI(ClamAVMainWindow):
         self.scan_pua.setChecked(False)
         self.scan_pua.setToolTip(self.tr("Enable scanning for potentially unwanted applications"))
         options_layout.addWidget(self.scan_pua)
+        
+        self.enable_smart_scanning = QCheckBox(self.tr("Enable smart scanning (skip known safe files)"))
+        self.enable_smart_scanning.setChecked(False)
+        self.enable_smart_scanning.setToolTip(self.tr("Use hash database to skip files that have been previously scanned and confirmed safe"))
+        options_layout.addWidget(self.enable_smart_scanning)
         
         options_group.setLayout(options_layout)
         
@@ -777,6 +782,20 @@ class ClamAVGUI(ClamAVMainWindow):
         
         perf_options.setLayout(perf_layout)
         scan_layout.addWidget(perf_options)
+        
+        # Scanner type selection
+        scanner_group = QGroupBox(self.tr("Scanner Integration"))
+        scanner_layout = QFormLayout()
+        
+        self.scanner_type_combo = QComboBox()
+        self.scanner_type_combo.addItem(self.tr("Integrated Scanner (Recommended)"), "integrated")
+        self.scanner_type_combo.addItem(self.tr("External Scanner (clamscan)"), "external")
+        self.scanner_type_combo.addItem(self.tr("Auto-detect (Let app decide)"), "auto")
+        self.scanner_type_combo.setToolTip(self.tr("Choose scanner integration method:\n• Integrated: Direct ClamAV library integration (fastest)\n• External: Use clamscan.exe subprocess (most compatible)\n• Auto-detect: Let app choose best available method"))
+        scanner_layout.addRow(self.tr("Scanner type:"), self.scanner_type_combo)
+        
+        scanner_group.setLayout(scanner_layout)
+        scan_layout.addWidget(scanner_group)
         
         # File patterns
         pattern_group = QGroupBox(self.tr("File Patterns"))
@@ -1371,291 +1390,348 @@ Last activity:
             self.target_input.setText(unc_path.strip())
     
     def start_scan(self):
-        """Start the ClamAV scan."""
+        """Start the ClamAV scan using selected scanner type."""
         target = self.target_input.text()
         if not target:
             QMessageBox.warning(self, self.tr("Error"), self.tr("Please select a target to scan"))
             return
-        
-        # Validate ClamAV installation first
-        # For now, use a simple check since clamav_validator doesn't exist
-        import subprocess
-        import os
 
-        try:
-            clamscan_path = self.clamscan_path.text().strip() if hasattr(self, 'clamscan_path') else 'clamscan'
-            if not clamscan_path:
-                clamscan_path = 'clamscan'
+        # Get the selected scanner type from settings
+        scanner_type = self.current_settings.get('scanner_type', 'integrated')
+        if hasattr(self, 'scanner_type_combo'):
+            scanner_type = self.scanner_type_combo.currentData() or scanner_type
 
-            # Try to run clamscan --version to check if it's available
-            result = subprocess.run([clamscan_path, '--version'],
-                                  capture_output=True, text=True, timeout=5)
-
-            if result.returncode == 0:
-                is_installed = True
-                status_msg = f"ClamAV found at: {clamscan_path}"
-                # Parse version info from output
-                output = result.stdout.strip()
-                version_info = {'version': output.split('\n')[0] if output else 'Unknown'}
+        # Check scanner availability based on type
+        if scanner_type == 'integrated':
+            if not self.clamav_manager.is_available():
+                QMessageBox.critical(
+                    self, self.tr("ClamAV Not Available"),
+                    self.tr("Integrated ClamAV scanner is not available. Please ensure ClamAV is properly installed and configured, or switch to External Scanner mode.")
+                )
+                return
+        elif scanner_type == 'external':
+            # Check if clamscan is available for external scanning
+            clamscan_path = self.current_settings.get('clamscan_path', 'clamscan')
+            if clamscan_path and clamscan_path != 'clamscan':
+                # Custom path provided
+                if not os.path.exists(clamscan_path):
+                    QMessageBox.critical(
+                        self, self.tr("ClamAV Not Found"),
+                        self.tr(f"External ClamAV scanner not found at: {clamscan_path}\n\nPlease check the ClamAV installation or update the path in Settings.")
+                    )
+                    return
             else:
-                is_installed = False
-                status_msg = "ClamAV not found or not working"
-                version_info = {'version': 'Not available'}
-
-        except (subprocess.TimeoutExpired, FileNotFoundError, subprocess.CalledProcessError):
-            is_installed = False
-            status_msg = "ClamAV not found - Please install ClamAV"
-            version_info = {'version': 'Not available'}
-
-        # Simple installation guidance
-        def get_installation_guidance():
-            return "Please install ClamAV and ensure it's in your system PATH, or configure the correct path in Settings."
-
-        # Simple clamscan finder
-        def find_clamscan():
-            common_paths = ['clamscan', '/usr/bin/clamscan', '/usr/local/bin/clamscan', 'C:\\Program Files\\ClamAV\\clamscan.exe']
-            for path in common_paths:
-                if os.path.exists(path):
-                    return path
-            return None
-        
-        # Validate network path if it's a UNC path
-        if target.startswith('\\\\'):
-            from clamav_gui.utils.network_scanner import NetworkScanner
-            network_scanner = NetworkScanner()
-            is_valid, message = network_scanner.validate_network_path(target)
-            
-            if not is_valid:
-                reply = QMessageBox.question(
-                    self, self.tr("Network Path Issue"),
-                    self.tr(f"Network path validation failed: {message}\n\n"
-                           "Do you want to continue with the scan anyway?"),
-                    QMessageBox.Yes | QMessageBox.No
-                )
-                if reply != QMessageBox.Yes:
+                # Check if clamscan is in PATH
+                try:
+                    subprocess.run(['clamscan', '--version'], capture_output=True, check=True, timeout=5)
+                except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
+                    QMessageBox.critical(
+                        self, self.tr("ClamAV Not Available"),
+                        self.tr("External ClamAV scanner (clamscan) is not available. Please install ClamAV or switch to Integrated Scanner mode.")
+                    )
                     return
-        
-        if not is_installed:
-            # Show detailed error message with installation guidance
-            error_msg = f"{status_msg}\n\n{get_installation_guidance()}"
-            QMessageBox.critical(self, self.tr("ClamAV Not Found"), error_msg)
-            
-            # Also try to suggest auto-detection of clamscan path
-            suggested_path = find_clamscan()
-            if suggested_path and suggested_path != self.clamscan_path.text().strip():
-                reply = QMessageBox.question(
-                    self, self.tr("Auto-detect ClamAV?"),
-                    self.tr(f"Would you like to use the detected path: {suggested_path}?"),
-                    QMessageBox.Yes | QMessageBox.No
-                )
-                if reply == QMessageBox.Yes:
-                    self.clamscan_path.setText(suggested_path)
-                    return  # Return to let user try again
-            
-            return
-        logger.info(f"Starting scan with ClamAV at: {status_msg}")
-        
-        # Get the path to clamscan from settings or use default
-        clamscan_path = self.clamscan_path.text().strip()
-        if not clamscan_path:
-            clamscan_path = "clamscan"  # Default to system path if not set
-            
-        # Create a database directory in the user's AppData folder
-        app_data = os.getenv('APPDATA')
-        clamav_dir = os.path.join(app_data, 'ClamAV')
-        db_dir = os.path.join(clamav_dir, 'database')
-        
-        try:
-            os.makedirs(db_dir, exist_ok=True)
-        except Exception as e:
-            QMessageBox.critical(self, self.tr("Error"), 
-                               self.tr(f"Failed to create database directory: {e}"))
-            return
-            
-        # Build the command with proper options
-        cmd = [clamscan_path]
-        
-        # Add database directory
-        cmd.extend(['--database', db_dir])
-        
-        # Add recursive flag if enabled
-        if self.recursive_scan.isChecked():
-            cmd.append("-r")
-            
-        # Add scan options based on settings
-        if self.scan_archives.isChecked():
-            cmd.append("-a")  # Scan archives
-        
-        if self.scan_heuristics.isChecked():
-            cmd.append("--heuristic-alerts")
-            
-        if self.scan_pua.isChecked():
-            cmd.append("--detect-pua")
-            
-        # Add performance settings
-        try:
-            max_file_size_mb = int(self.max_file_size.text())
-            if max_file_size_mb > 0:
-                cmd.extend(['--max-filesize', f'{max_file_size_mb}M'])
-        except (ValueError, AttributeError):
-            pass
-            
-        try:
-            max_scan_time = int(self.max_scan_time.text())
-            if max_scan_time > 0:
-                cmd.extend(['--max-scantime', str(max_scan_time)])
-        except (ValueError, AttributeError):
-            pass
-            
-        # Add file pattern options
-        exclude_patterns = self.exclude_patterns.text().strip()
-        if exclude_patterns and exclude_patterns != "*":
-            for pattern in exclude_patterns.split(','):
-                pattern = pattern.strip()
-                if pattern:
-                    cmd.extend(['--exclude', pattern])
-                    
-        include_patterns = self.include_patterns.text().strip()
-        if include_patterns and include_patterns != "*":
-            for pattern in include_patterns.split(','):
-                pattern = pattern.strip()
-                if pattern:
-                    cmd.extend(['--include', pattern])
-        
-        # Validate network path if it's a UNC path
-        if target.startswith('\\\\'):
-            from clamav_gui.utils.network_scanner import NetworkScanner
-            network_scanner = NetworkScanner()
-            is_valid, message = network_scanner.validate_network_path(target)
-            
-            if not is_valid:
-                reply = QMessageBox.question(
-                    self, self.tr("Network Path Issue"),
-                    self.tr(f"Network path validation failed: {message}\n\n"
-                           "Do you want to continue with the scan anyway?"),
-                    QMessageBox.Yes | QMessageBox.No
-                )
-                if reply != QMessageBox.Yes:
-                    return
-        
-        # ClamAV is installed, proceed with scan
-        logger.info(f"Starting scan with ClamAV at: {status_msg}")
-        
-        # Get the path to clamscan from settings or use default
-        clamscan_path = self.clamscan_path.text().strip()
-        if not clamscan_path:
-            clamscan_path = "clamscan"  # Default to system path if not set
-            
-        # Create a database directory in the user's AppData folder
-        app_data = os.getenv('APPDATA')
-        clamav_dir = os.path.join(app_data, 'ClamAV')
-        db_dir = os.path.join(clamav_dir, 'database')
-        
-        try:
-            os.makedirs(db_dir, exist_ok=True)
-        except Exception as e:
-            QMessageBox.critical(self, self.tr("Error"), 
-                               self.tr(f"Failed to create database directory: {e}"))
-            return
-            
-        # Build the command with proper options
-        cmd = [clamscan_path]
-        
-        # Add database directory
-        cmd.extend(['--database', db_dir])
-        
-        # Add recursive flag if enabled
-        if self.recursive_scan.isChecked():
-            cmd.append("-r")
-            
-        # Add scan options based on settings
-        if self.scan_archives.isChecked():
-            cmd.append("-a")  # Scan archives
-        
-        if self.scan_heuristics.isChecked():
-            cmd.append("--heuristic-alerts")
-            
-        if self.scan_pua.isChecked():
-            cmd.append("--detect-pua")
-            
-        # Add performance settings
-        try:
-            max_file_size_mb = int(self.max_file_size.text())
-            if max_file_size_mb > 0:
-                cmd.extend(['--max-filesize', f'{max_file_size_mb}M'])
-        except (ValueError, AttributeError):
-            pass
-            
-        try:
-            max_scan_time = int(self.max_scan_time.text())
-            if max_scan_time > 0:
-                cmd.extend(['--max-scantime', str(max_scan_time)])
-        except (ValueError, AttributeError):
-            pass
-            
-        # Add file pattern options
-        exclude_patterns = self.exclude_patterns.text().strip()
-        if exclude_patterns and exclude_patterns != "*":
-            for pattern in exclude_patterns.split(','):
-                pattern = pattern.strip()
-                if pattern:
-                    cmd.extend(['--exclude', pattern])
-                    
-        include_patterns = self.include_patterns.text().strip()
-        if include_patterns and include_patterns != "*":
-            for pattern in include_patterns.split(','):
-                pattern = pattern.strip()
-                if pattern:
-                    cmd.extend(['--include', pattern])
-        
-        # Add target and output options
-        cmd.extend([target, "--verbose", "--stdout"])
-        
-        # Use error recovery for scan operations
-        try:
-            # Start the scan in a separate thread with error recovery
-            enable_smart = False
-            if hasattr(self, 'enable_smart_scanning') and self.enable_smart_scanning is not None:
-                if hasattr(self.enable_smart_scanning, 'isChecked'):
-                    enable_smart = self.enable_smart_scanning.isChecked()
+        elif scanner_type == 'auto':
+            # Auto-detect: prefer integrated if available, fallback to external
+            if self.clamav_manager.is_available():
+                scanner_type = 'integrated'
+            else:
+                scanner_type = 'external'
+                # Check external availability for auto mode
+                clamscan_path = self.current_settings.get('clamscan_path', 'clamscan')
+                if clamscan_path and clamscan_path != 'clamscan':
+                    if not os.path.exists(clamscan_path):
+                        QMessageBox.critical(
+                            self, self.tr("ClamAV Not Available"),
+                            self.tr("No ClamAV integration is available. Please install ClamAV or check your settings.")
+                        )
+                        return
                 else:
-                    # Fallback for boolean value
-                    enable_smart = bool(self.enable_smart_scanning)
-            
-            self.scan_thread = ScanThread(cmd, enable_smart_scanning=enable_smart)
-            self.scan_thread.update_output.connect(self.update_scan_output)
-            self.scan_thread.update_progress.connect(self.update_progress)
-            self.scan_thread.update_stats.connect(self.update_scan_stats)
-            self.scan_thread.finished.connect(self.scan_finished)
-            self.scan_thread.cancelled.connect(self.scan_cancelled)
-            
+                    try:
+                        subprocess.run(['clamscan', '--version'], capture_output=True, check=True, timeout=5)
+                    except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
+                        QMessageBox.critical(
+                            self, self.tr("ClamAV Not Available"),
+                            self.tr("No ClamAV integration is available. Please install ClamAV or check your settings.")
+                        )
+                        return
+
+        # Validate network path if it's a UNC path
+        if target.startswith('\\\\'):
+            from clamav_gui.utils.network_scanner import NetworkScanner
+            network_scanner = NetworkScanner()
+            is_valid, message = network_scanner.validate_network_path(target)
+
+            if not is_valid:
+                reply = QMessageBox.question(
+                    self, self.tr("Network Path Issue"),
+                    self.tr(f"Network path validation failed: {message}\n\n"
+                           "Do you want to continue with the scan anyway?"),
+                    QMessageBox.Yes | QMessageBox.No
+                )
+                if reply != QMessageBox.Yes:
+                    return
+
+        # Show scanner type being used
+        scanner_names = {
+            'integrated': 'Direct ClamAV Integration',
+            'external': 'External ClamAV Scanner',
+            'auto': f'Auto-detected ({scanner_type})'
+        }
+        self.output.append(f"🔧 Using scanner: {scanner_names.get(scanner_type, scanner_type)}")
+
+        # Prepare scan options
+        scan_options = {
+            'recursive': self.recursive_scan.isChecked(),
+            'scan_archives': self.scan_archives.isChecked(),
+            'scan_heuristics': self.heuristic_scan.isChecked(),
+            'scan_pua': self.scan_pua.isChecked(),
+            'enable_smart_scanning': self.enable_smart_scanning.isChecked()
+        }
+
+        # Get performance settings
+        try:
+            max_file_size = int(self.max_file_size.text()) if self.max_file_size.text() else 100
+            max_scan_time = int(self.max_scan_time.text()) if self.max_scan_time.text() else 300
+        except ValueError:
+            max_file_size = 100
+            max_scan_time = 300
+
+        # Start the scan using the appropriate method
+        try:
+            # Clear output area
+            self.output.clear()
+
             # Update UI
             self.scan_btn.setEnabled(False)
             self.stop_btn.setEnabled(True)
-            self.output.clear()
-            
-            # Configure progress bar
+            self.save_report_btn.setEnabled(False)
+
+            # Initialize progress bar
             if hasattr(self, 'progress'):
-                self.progress.setRange(0, 0)  # Animated mode
+                self.progress.setRange(0, 0)  # Animated mode initially
                 self.progress.setValue(0)
-                self.progress.setTextVisible(False)  # Hide percentage for animated mode
-            
-            # Start the thread
-            self.scan_thread.start()
-            
+
+            # Initialize scan results storage
+            self.current_scan_results = []
+
+            if scanner_type == 'integrated':
+                # Use integrated scanner
+                # Connect signals from ClamAV manager
+                self.clamav_manager.scan_progress.connect(self.update_progress)
+                self.clamav_manager.scan_output.connect(self.update_scan_output)
+                self.clamav_manager.scan_stats.connect(self.update_scan_stats)
+                self.clamav_manager.file_scanned.connect(self.on_file_scanned)
+
+                # Define completion callback
+                def on_scan_complete(success, message, files_scanned, threats_found):
+                    self.scan_finished(success, message, files_scanned, threats_found)
+
+                # Start the scan based on target type
+                if os.path.isfile(target):
+                    # Single file scan
+                    self.clamav_manager.scan_files_async([target], on_scan_complete)
+                elif os.path.isdir(target):
+                    # Directory scan
+                    self.clamav_manager.scan_directory_async(target, scan_options['recursive'], on_scan_complete)
+                else:
+                    # Network path or other
+                    self.clamav_manager.scan_files_async([target], on_scan_complete)
+
+            else:  # external or auto-detected external
+                # Use external scanner (subprocess-based)
+                # This would require implementing an external scanner class or modifying the existing scan thread
+                # For now, fall back to the original subprocess method but with the scanner type awareness
+                self._start_external_scan(target, scan_options, max_file_size, max_scan_time)
+
         except Exception as e:
             logger.error(f"Error starting scan: {e}")
-            QMessageBox.critical(self, self.tr("Scan Error"), 
+            QMessageBox.critical(self, self.tr("Scan Error"),
                                self.tr(f"Failed to start scan: {str(e)}"))
+
+            # Reset UI
+            self.scan_btn.setEnabled(True)
+            self.stop_btn.setEnabled(False)
+            self.save_report_btn.setEnabled(False)
+
+    def _start_external_scan(self, target, scan_options, max_file_size, max_scan_time):
+        """Start external scan using subprocess-based scanning."""
+        # Get clamscan path from settings
+        clamscan_path = self.current_settings.get('clamscan_path', 'clamscan')
+
+        # Build command arguments
+        cmd_args = []
+
+        # Add basic options
+        if scan_options['recursive']:
+            cmd_args.append('-r')
+        if scan_options['scan_heuristics']:
+            cmd_args.append('--scan-heuristic')
+        if scan_options['scan_pua']:
+            cmd_args.append('--scan-pua')
+        if scan_options['scan_archives']:
+            cmd_args.append('--scan-archive')
+        else:
+            cmd_args.append('--scan-archive=no')
+
+        # Add performance options
+        if max_file_size > 0:
+            cmd_args.extend(['--max-filesize', str(max_file_size * 1024 * 1024)])  # Convert MB to bytes
+        if max_scan_time > 0:
+            cmd_args.extend(['--max-scantime', str(max_scan_time)])
+
+        # Add file patterns if specified
+        exclude_patterns = self.exclude_patterns.text().strip()
+        if exclude_patterns and exclude_patterns != '*.log,*.tmp,*.cache':
+            for pattern in exclude_patterns.split(','):
+                pattern = pattern.strip()
+                if pattern:
+                    cmd_args.extend(['--exclude', pattern])
+
+        include_patterns = self.include_patterns.text().strip()
+        if include_patterns and include_patterns != '*':
+            for pattern in include_patterns.split(','):
+                pattern = pattern.strip()
+                if pattern:
+                    cmd_args.extend(['--include', pattern])
+
+        # Add target
+        cmd_args.append(target)
+
+        # Start the scan process
+        try:
+            self.scan_process = QProcess()
+            self.scan_process.readyReadStandardOutput.connect(self._handle_external_scan_output)
+            self.scan_process.readyReadStandardError.connect(self._handle_external_scan_error)
+            self.scan_process.finished.connect(self._handle_external_scan_finished)
+
+            # Start the process
+            logger.info(f"Starting external scan with command: {clamscan_path} {' '.join(cmd_args)}")
+            self.scan_process.start(clamscan_path, cmd_args)
+
+            if not self.scan_process.waitForStarted(5000):  # 5 second timeout
+                raise Exception("Failed to start clamscan process")
+
+        except Exception as e:
+            logger.error(f"Error starting external scan: {e}")
+            QMessageBox.critical(self, self.tr("External Scan Error"),
+                               self.tr(f"Failed to start external scan: {str(e)}"))
+            self.scan_btn.setEnabled(True)
+            self.stop_btn.setEnabled(False)
+
+    def _handle_external_scan_output(self):
+        """Handle output from external scan process."""
+        if self.scan_process:
+            data = self.scan_process.readAllStandardOutput().data().decode('utf-8', errors='ignore')
+            if data:
+                self.output.append(data.strip())
+
+                # Update progress for each scanned file (basic progress indication)
+                if 'Scanned file:' in data:
+                    current = self.progress.value()
+                    if current < 99:
+                        self.progress.setValue(min(99, current + 1))
+
+    def _handle_external_scan_error(self):
+        """Handle error output from external scan process."""
+        if self.scan_process:
+            data = self.scan_process.readAllStandardError().data().decode('utf-8', errors='ignore')
+            if data:
+                self.output.append(f"ERROR: {data.strip()}")
+
+    def _handle_external_scan_finished(self, exit_code, exit_status):
+        """Handle external scan completion."""
+        # Update UI
+        self.scan_btn.setEnabled(True)
+        self.stop_btn.setEnabled(False)
+        self.save_report_btn.setEnabled(True)
+        self.progress.setValue(100)
+
+        # Process results
+        if exit_code == 0:
+            self.status_bar.showMessage(self.tr("External scan completed successfully"))
+            QMessageBox.information(self, self.tr("Scan Complete"),
+                                   self.tr("The external scan completed successfully. No threats were found."))
+        elif exit_code == 1:
+            # Count threats from output (simplified)
+            output_text = self.output.toPlainText()
+            threat_count = output_text.count('FOUND') + output_text.count('infected')
+            self.status_bar.showMessage(self.tr(f"External scan completed - {threat_count} threats found!"))
+            QMessageBox.warning(self, self.tr("Threats Detected"),
+                               self.tr(f"The external scan completed and found {threat_count} potential threats. Check the scan results for details."))
+        else:
+            self.status_bar.showMessage(self.tr("External scan failed with errors"))
+            QMessageBox.critical(self, self.tr("External Scan Failed"),
+                               self.tr("The external scan failed to complete. Please check if ClamAV is properly installed and configured."))
+
+    def on_file_scanned(self, file_path, result):
+        """Handle individual file scan results."""
+        self.current_scan_results.append(result)
+
+        # Update scan report generator if available
+        if hasattr(self, 'scan_report_generator'):
+            # Convert ScanFileResult to expected format for report generator
+            scan_result = type('ScanResult', (), {
+                'file_path': result.file_path,
+                'status': result.result.value if hasattr(result.result, 'value') else str(result.result),
+                'threat_name': result.threat_name,
+                'timestamp': datetime.now()
+            })()
+            self.scan_report_generator.scan_results.append(scan_result)
+
+    def scan_finished(self, success, message, files_scanned, threats_found):
+        """Handle scan completion with enhanced reporting."""
+        # Update UI
+        self.scan_btn.setEnabled(True)
+        self.stop_btn.setEnabled(False)
+        self.save_report_btn.setEnabled(True)
+
+        # Update progress to 100%
+        if hasattr(self, 'progress'):
+            self.progress.setValue(100)
+
+        # Process scan results for auto-quarantine if enabled
+        if hasattr(self, 'enable_quarantine') and self.enable_quarantine.isChecked():
+            self._auto_quarantine_infected_files()
+
+        # Show appropriate message based on results
+        if success:
+            if threats_found > 0:
+                self.status_bar.showMessage(self.tr(f"Scan completed - {threats_found} threats found!"))
+                QMessageBox.warning(
+                    self, self.tr("Threats Detected"),
+                    self.tr(f"The scan completed and found {threats_found} potential threats.\n\n"
+                           "Check the scan results for details and use 'View Quarantine' to manage infected files.")
+                )
+            else:
+                self.status_bar.showMessage(self.tr("Scan completed successfully"))
+                QMessageBox.information(
+                    self, self.tr("Scan Complete"),
+                    self.tr("The scan completed successfully. No threats were found.")
+                )
+        else:
+            self.status_bar.showMessage(self.tr("Scan failed"))
+            QMessageBox.critical(
+                self, self.tr("Scan Failed"),
+                self.tr(f"The scan failed to complete: {message}")
+            )
     
     def stop_scan(self):
         """Stop the current scan."""
-        if self.scan_thread and self.scan_thread.isRunning():
-            self.scan_thread.cancel()
-            # Update UI immediately to show cancellation is in progress
-            self.scan_btn.setEnabled(True)
-            self.stop_btn.setEnabled(False)
-            self.status_bar.showMessage(self.tr("Cancelling scan..."))
+        # Stop the integrated scan if running
+        if hasattr(self, 'clamav_manager'):
+            self.clamav_manager.stop_scan()
+
+        # Stop external scan if running
+        if hasattr(self, 'scan_process') and self.scan_process:
+            if self.scan_process.state() == QProcess.Running:
+                self.scan_process.terminate()
+                if not self.scan_process.waitForFinished(3000):  # 3 second timeout
+                    self.scan_process.kill()  # Force kill if terminate doesn't work
+
+        # Update UI immediately to show cancellation is in progress
+        self.scan_btn.setEnabled(True)
+        self.stop_btn.setEnabled(False)
+        self.status_bar.showMessage(self.tr("Cancelling scan..."))
     
     def update_scan_output(self, text):
         """Update the scan output with new text."""
@@ -1663,28 +1739,31 @@ Last activity:
         self.output.verticalScrollBar().setValue(
             self.output.verticalScrollBar().maximum()
         )
+
+        # The integrated scanner doesn't use "Scanned file:" format like subprocess
+        # Progress is handled by the update_progress signal instead
     
     def update_progress(self, value):
         """Update the progress bar with the current value.
-        
+
         Args:
             value (int): Progress value from 0 to 100
         """
         if not hasattr(self, 'progress') or not self.progress:
             return
-            
+
         try:
             # Ensure the value is within valid range
             value = max(0, min(100, int(value)))
-            
-            # Only update if the value has changed significantly
-            current_value = self.progress.value()
-            if abs(value - current_value) > 2 or value in (0, 100):
+
+            # Update progress bar - for integrated scanner, we use determinate progress
+            if hasattr(self, 'progress') and self.progress:
+                self.progress.setRange(0, 100)  # Determinate mode for integrated scanner
                 self.progress.setValue(value)
-                
-                # Force UI update
+
+                # Force UI update for responsiveness
                 QtWidgets.QApplication.processEvents()
-                
+
         except Exception as e:
             logger.error(f"Error updating progress bar: {e}")
     
@@ -1698,7 +1777,7 @@ Last activity:
         self.status_bar.showMessage(self.tr("Scan cancelled"))
         self.scan_btn.setEnabled(True)
         self.stop_btn.setEnabled(False)
-        QMessageBox.information(self, self.tr("Scan Cancelled"), 
+        QMessageBox.information(self, self.tr("Scan Cancelled"),
                                self.tr("The scan has been cancelled by the user."))
     
     def scan_finished(self, exit_code, _):
@@ -1870,7 +1949,8 @@ Last activity:
             'max_scan_time': self.max_scan_time.text(),
             'exclude_patterns': self.exclude_patterns.text(),
             'include_patterns': self.include_patterns.text(),
-            'enable_smart_scanning': self.enable_smart_scanning.isChecked() if hasattr(self.enable_smart_scanning, 'isChecked') else self.enable_smart_scanning
+            'enable_smart_scanning': self.enable_smart_scanning.isChecked() if hasattr(self.enable_smart_scanning, 'isChecked') else self.enable_smart_scanning,
+            'scanner_type': self.scanner_type_combo.currentData() if hasattr(self, 'scanner_type_combo') else 'integrated'
         }
         
         if self.settings.save_settings(settings):
@@ -1926,20 +2006,17 @@ Last activity:
             self.exclude_patterns.setText(scan_settings['exclude_patterns'])
         if 'include_patterns' in scan_settings:
             self.include_patterns.setText(scan_settings['include_patterns'])
-        if 'enable_smart_scanning' in scan_settings:
-            # Ensure enable_smart_scanning is a checkbox widget
-            if not hasattr(self, 'enable_smart_scanning') or self.enable_smart_scanning is None:
-                # Re-initialize the checkbox if it doesn't exist or is None
-                self.enable_smart_scanning = QCheckBox(self.tr("Enable smart scanning (skip known safe files)"))
-                self.enable_smart_scanning.setChecked(False)
-                self.enable_smart_scanning.setToolTip(self.tr("Use hash database to skip files that have been previously scanned and confirmed safe"))
-                # Add to the scan options layout if it exists
-                if hasattr(self, 'options_layout'):
-                    self.options_layout.addWidget(self.enable_smart_scanning)
-
-            # Now safely set the checkbox state
-            if hasattr(self.enable_smart_scanning, 'setChecked'):
-                self.enable_smart_scanning.setChecked(scan_settings.get('enable_smart_scanning', False))
+        if 'scanner_type' in scan_settings:
+            if not hasattr(self, 'scanner_type_combo') or self.scanner_type_combo is None:
+                # Scanner type combo doesn't exist yet, skip for now
+                pass
+            else:
+                # Find the index for the scanner type and set it
+                scanner_type = scan_settings.get('scanner_type', 'integrated')
+                for i in range(self.scanner_type_combo.count()):
+                    if self.scanner_type_combo.itemData(i) == scanner_type:
+                        self.scanner_type_combo.setCurrentIndex(i)
+                        break
         
     def _auto_quarantine_infected_files(self):
         """Automatically quarantine infected files found during scan."""
