@@ -4,7 +4,7 @@ This document describes the current structure of the ClamAV GUI project as of ve
 
 ## Directory Structure
 
-```
+```text
 clamav-gui/
 ├── .github/                      \# GitHub-specific files
 │   └── workflows/
