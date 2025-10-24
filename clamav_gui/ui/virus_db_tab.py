@@ -124,6 +124,24 @@ class VirusDBTab(QWidget):
         # Progress bar for updates
         self.progress_bar = QProgressBar()
         self.progress_bar.setVisible(False)
+        self.progress_bar.setStyleSheet("""
+            QProgressBar {
+                border: 2px solid #2196F3;
+                border-radius: 5px;
+                text-align: center;
+                font-weight: bold;
+                height: 25px;
+                background-color: #f0f0f0;
+            }
+            QProgressBar::chunk {
+                background-color: #2196F3;
+                border-radius: 3px;
+                width: 1px;
+                margin: 0px;
+            }
+        """)
+        # Disable any animations
+        self.progress_bar.setProperty("animated", False)
         main_layout.addWidget(self.progress_bar)
 
     def refresh_database_info(self):
@@ -446,7 +464,9 @@ class VirusDBTab(QWidget):
 
             # Show progress
             self.progress_bar.setVisible(True)
-            self.progress_bar.setRange(0, 0)  # Indeterminate progress
+            self.progress_bar.setRange(0, 100)  # Determinate progress
+            self.progress_bar.setValue(0)
+            self.progress_bar.setFormat("Starting database update...")
             self.update_btn.setEnabled(False)
             self.refresh_btn.setEnabled(False)
 
@@ -465,13 +485,16 @@ class VirusDBTab(QWidget):
 
     def _handle_update_output(self, text):
         """Handle update output."""
-        # Update progress text if possible
+        # Update progress text and simulate progress
         if "Downloading" in text or "Testing" in text:
             self.progress_bar.setFormat(f"Updating... {text.strip()}")
+            self.progress_bar.setValue(50)  # Midway through update
         elif "Updated" in text or "updated" in text.lower():
             self.progress_bar.setFormat("Update completed successfully!")
+            self.progress_bar.setValue(100)
         elif "Error" in text or "ERROR" in text:
             self.progress_bar.setFormat(f"Error: {text.strip()}")
+            self.progress_bar.setValue(0)
 
     def _handle_update_finished(self, success, message):
         """Handle update completion."""
@@ -493,9 +516,10 @@ class VirusDBTab(QWidget):
     def _reset_update_ui(self):
         """Reset the update UI controls."""
         self.progress_bar.setVisible(False)
+        self.progress_bar.setValue(0)
+        self.progress_bar.setFormat("")
         self.update_btn.setEnabled(True)
         self.refresh_btn.setEnabled(True)
-        self.progress_bar.setFormat("")
 
     def closeEvent(self, event):
         """Handle close event."""

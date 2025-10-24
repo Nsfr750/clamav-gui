@@ -33,7 +33,9 @@ __requires__ = [
     "pdf2image>=1.17.0",
     "imagehash>=4.3.1",
     "python-dotenv>=0.19.0",
-    "tqdm>=4.64.0"
+    "tqdm>=4.64.0",
+    "clamd>=1.0.2",
+    "pyclamd>=0.4.0"
 ]
 
 # Version as a tuple for comparison

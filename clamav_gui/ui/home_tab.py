@@ -145,6 +145,12 @@ class HomeTab(QWidget):
         )
         status_layout.addWidget(self.db_status_label, 0, 0)
 
+        # Load current settings
+        self.load_settings()
+
+        # Check and reinitialize quarantine manager if needed
+        self._check_quarantine_manager()
+
         # Last scan status
         self.last_scan_label = self.create_status_label(
             self.tr("Last Scan:"),
@@ -208,13 +214,17 @@ class HomeTab(QWidget):
                 text-align: center;
                 font-weight: bold;
                 color: #75b5aa;
+                background-color: #f0f0f0;
             }
             QProgressBar::chunk {
-                background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
-                    stop: 0 #4CAF50, stop: 0.5 #2196F3, stop: 1 #4CAF50);
+                background-color: #2196F3;
                 border-radius: 3px;
+                width: 1px;
+                margin: 0px;
             }
         """)
+        # Disable any animations
+        self.operation_progress.setProperty("animated", False)
         progress_layout.addWidget(self.operation_progress)
 
         self.operation_label = QLabel(self.tr("Ready"))
@@ -474,15 +484,38 @@ class HomeTab(QWidget):
             if hasattr(self.parent, 'quarantine_manager') and self.parent.quarantine_manager:
                 try:
                     stats = self.parent.quarantine_manager.get_quarantine_stats()
-                    threats = str(stats.get('total_quarantined', 0))
-                    color = "orange" if int(threats) > 0 else "green"
+                    if stats and isinstance(stats, dict):
+                        threats = str(stats.get('total_quarantined', 0))
+                        color = "orange" if int(threats) > 0 else "green"
+                    else:
+                        threats = "0"
+                        color = "green"
                 except Exception as e:
                     logger.warning(f"Error getting quarantine stats: {e}")
                     threats = "0"
                     color = "green"
             else:
-                threats = "0"
-                color = "green"
+                logger.debug("Quarantine manager not available or not initialized")
+                # Try to create a minimal fallback quarantine manager
+                try:
+                    from clamav_gui.utils.quarantine_manager import QuarantineManager
+                    # Try to create with app directory fallback
+                    app_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+                    fallback_dir = os.path.join(app_dir, 'quarantine')
+                    self.parent.quarantine_manager = QuarantineManager(fallback_dir)
+                    logger.info(f"Created fallback quarantine manager: {fallback_dir}")
+                    # Now try to get stats
+                    stats = self.parent.quarantine_manager.get_quarantine_stats()
+                    if stats and isinstance(stats, dict):
+                        threats = str(stats.get('total_quarantined', 0))
+                        color = "orange" if int(threats) > 0 else "green"
+                    else:
+                        threats = "0"
+                        color = "green"
+                except Exception as e2:
+                    logger.warning(f"Could not create fallback quarantine manager: {e2}")
+                    threats = "0"
+                    color = "green"
 
             # Update the threats label
             self.update_status_label(self.threats_label, self.tr("Threats Found:"), threats, color)
@@ -519,9 +552,26 @@ class HomeTab(QWidget):
             if hasattr(self.parent, 'quarantine_manager') and self.parent.quarantine_manager:
                 try:
                     stats = self.parent.quarantine_manager.get_quarantine_stats()
-                    threats_count = stats.get('total_quarantined', 0)
-                except:
-                    pass
+                    if stats and isinstance(stats, dict):
+                        threats_count = stats.get('total_quarantined', 0)
+                except Exception as e:
+                    logger.debug(f"Could not get quarantine stats for protection evaluation: {e}")
+                    threats_count = 0
+            else:
+                logger.debug("Quarantine manager not available for protection evaluation")
+                # Try to create a fallback quarantine manager
+                try:
+                    from clamav_gui.utils.quarantine_manager import QuarantineManager
+                    app_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+                    fallback_dir = os.path.join(app_dir, 'quarantine')
+                    self.parent.quarantine_manager = QuarantineManager(fallback_dir)
+                    logger.info(f"Created fallback quarantine manager for protection evaluation: {fallback_dir}")
+                    stats = self.parent.quarantine_manager.get_quarantine_stats()
+                    if stats and isinstance(stats, dict):
+                        threats_count = stats.get('total_quarantined', 0)
+                except Exception as e2:
+                    logger.debug(f"Could not create fallback quarantine manager for protection: {e2}")
+                    threats_count = 0
 
             # Check scan history
             recent_scans = False
@@ -715,6 +765,32 @@ class HomeTab(QWidget):
         """Hide operation progress bar."""
         self.operation_progress.setVisible(False)
         self.operation_label.setText(self.tr("Ready"))
+
+    def load_settings(self):
+        """Load settings for the home tab."""
+        try:
+            if hasattr(self.parent, 'settings') and self.parent.settings:
+                settings = self.parent.settings.load_settings() or {}
+
+                # Update database path display if custom path is saved
+                if hasattr(self, 'db_path_display') and 'db_path' in settings and settings['db_path']:
+                    self.db_path_display.setText(settings['db_path'])
+                elif hasattr(self, 'db_path_display'):
+                    # Show detected database path
+                    self.db_path_display.setText(self.get_database_path())
+
+        except Exception as e:
+            logger.error(f"Error loading settings in home tab: {e}")
+
+    def _check_quarantine_manager(self):
+        """Check and reinitialize quarantine manager if needed."""
+        if not hasattr(self.parent, 'quarantine_manager') or not self.parent.quarantine_manager:
+            logger.info("Attempting to reinitialize quarantine manager from home tab...")
+            if hasattr(self.parent, 'reinitialize_quarantine_manager'):
+                if self.parent.reinitialize_quarantine_manager():
+                    logger.info("Quarantine manager successfully reinitialized")
+                else:
+                    logger.warning("Failed to reinitialize quarantine manager")
 
     def closeEvent(self, event):
         """Handle tab close event."""

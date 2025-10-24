@@ -8,7 +8,7 @@ from typing import Dict
 
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QGroupBox, QLabel, QPushButton,
-    QLineEdit, QFormLayout, QMessageBox, QSpinBox, QCheckBox
+    QLineEdit, QFormLayout, QMessageBox, QSpinBox, QCheckBox, QComboBox
 )
 from PySide6.QtCore import Qt
 
@@ -57,11 +57,33 @@ class SettingsTab(QWidget):
         db_group = QGroupBox(self.tr("Virus Database Configuration"))
         db_layout = QFormLayout()
 
-        # Database path (read-only, shows current location)
+        # Database path (now editable with browse button)
+        db_path_layout = QHBoxLayout()
         self.db_path_display = QLineEdit()
-        self.db_path_display.setReadOnly(True)
-        self.db_path_display.setText(self.get_database_path())
-        db_layout.addRow(self.tr("Database Location:"), self.db_path_display)
+        self.db_path_display.setPlaceholderText(self.tr("Path to virus database directory"))
+        db_path_layout.addWidget(self.db_path_display)
+
+        browse_db_btn = QPushButton(self.tr("Browse..."))
+        browse_db_btn.setMaximumWidth(80)
+        browse_db_btn.clicked.connect(self.browse_database_path)
+        browse_db_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #2196F3;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                font-weight: bold;
+                border-radius: 3px;
+            }
+            QPushButton:hover {
+                background-color: #1976D2;
+            }
+            QPushButton:pressed {
+                background-color: #1565C0;
+            }
+        """)
+        db_path_layout.addWidget(browse_db_btn)
+        db_layout.addRow(self.tr("Database Location:"), db_path_layout)
 
         # Database update interval (days)
         self.db_update_interval = QSpinBox()
@@ -75,10 +97,30 @@ class SettingsTab(QWidget):
         self.db_mirror_url.setPlaceholderText(self.tr("Custom database mirror URL (optional)"))
         db_layout.addRow(self.tr("Custom mirror:"), self.db_mirror_url)
 
-        db_group.setLayout(db_layout)
-        layout.addWidget(db_group)
+        # Scanner Type Section
+        scanner_group = QGroupBox(self.tr("Scanner Configuration"))
+        scanner_layout = QVBoxLayout()
 
-        # Scan Settings Section
+        # Scanner type selection
+        self.scanner_type_combo = QComboBox()
+        self.scanner_type_combo.addItem(self.tr("Integrated Scanner"), "integrated")
+        self.scanner_type_combo.addItem(self.tr("ClamAV Scanner"), "clamav")
+        self.scanner_type_combo.setToolTip(self.tr("Choose the scanning engine to use"))
+        self.scanner_type_combo.currentTextChanged.connect(self.on_scanner_type_changed)
+        scanner_layout.addWidget(QLabel(self.tr("Scanner Type:")))
+        scanner_layout.addWidget(self.scanner_type_combo)
+
+        # Scanner type description
+        self.scanner_description = QLabel(self.tr(
+            "• Integrated Scanner: Built-in scanning engine with enhanced features\n"
+            "• ClamAV Scanner: Uses external ClamAV executable for maximum compatibility"
+        ))
+        self.scanner_description.setWordWrap(True)
+        self.scanner_description.setStyleSheet("QLabel { color: #666; font-size: 11px; padding: 5px; }")
+        scanner_layout.addWidget(self.scanner_description)
+
+        scanner_group.setLayout(scanner_layout)
+        layout.addWidget(scanner_group)
         scan_group = QGroupBox(self.tr("Default Scan Settings"))
         scan_layout = QVBoxLayout()
 
@@ -211,9 +253,63 @@ class SettingsTab(QWidget):
         # Load current settings
         self.load_settings()
 
+        # Set initial scanner type visibility
+        self.on_scanner_type_changed()
+
+    def on_scanner_type_changed(self):
+        """Handle scanner type selection change."""
+        scanner_type = self.scanner_type_combo.currentData()
+        is_clamav = scanner_type == "clamav"
+
+        # Show/hide ClamAV paths section based on scanner type
+        if hasattr(self, 'paths_group'):
+            self.paths_group.setVisible(is_clamav)
+
+        # Update description text based on selection
+        if hasattr(self, 'scanner_description'):
+            if is_clamav:
+                self.scanner_description.setText(self.tr(
+                    "• ClamAV Scanner: Uses external ClamAV executable for maximum compatibility\n"
+                    "  Requires ClamAV to be installed on the system\n"
+                    "  Database updates handled by ClamAV's freshclam utility"
+                ))
+            else:
+                self.scanner_description.setText(self.tr(
+                    "• Integrated Scanner: Built-in scanning engine with enhanced features\n"
+                    "  Self-contained with embedded virus definitions\n"
+                    "  Automatic updates and advanced threat detection"
+                ))
+
+    def browse_database_path(self):
+        """Browse for virus database directory."""
+        from PySide6.QtWidgets import QFileDialog
+
+        current_path = self.db_path_display.text()
+        if not current_path or current_path == self.get_database_path():
+            # Start from the detected database path
+            start_dir = self.get_database_path()
+        else:
+            start_dir = current_path
+
+        db_path = QFileDialog.getExistingDirectory(
+            self, self.tr("Select Virus Database Directory"),
+            start_dir,
+            QFileDialog.ShowDirsOnly
+        )
+
+        if db_path:
+            self.db_path_display.setText(db_path)
+
     def get_database_path(self):
         """Get the current virus database path."""
         try:
+            # First check if we have a custom database path set in the display field
+            if hasattr(self, 'db_path_display') and self.db_path_display.text().strip():
+                custom_path = self.db_path_display.text().strip()
+                if custom_path and custom_path != self.tr("Unknown") and os.path.exists(custom_path):
+                    return custom_path
+
+            # Fallback to parent method if available
             if hasattr(self.parent, 'get_database_path'):
                 return self.parent.get_database_path()
         except Exception as e:
@@ -226,14 +322,43 @@ class SettingsTab(QWidget):
             if not hasattr(self, 'current_settings'):
                 self.current_settings = {}
 
-            # Save ClamAV paths
-            self.current_settings['clamd_path'] = self.clamd_path.text()
-            self.current_settings['freshclam_path'] = self.freshclam_path.text()
-            self.current_settings['clamscan_path'] = self.clamscan_path.text()
+            # Save ClamAV paths (only if using ClamAV scanner)
+            scanner_type = self.scanner_type_combo.currentData()
+            if scanner_type == "clamav":
+                self.current_settings['clamd_path'] = self.clamd_path.text()
+                self.current_settings['freshclam_path'] = self.freshclam_path.text()
+                self.current_settings['clamscan_path'] = self.clamscan_path.text()
+            else:
+                # Clear ClamAV paths when using integrated scanner
+                self.current_settings['clamd_path'] = ""
+                self.current_settings['freshclam_path'] = ""
+                self.current_settings['clamscan_path'] = ""
 
             # Save database settings
             self.current_settings['db_update_interval'] = self.db_update_interval.value()
             self.current_settings['db_mirror_url'] = self.db_mirror_url.text()
+            db_path = self.db_path_display.text().strip()
+            if db_path and db_path != self.tr("Unknown"):
+                # Validate the database path exists
+                if os.path.exists(db_path) and os.path.isdir(db_path):
+                    self.current_settings['db_path'] = db_path
+                else:
+                    # Show warning but still save (user might want to set a path that doesn't exist yet)
+                    reply = QMessageBox.question(
+                        self, self.tr("Invalid Database Path"),
+                        self.tr(f"The specified database path does not exist:\n{db_path}\n\nDo you want to save it anyway?"),
+                        QMessageBox.Yes | QMessageBox.No
+                    )
+                    if reply == QMessageBox.Yes:
+                        self.current_settings['db_path'] = db_path
+                    else:
+                        # Don't save the invalid path
+                        self.current_settings['db_path'] = ""
+            else:
+                self.current_settings['db_path'] = ""
+
+            # Save scanner type
+            self.current_settings['scanner_type'] = self.scanner_type_combo.currentData()
 
             # Save scan settings - use hasattr to check if attributes exist
             if hasattr(self, 'default_scan_archives'):
@@ -280,13 +405,21 @@ class SettingsTab(QWidget):
         )
 
         if reply == QMessageBox.Yes:
-            # Reset to defaults
+            # Reset ClamAV paths (clear them since default is integrated scanner)
             self.clamd_path.clear()
             self.freshclam_path.clear()
             self.clamscan_path.clear()
 
             self.db_update_interval.setValue(7)
             self.db_mirror_url.clear()
+            self.db_path_display.clear()
+
+            # Reset scanner type to default (integrated)
+            index = self.scanner_type_combo.findData("integrated")
+            if index != -1:
+                self.scanner_type_combo.setCurrentIndex(index)
+            else:
+                self.scanner_type_combo.setCurrentText(self.tr("Integrated Scanner"))
 
             # Reset scan settings - use hasattr to check if attributes exist
             if hasattr(self, 'default_scan_archives'):
@@ -324,10 +457,17 @@ class SettingsTab(QWidget):
             with open(config_file, 'r', encoding='utf-8') as f:
                 json_settings = json.load(f)
 
-            # Update form fields with loaded settings
-            self.clamd_path.setText(json_settings.get('clamd_path', ''))
-            self.freshclam_path.setText(json_settings.get('freshclam_path', ''))
-            self.clamscan_path.setText(json_settings.get('clamscan_path', ''))
+            # Update form fields with loaded settings (only if using ClamAV scanner)
+            current_scanner_type = json_settings.get('scanner_type', 'integrated')
+            if current_scanner_type == "clamav":
+                self.clamd_path.setText(json_settings.get('clamd_path', ''))
+                self.freshclam_path.setText(json_settings.get('freshclam_path', ''))
+                self.clamscan_path.setText(json_settings.get('clamscan_path', ''))
+            else:
+                # Clear ClamAV paths when using integrated scanner
+                self.clamd_path.clear()
+                self.freshclam_path.clear()
+                self.clamscan_path.clear()
 
             # Update scan settings
             if hasattr(self, 'default_scan_archives'):
@@ -351,13 +491,15 @@ class SettingsTab(QWidget):
                 self.db_update_interval.setValue(json_settings['db_update_interval'])
             if 'db_mirror_url' in json_settings:
                 self.db_mirror_url.setText(json_settings['db_mirror_url'])
+            if 'db_path' in json_settings:
+                self.db_path_display.setText(json_settings['db_path'])
 
-            # Update quarantine setting
-            if hasattr(self, 'default_enable_quarantine'):
-                self.default_enable_quarantine.setChecked(json_settings.get('enable_quarantine', True))
-
-            # Update scanner type (if field exists in future)
-            # Note: scanner_type is stored in current_settings but not displayed in current form
+            # Update scanner type
+            scanner_type = json_settings.get('scanner_type', 'integrated')
+            if scanner_type == 'integrated':
+                self.scanner_type_combo.setCurrentText(self.tr("Integrated Scanner"))
+            elif scanner_type == 'clamav':
+                self.scanner_type_combo.setCurrentText(self.tr("ClamAV Scanner"))
 
             # Update current settings
             self.current_settings.update(json_settings)
@@ -377,16 +519,35 @@ class SettingsTab(QWidget):
             if hasattr(self.parent, 'settings') and self.parent.settings:
                 self.current_settings = self.parent.settings.load_settings() or {}
 
-                # Load ClamAV paths
-                self.clamd_path.setText(self.current_settings.get('clamd_path', ''))
-                self.freshclam_path.setText(self.current_settings.get('freshclam_path', ''))
-                self.clamscan_path.setText(self.current_settings.get('clamscan_path', ''))
+                # Load ClamAV paths (only if using ClamAV scanner)
+                current_scanner_type = self.current_settings.get('scanner_type', 'integrated')
+                if current_scanner_type == "clamav":
+                    self.clamd_path.setText(self.current_settings.get('clamd_path', ''))
+                    self.freshclam_path.setText(self.current_settings.get('freshclam_path', ''))
+                    self.clamscan_path.setText(self.current_settings.get('clamscan_path', ''))
+                else:
+                    # Clear ClamAV paths when using integrated scanner
+                    self.clamd_path.clear()
+                    self.freshclam_path.clear()
+                    self.clamscan_path.clear()
 
                 # Load database settings
                 if 'db_update_interval' in self.current_settings:
                     self.db_update_interval.setValue(self.current_settings['db_update_interval'])
                 if 'db_mirror_url' in self.current_settings:
                     self.db_mirror_url.setText(self.current_settings['db_mirror_url'])
+                if 'db_path' in self.current_settings:
+                    self.db_path_display.setText(self.current_settings['db_path'])
+                else:
+                    # If no custom path saved, show the detected path
+                    self.db_path_display.setText(self.get_database_path())
+
+                # Load scanner type
+                scanner_type = self.current_settings.get('scanner_type', 'integrated')
+                if scanner_type == 'integrated':
+                    self.scanner_type_combo.setCurrentText(self.tr("Integrated Scanner"))
+                elif scanner_type == 'clamav':
+                    self.scanner_type_combo.setCurrentText(self.tr("ClamAV Scanner"))
 
                 # Load scan settings - use hasattr to check if attributes exist
                 if hasattr(self, 'default_scan_archives'):
@@ -413,14 +574,22 @@ class SettingsTab(QWidget):
         """Get the current settings from the form."""
         settings = {}
 
-        # Get ClamAV paths
-        settings['clamd_path'] = self.clamd_path.text()
-        settings['freshclam_path'] = self.freshclam_path.text()
-        settings['clamscan_path'] = self.clamscan_path.text()
+        # Get ClamAV paths (only if using ClamAV scanner)
+        current_scanner_type = self.scanner_type_combo.currentData()
+        if current_scanner_type == "clamav":
+            settings['clamd_path'] = self.clamd_path.text()
+            settings['freshclam_path'] = self.freshclam_path.text()
+            settings['clamscan_path'] = self.clamscan_path.text()
+        else:
+            settings['clamd_path'] = ""
+            settings['freshclam_path'] = ""
+            settings['clamscan_path'] = ""
 
         # Get database settings
         settings['db_update_interval'] = self.db_update_interval.value()
         settings['db_mirror_url'] = self.db_mirror_url.text()
+        settings['db_path'] = self.db_path_display.text()
+        settings['scanner_type'] = self.scanner_type_combo.currentData()
 
         # Get scan settings
         if hasattr(self, 'default_scan_archives'):
@@ -445,19 +614,36 @@ class SettingsTab(QWidget):
     def apply_settings(self, settings: Dict):
         """Apply settings to the form fields."""
         try:
-            # Apply ClamAV paths
-            if 'clamd_path' in settings:
-                self.clamd_path.setText(settings['clamd_path'])
-            if 'freshclam_path' in settings:
-                self.freshclam_path.setText(settings['freshclam_path'])
-            if 'clamscan_path' in settings:
-                self.clamscan_path.setText(settings['clamscan_path'])
+            # Apply ClamAV paths (only if using ClamAV scanner)
+            current_scanner_type = self.scanner_type_combo.currentData()
+            if current_scanner_type == "clamav":
+                if 'clamd_path' in settings:
+                    self.clamd_path.setText(settings['clamd_path'])
+                if 'freshclam_path' in settings:
+                    self.freshclam_path.setText(settings['freshclam_path'])
+                if 'clamscan_path' in settings:
+                    self.clamscan_path.setText(settings['clamscan_path'])
+            else:
+                # Clear ClamAV paths when using integrated scanner
+                self.clamd_path.clear()
+                self.freshclam_path.clear()
+                self.clamscan_path.clear()
 
             # Apply database settings
             if 'db_update_interval' in settings:
                 self.db_update_interval.setValue(settings['db_update_interval'])
             if 'db_mirror_url' in settings:
                 self.db_mirror_url.setText(settings['db_mirror_url'])
+            if 'db_path' in settings:
+                self.db_path_display.setText(settings['db_path'])
+
+            # Apply scanner type
+            if 'scanner_type' in settings:
+                scanner_type = settings['scanner_type']
+                if scanner_type == 'integrated':
+                    self.scanner_type_combo.setCurrentText(self.tr("Integrated Scanner"))
+                elif scanner_type == 'clamav':
+                    self.scanner_type_combo.setCurrentText(self.tr("ClamAV Scanner"))
 
             # Apply scan settings
             if 'scan_archives' in settings and hasattr(self, 'default_scan_archives'):

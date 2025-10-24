@@ -9,5 +9,6 @@
   "max_scan_time": "300",
   "exclude_patterns": "*.log,*.tmp,*.cache",
   "include_patterns": "*",
+  "auto_update": true,
   "scanner_type": "integrated"
 }

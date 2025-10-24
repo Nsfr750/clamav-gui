@@ -218,7 +218,7 @@ class ScanTab(QWidget):
         self.progress = QProgressBar()
         self.progress.setRange(0, 100)  # 0-100% range
         self.progress.setValue(0)  # Start at 0%
-        self.progress.setFormat("Scanning files... %p%")
+        self.progress.setFormat("Ready")
         self.progress.setStyleSheet("""
             QProgressBar {
                 border: 2px solid #333;
@@ -229,11 +229,14 @@ class ScanTab(QWidget):
                 background-color: #f0f0f0;
             }
             QProgressBar::chunk {
-                background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
-                    stop: 0 #4CAF50, stop: 1 #45a049);
+                background-color: #4CAF50;
                 border-radius: 3px;
+                width: 1px;
+                margin: 0px;
             }
         """)
+        # Disable any animations
+        self.progress.setProperty("animated", False)
 
         # Buttons
         button_layout = QHBoxLayout()
@@ -344,8 +347,8 @@ class ScanTab(QWidget):
         # Initialize UI
         self.output.clear()
         self.output.append(f"Starting ClamAV scan of: {target}")
-        self.output.append("Initializing scan...")
-        self.progress.setFormat("Preparing scan...")
+        self.output.append("Preparing scan...")
+        self.progress.setFormat("Initializing scan...")
         self.progress.setValue(0)
         self.scan_btn.setEnabled(False)
         self.stop_btn.setEnabled(True)
@@ -363,7 +366,8 @@ class ScanTab(QWidget):
     def on_scan_progress(self, progress, current_file):
         """Handle scan progress updates."""
         self.progress.setValue(progress)
-        self.progress.setFormat(f"Scanning: {os.path.basename(current_file)} - %p%")
+        filename = os.path.basename(current_file)
+        self.progress.setFormat(f"{filename} - %p%")
 
     def on_scan_result(self, file_path, status, details):
         """Handle individual scan results."""
@@ -382,7 +386,8 @@ class ScanTab(QWidget):
 
     def on_scan_finished(self):
         """Handle scan completion."""
-        self.progress.setFormat("Scan complete - %p%")
+        self.progress.setFormat("✓ Scan complete - %p%")
+        self.progress.setValue(100)
         self.scan_btn.setEnabled(True)
         self.stop_btn.setEnabled(False)
         self.save_report_btn.setEnabled(True)
@@ -395,7 +400,8 @@ class ScanTab(QWidget):
 
     def on_scan_error(self, error_message):
         """Handle scan errors."""
-        self.progress.setFormat("Error - %p%")
+        self.progress.setFormat("✗ Error - %p%")
+        self.progress.setValue(0)
         self.scan_btn.setEnabled(True)
         self.stop_btn.setEnabled(False)
         self.save_report_btn.setEnabled(True)
@@ -437,7 +443,7 @@ class ScanTab(QWidget):
             self.scan_worker.wait(1000)  # Wait up to 1 second
         self.stop_btn.setEnabled(False)
         self.output.append("Stopping scan...")
-        self.progress.setFormat("Stopping...")
+        self.progress.setFormat("⏸️ Stopping scan...")
         QtCore.QCoreApplication.processEvents()  # Update UI immediately
 
     def save_scan_report(self) -> None:
