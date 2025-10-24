@@ -1,14 +1,3 @@
 {
-  "clamd_path": "C:\\Program Files\\ClamAV\\clamd.exe",
-  "freshclam_path": "C:\\Program Files\\ClamAV\\freshclam.exe",
-  "clamscan_path": "C:\\Program Files\\ClamAV\\clamscan.exe",
-  "scan_archives": false,
-  "scan_heuristics": false,
-  "scan_pua": false,
-  "max_file_size": "100",
-  "max_scan_time": "300",
-  "exclude_patterns": "*.log,*.tmp,*.cache",
-  "include_patterns": "*",
-  "auto_update": true,
-  "scanner_type": "integrated"
+  "freshclam_path": "C:\\Program Files\\ClamAV\\freshclam.exe"
 }

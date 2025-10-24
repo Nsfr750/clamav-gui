@@ -195,6 +195,8 @@ class StatusTab(QWidget):
                                 # Version is typically the next part after "ClamAV"
                                 version_part = parts[i + 1]
                                 print(f"StatusTab DEBUG: Version part: '{version_part}'")
+
+                                # Handle different version formats
                                 if '/' in version_part:
                                     # Format: "1.3.0/26987/Mon Jan 15 08:30:00 2024"
                                     version_components = version_part.split('/')
@@ -217,7 +219,10 @@ class StatusTab(QWidget):
                                     else:
                                         info['version'] = f"ClamAV {version_part}"
                                 else:
+                                    # Format: "1.5.0-rc" or "1.5.0"
                                     info['version'] = f"ClamAV {version_part}"
+                                    info['engine_version'] = version_part
+                                    print(f"StatusTab DEBUG: Simple version format detected: {version_part}")
                                 break
 
                     # Look for platform information in all lines (improved detection)
@@ -358,6 +363,19 @@ class StatusTab(QWidget):
                         print(f"StatusTab DEBUG: Last update: {info['last_update']}")
                     else:
                         print(f"StatusTab DEBUG: Last update could not be determined")
+
+                    # Try to get more accurate signature count using freshclam info
+                    accurate_count = self._get_accurate_signature_count(db_dir)
+                    if accurate_count:
+                        info['total_signatures'] = str(accurate_count)
+                        print(f"StatusTab DEBUG: Using accurate signature count: {accurate_count}")
+                    elif sig_count:
+                        # Keep the original count if no accurate count found
+                        info['total_signatures'] = str(sig_count)
+                        print(f"StatusTab DEBUG: Using estimated signature count: {sig_count}")
+                    else:
+                        info['total_signatures'] = 'Unknown'
+                        print(f"StatusTab DEBUG: Signature count unknown")
 
                 else:
                     info['total_signatures'] = 'No database files found'
@@ -559,22 +577,44 @@ class StatusTab(QWidget):
 
     def _get_database_version(self, db_dir, db_files):
         """Get database version from CVD files."""
-        for db_file in db_files:
-            if db_file.endswith('.cvd'):
-                db_path = os.path.join(db_dir, db_file)
-                try:
-                    with open(db_path, 'rb') as f:
-                        # CVD format has version info in header
-                        header = f.read(512)
-                        header_str = header.decode('latin-1', errors='ignore')
-                        if 'ClamAV-VDB:' in header_str:
-                            version_start = header_str.find('ClamAV-VDB:') + 11
-                            version_end = header_str.find('\0', version_start)
-                            if version_end > version_start:
-                                version = header_str[version_start:version_end].strip()
-                                return version
-                except (IOError, OSError):
-                    continue
+        versions = []
+
+        # First try to get version from main.cvd (most important)
+        main_cvd = os.path.join(db_dir, 'main.cvd')
+        if os.path.exists(main_cvd):
+            try:
+                with open(main_cvd, 'rb') as f:
+                    # CVD format has version info in header
+                    header = f.read(512)
+                    header_str = header.decode('latin-1', errors='ignore')
+                    if 'ClamAV-VDB:' in header_str:
+                        version_start = header_str.find('ClamAV-VDB:') + 11
+                        version_end = header_str.find('\0', version_start)
+                        if version_end > version_start:
+                            version = header_str[version_start:version_end].strip()
+                            if version:
+                                versions.append(f"main: {version}")
+                                print(f"StatusTab DEBUG: Found main database version: {version}")
+            except (IOError, OSError) as e:
+                print(f"StatusTab DEBUG: Error reading main.cvd: {e}")
+
+        # Then try daily.cvd
+        daily_cvd = os.path.join(db_dir, 'daily.cvd')
+        if os.path.exists(daily_cvd):
+            try:
+                with open(daily_cvd, 'rb') as f:
+                    header = f.read(512)
+                    header_str = header.decode('latin-1', errors='ignore')
+                    if 'ClamAV-VDB:' in header_str:
+                        version_start = header_str.find('ClamAV-VDB:') + 11
+                        version_end = header_str.find('\0', version_start)
+                        if version_end > version_start:
+                            version = header_str[version_start:version_end].strip()
+                            if version:
+                                versions.append(f"daily: {version}")
+                                print(f"StatusTab DEBUG: Found daily database version: {version}")
+            except (IOError, OSError) as e:
+                print(f"StatusTab DEBUG: Error reading daily.cvd: {e}")
 
         # Fallback: extract version from filename
         for db_file in db_files:
@@ -582,7 +622,116 @@ class StatusTab(QWidget):
                 # Extract version from filename like "daily.cvd" or "main.cvd"
                 name_part = db_file.replace('.cvd', '').replace('.cld', '')
                 if name_part and not name_part.isdigit():
-                    return name_part
+                    if name_part not in [v.split(': ')[0] for v in versions]:
+                        versions.append(name_part)
+                        print(f"StatusTab DEBUG: Using filename for version: {name_part}")
+
+        if versions:
+            return ', '.join(versions)
+        else:
+            return 'Unknown'
+
+    def _get_accurate_signature_count(self, db_dir):
+        """Get accurate signature count using freshclam --info or similar."""
+        try:
+            # Try to get freshclam path from settings
+            if hasattr(self.parent, 'current_settings') and self.parent.current_settings:
+                freshclam_path = self.parent.current_settings.get('freshclam_path', 'freshclam')
+            elif hasattr(self.parent, 'settings') and self.parent.settings:
+                settings = self.parent.settings.load_settings() or {}
+                freshclam_path = settings.get('freshclam_path', 'freshclam')
+            else:
+                freshclam_path = 'freshclam'
+
+            if not freshclam_path or freshclam_path == 'freshclam':
+                # Try to find freshclam in PATH
+                freshclam_path = self._find_freshclam_executable()
+
+            if freshclam_path and os.path.exists(freshclam_path):
+                print(f"StatusTab DEBUG: Running freshclam to get signature info: {freshclam_path}")
+                # Try freshclam --info (if available)
+                process = subprocess.run([freshclam_path, '--info'],
+                                       capture_output=True, text=True, timeout=30,
+                                       cwd=db_dir)
+                if process.returncode == 0:
+                    output = process.stdout.strip()
+                    print(f"StatusTab DEBUG: freshclam --info output: {output}")
+                    # Look for signature count in output
+                    for line in output.split('\n'):
+                        line_lower = line.lower()
+                        if 'signatures' in line_lower or 'total' in line_lower:
+                            # Try to extract number
+                            import re
+                            numbers = re.findall(r'\d+', line)
+                            if numbers:
+                                count = int(numbers[0])
+                                if count > 1000000:  # Reasonable signature count
+                                    print(f"StatusTab DEBUG: Found signature count in freshclam output: {count}")
+                                    return count
+                else:
+                    print(f"StatusTab DEBUG: freshclam --info failed with return code {process.returncode}")
+
+        except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError) as e:
+            print(f"StatusTab DEBUG: Error running freshclam: {e}")
+
+        # Alternative: try to read the total signature count from all CVD files
+        try:
+            total_count = 0
+            for db_file in os.listdir(db_dir):
+                if db_file.endswith('.cvd'):
+                    db_path = os.path.join(db_dir, db_file)
+                    try:
+                        with open(db_path, 'rb') as f:
+                            # Try different offsets for signature count
+                            for offset in [512, 516, 520, 524]:
+                                f.seek(offset, 0)
+                                count_data = f.read(4)
+                                if len(count_data) == 4:
+                                    count = int.from_bytes(count_data, byteorder='little', signed=False)
+                                    if 100000 <= count <= 10000000:  # Reasonable range
+                                        total_count += count
+                                        print(f"StatusTab DEBUG: Found {count} signatures in {db_file}")
+                                        break
+                    except Exception:
+                        continue
+
+            if total_count > 0:
+                print(f"StatusTab DEBUG: Total signature count from CVD files: {total_count}")
+                return total_count
+
+        except Exception as e:
+            print(f"StatusTab DEBUG: Error reading CVD files: {e}")
+
+        return None
+
+    def _find_freshclam_executable(self):
+        """Find freshclam executable in common locations or PATH."""
+        # Check if it's in PATH
+        try:
+            subprocess.run(['freshclam', '--version'],
+                         capture_output=True, timeout=5)
+            return 'freshclam'
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            pass
+
+        # Check common installation paths
+        common_paths = [
+            r'C:\Program Files\ClamAV\freshclam.exe',
+            r'C:\Program Files (x86)\ClamAV\freshclam.exe',
+            r'C:\ClamAV\freshclam.exe',
+            'freshclam'  # Check PATH again
+        ]
+
+        for path in common_paths:
+            if path == 'freshclam':
+                try:
+                    subprocess.run([path, '--version'],
+                                 capture_output=True, timeout=5)
+                    return path
+                except (FileNotFoundError, subprocess.TimeoutExpired):
+                    continue
+            elif os.path.exists(path):
+                return path
 
         return None
 
