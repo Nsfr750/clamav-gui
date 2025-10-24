@@ -2,7 +2,18 @@
 
 This document outlines the development roadmap for ClamAV GUI, including upcoming features, improvements, and long-term goals.
 
-## Version 1.2.0 (Current Release) 🚀
+## Version 1.2.5 (Current Release) 🚀
+
+### Database Management Enhancements
+
+- [x] **Database Configuration Section**: Added visible database path configuration in settings tab with browse functionality
+- [x] **Enhanced Database Path Detection**: Improved automatic detection of ClamAV database location using multiple fallback methods
+- [x] **Settings Persistence**: Database path now properly saved to settings.json configuration file
+- [x] **Settings Tab UI**: Fixed missing Virus Database Configuration section visibility in the settings interface
+- [x] **Database Path Management**: Better integration between settings and database detection systems
+- [x] **Configuration Loading**: Enhanced loading of database settings from config files with validation
+
+## Version 1.2.0 (Released) ✅
 
 ### Core Features
 
@@ -68,7 +79,16 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 
 ## Completed Milestones ✅
 
-### Version 1.2.0 (Current)
+### Version 1.2.5 (Current)
+
+- ✅ **Database Configuration Section**: Added visible database path configuration in settings tab with browse functionality
+- ✅ **Enhanced Database Path Detection**: Improved automatic detection of ClamAV database location using multiple fallback methods
+- ✅ **Settings Persistence**: Database path now properly saved to settings.json configuration file
+- ✅ **Settings Tab UI**: Fixed missing Virus Database Configuration section visibility in the settings interface
+- ✅ **Database Path Management**: Better integration between settings and database detection systems
+- ✅ **Configuration Loading**: Enhanced loading of database settings from config files with validation
+
+### Version 1.2.0
 
 - ✅ **Complete UI Overhaul**: Modern PySide6 interface with improved usability
 - ✅ **Enhanced Log Viewer**: Advanced log viewing with search, filtering, and statistics
@@ -197,4 +217,4 @@ We follow [Semantic Versioning](https://semver.org/) principles:
 
 ## Footer
 
-This roadmap is continuously updated based on community feedback, technical requirements, and market needs. Last updated: October 15, 2025
+This roadmap is continuously updated based on community feedback, technical requirements, and market needs. Last updated: October 24, 2025

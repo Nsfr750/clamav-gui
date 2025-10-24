@@ -1,6 +1,6 @@
 # ClamAV GUI
 
-![Version](https://img.shields.io/badge/Version-1.2.0-blue)
+![Version](https://img.shields.io/badge/Version-1.2.5-blue)
 ![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-blue)
 ![GUI](https://img.shields.io/badge/GUI-PyQt6.6-blue)
 ![License](https://img.shields.io/badge/License-GPLv3-blue)

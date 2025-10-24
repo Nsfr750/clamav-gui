@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="clamav-gui",
-    version="1.0.0",
+    version="1.2.5",
     author="Nsfr750",
     author_email="nsfr750@yandex.com",
     description="A GUI for ClamAV Antivirus",

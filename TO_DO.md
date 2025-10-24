@@ -22,6 +22,15 @@
 - [ ] Progress tracking
 - [ ] Multi-language support
 
+## Completed in v1.2.5
+
+- [x] **Database Configuration Section** - Added visible database path configuration in settings tab with browse functionality
+- [x] **Enhanced Database Path Detection** - Improved automatic detection of ClamAV database location using multiple fallback methods
+- [x] **Settings Persistence** - Database path now properly saved to settings.json configuration file
+- [x] **Settings Tab UI** - Fixed missing Virus Database Configuration section visibility in the settings interface
+- [x] **Database Path Management** - Better integration between settings and database detection systems
+- [x] **Configuration Loading** - Enhanced loading of database settings from config files with validation
+
 ## Completed in v1.2.0
 
 - [x] **Enhanced Log Viewer** - Advanced log viewing with search, filtering, color coding, and statistics

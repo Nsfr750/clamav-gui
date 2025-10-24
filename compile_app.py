@@ -13,7 +13,7 @@ Opzioni:
   --onedir      Crea una directory con eseguibile e dipendenze separate
 
 Autore: Nsfr750
-Versione: 1.0.0
+Versione: 1.2.5
 """
 
 import os
@@ -25,7 +25,7 @@ from pathlib import Path
 
 # Configurazione dell'applicazione
 APP_NAME = "ClamAV-GUI"
-APP_VERSION = "1.2.0"
+APP_VERSION = "1.2.5"
 APP_DESCRIPTION = "ClamAV GUI - Antivirus Interface with Enhanced Scanning and Quarantine Management"
 APP_AUTHOR = "Nsfr750"
 APP_EMAIL = "nsfr750@yandex.com"

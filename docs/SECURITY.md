@@ -51,6 +51,21 @@ Once received, we will:
 5. **Release** a security update
 6. **Publish** a security advisory
 
+### Version 1.2.5 Security Improvements
+
+#### Enhanced Database Configuration Security
+
+- **Secure Path Validation**: Database path configuration includes comprehensive path validation to prevent directory traversal attacks
+- **Safe File Operations**: Database configuration changes use atomic file operations to prevent corruption
+- **Input Sanitization**: All database path inputs are properly sanitized and validated before use
+- **Error Handling**: Secure error handling prevents information disclosure during database path operations
+
+#### Settings Management Security
+
+- **Configuration File Security**: Enhanced security for settings.json file handling with proper file permissions
+- **Path Security**: All configuration paths are validated to prevent access to unauthorized directories
+- **Safe Serialization**: JSON parsing includes proper error handling to prevent injection attacks
+
 ### Version 1.2.0 Security Improvements
 
 #### Enhanced Log Viewer Security
@@ -259,4 +274,4 @@ For sensitive communications, you may use our PGP key (available upon request).
 
 ---
 
-*This security policy was last updated on October 16, 2025.*
+*This security policy was last updated on October 24, 2025.*

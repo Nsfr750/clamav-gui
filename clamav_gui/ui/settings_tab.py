@@ -97,6 +97,9 @@ class SettingsTab(QWidget):
         self.db_mirror_url.setPlaceholderText(self.tr("Custom database mirror URL (optional)"))
         db_layout.addRow(self.tr("Custom mirror:"), self.db_mirror_url)
 
+        db_group.setLayout(db_layout)
+        layout.addWidget(db_group)
+
         # Scanner Type Section
         scanner_group = QGroupBox(self.tr("Scanner Configuration"))
         scanner_layout = QVBoxLayout()
@@ -116,7 +119,7 @@ class SettingsTab(QWidget):
             "• ClamAV Scanner: Uses external ClamAV executable for maximum compatibility"
         ))
         self.scanner_description.setWordWrap(True)
-        self.scanner_description.setStyleSheet("QLabel { color: #666; font-size: 11px; padding: 5px; }")
+        self.scanner_description.setStyleSheet("QLabel { color: #FFFE59; font-size: 11px; font-weight: bold; padding: 5px; }")
         scanner_layout.addWidget(self.scanner_description)
 
         scanner_group.setLayout(scanner_layout)
@@ -308,6 +311,40 @@ class SettingsTab(QWidget):
                 custom_path = self.db_path_display.text().strip()
                 if custom_path and custom_path != self.tr("Unknown") and os.path.exists(custom_path):
                     return custom_path
+
+            # Try to detect the default ClamAV database path
+            try:
+                import subprocess
+                import sys
+
+                # Try to run freshclam --info to get database path
+                try:
+                    result = subprocess.run(['freshclam', '--info'],
+                                          capture_output=True, text=True, timeout=10)
+                    if result.returncode == 0:
+                        for line in result.stdout.split('\n'):
+                            if 'Database directory' in line:
+                                db_path = line.split(':', 1)[-1].strip()
+                                if db_path and os.path.exists(db_path):
+                                    return db_path
+                except (subprocess.TimeoutExpired, FileNotFoundError, subprocess.CalledProcessError):
+                    pass
+
+                # Fallback: common ClamAV database paths
+                common_paths = [
+                    "C:\\ProgramData\\ClamAV\\db",
+                    "C:\\ClamAV\\db",
+                    "/var/lib/clamav",
+                    "/usr/share/clamav",
+                    os.path.expanduser("~/.clamav")
+                ]
+
+                for path in common_paths:
+                    if os.path.exists(path):
+                        return path
+
+            except Exception as e:
+                logger.warning(f"Error detecting database path: {e}")
 
             # Fallback to parent method if available
             if hasattr(self.parent, 'get_database_path'):
@@ -536,11 +573,13 @@ class SettingsTab(QWidget):
                     self.db_update_interval.setValue(self.current_settings['db_update_interval'])
                 if 'db_mirror_url' in self.current_settings:
                     self.db_mirror_url.setText(self.current_settings['db_mirror_url'])
-                if 'db_path' in self.current_settings:
+                if 'db_path' in self.current_settings and self.current_settings['db_path']:
                     self.db_path_display.setText(self.current_settings['db_path'])
                 else:
                     # If no custom path saved, show the detected path
-                    self.db_path_display.setText(self.get_database_path())
+                    detected_path = self.get_database_path()
+                    if detected_path and detected_path != self.tr("Unknown"):
+                        self.db_path_display.setText(detected_path)
 
                 # Load scanner type
                 scanner_type = self.current_settings.get('scanner_type', 'integrated')
@@ -561,7 +600,7 @@ class SettingsTab(QWidget):
                 if hasattr(self, 'default_max_file_size'):
                     self.default_max_file_size.setText(str(self.current_settings.get('max_file_size', '100')))
                 if hasattr(self, 'default_max_scan_time'):
-                    self.default_max_scan_time.setText(str(self.current_settings.get('max_scan_time', '300')))
+                    self.default_max_scan_time.setText(str(self.current_settings.get('max_scan_time', '600')))
                 if hasattr(self, 'default_exclude_patterns'):
                     self.default_exclude_patterns.setText(self.current_settings.get('exclude_patterns', '*.log,*.tmp,*.cache'))
                 if hasattr(self, 'default_include_patterns'):

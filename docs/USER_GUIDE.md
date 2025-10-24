@@ -281,7 +281,7 @@ By default, ClamAV scans all file types. You can configure include/exclude patte
 
 ### Can I schedule automatic scans?
 
-Scheduled scans are planned for version 1.2.0. Currently, you need to run scans manually or use Windows Task Scheduler with the command line interface.
+Scheduled scans are planned for version 1.2.5. Currently, you need to run scans manually or use Windows Task Scheduler with the command line interface.
 
 ### How do I update virus definitions?
 
@@ -357,11 +357,11 @@ If ClamAV GUI helps keep your system secure, consider supporting the development
 
 ---
 
-*This user guide was last updated for ClamAV GUI version 1.2.0. For the latest version, visit the [GitHub repository](https://github.com/Nsfr750/clamav-gui).*
+*This user guide was last updated for ClamAV GUI version 1.2.5. For the latest version, visit the [GitHub repository](https://github.com/Nsfr750/clamav-gui).*
 
 ### Quick Reference
 
-**Application**: ClamAV GUI v1.2.0
+**Application**: ClamAV GUI v1.2.5
 **License**: GPLv3
 **Platform**: Windows 10/11
 **Support**: [GitHub Issues](https://github.com/Nsfr750/clamav-gui/issues)

@@ -255,4 +255,4 @@ For commercial support or custom development:
 
 ---
 
-*Last updated: October 12, 2025*
+*Last updated: October 24, 2025*

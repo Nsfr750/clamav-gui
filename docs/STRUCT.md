@@ -1,6 +1,6 @@
 # ClamAV GUI Project Structure
 
-This document describes the current structure of the ClamAV GUI project as of version 1.2.0.
+This document describes the current structure of the ClamAV GUI project as of version 1.2.5.
 
 ## Directory Structure
 
@@ -9,13 +9,13 @@ clamav-gui/
 ├── .github/                      \# GitHub-specific files
 │   └── workflows/
 │       └── test.yml              \# CI/CD pipeline configuration
-├── assets/                       \# Static assets (icons, images, etc.)
 ├── build/                        \# Build artifacts and temporary files
 ├── clamav_gui/                   \# Main application package
 │   ├── __init__.py               \# Package initialization
 │   ├── __main__.py               \# Entry point when run as a module
 │   ├── main_window.py            \# Main window implementation
 │   ├── version.py                \# Version information and management
+|   ├── assets/                   \# Static assets (icons, images, etc.)
 │   ├── lang/                     \# Internationalization system
 │   │   ├── __init__.py           \# Language package initialization
 │   │   ├── en_US.py              \# English (US) translations
@@ -103,7 +103,7 @@ clamav-gui/
   - **`menu.py`**: Application menu bar with File, Tools, Advanced Scanning, Language, Help menus
   - **`about.py`**: About dialog with version and system information
   - **`help.py`**: Help documentation browser
-  - **`settings.py`**: Configuration and preferences management
+  - **`settings_tab.py`**: Enhanced settings tab with database configuration (NEW in 1.2.5)
   - **`sponsor.py`**: Support and donation information
   - **`updates_dialog.py`**: Update notification and installation
   - **`conf_editor_tab.py`**: Configuration file editor tab (NEW in 1.2.0)
@@ -126,7 +126,7 @@ clamav-gui/
   - **`quarantine_manager.py`**: Infected file isolation and management
   - **`scan_report.py`**: Scan result formatting and HTML report generation
   - **`updates.py`**: Application and virus database update checking
-  - **`virus_db.py`**: Virus database download and integrity verification
+  - **`virus_db.py`**: Enhanced virus database management with improved detection (ENHANCED in 1.2.5)
   - **`error_recovery.py`**: Automatic retry mechanisms for failed operations
   - **`advanced_reporting.py`**: Comprehensive analytics and threat intelligence
   - **`ml_threat_detector.py`**: AI-powered threat detection with ML models
@@ -256,4 +256,4 @@ The codebase is designed with extension points for:
 
 ---
 
-*This structure document reflects the ClamAV GUI project as of version 1.2.0 and is updated as the project evolves with the new tab-based architecture and enhanced functionality.*
+*This structure document reflects the ClamAV GUI project as of version 1.2.5 and is updated as the project evolves with the enhanced tab-based architecture and improved database management functionality.*

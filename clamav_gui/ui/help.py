@@ -304,7 +304,7 @@ class HelpDialog(QDialog):
                 <li>Utilizzare il browser dei file per navigare fino alla posizione desiderata.</li>
             </ul>
 
-            <h2>Funzionalità avanzate (Versione 1.2.0)</h2>
+            <h2>Funzionalità avanzate (Versione 1.2.5)</h2>
 
             <h3>Visualizzatore log avanzato</h3>
             <p>Visualizza e analizza i log dell'applicazione con funzionalità avanzate.</p>
@@ -395,7 +395,7 @@ class HelpDialog(QDialog):
                 <li>Use the file browser to navigate to your desired location.</li>
             </ul>
 
-            <h2>Advanced Features (Version 1.2.0)</h2>
+            <h2>Advanced Features (Version 1.2.5)</h2>
 
             <h3>Enhanced Log Viewer</h3>
             <p>View and analyze application logs with advanced features.</p>

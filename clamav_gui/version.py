@@ -3,7 +3,7 @@ Version information for ClamAV GUI.
 """
 
 # Version as a tuple (major, minor, patch)
-VERSION = (1, 2, 0)
+VERSION = (1, 2, 5)
 
 # String version
 __version__ = ".".join(map(str, VERSION))
@@ -19,7 +19,7 @@ __license__ = "GPL-3.0"
 
 # Build information
 __build__ = ""
-__date__ = "2025-10-16"
+__date__ = "2025-10-24"
 
 # Version description
 __description__ = "A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows with enhanced scanning, reporting, and quarantine management."
@@ -43,6 +43,17 @@ version_info = tuple(map(int, __version__.split('.')))
 
 # Changelog
 __changelog__ = """
+## [1.2.5] - 2025-10-24
+### Added
+- Database Configuration Section: Added visible database path configuration in settings tab
+- Enhanced Database Path Detection: Improved automatic detection of ClamAV database location
+- Settings Persistence: Database path now properly saved to settings.json
+
+### Improved
+- Settings Tab UI: Fixed missing Virus Database Configuration section visibility
+- Database Path Management: Better integration between settings and database detection
+- Configuration Loading: Enhanced loading of database settings from config files
+
 ## [1.2.0] - 2025-10-16
 ### Added
 - Enhanced Log Viewer: Advanced log viewing with search, filtering, color coding, and statistics
@@ -107,6 +118,18 @@ def get_version_info():
 def get_version_history():
     """Return the version history."""
     return [
+        {
+            "version": "1.2.5",
+            "date": "2025-10-24",
+            "changes": [
+                "Database Configuration Section: Added visible database path configuration in settings tab",
+                "Enhanced Database Path Detection: Improved automatic detection of ClamAV database location",
+                "Settings Persistence: Database path now properly saved to settings.json",
+                "Settings Tab UI: Fixed missing Virus Database Configuration section visibility",
+                "Database Path Management: Better integration between settings and database detection",
+                "Configuration Loading: Enhanced loading of database settings from config files"
+            ]
+        },
         {
             "version": "1.2.0",
             "date": "2025-10-16",
