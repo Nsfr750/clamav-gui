@@ -47,7 +47,7 @@ class ScanWorker(QThread):
                 if self.is_cancelled:
                     break
 
-                # Update progress
+                # Update progress with file count information
                 progress = int((i / total_files) * 100)
                 self.progress_updated.emit(progress, file_path)
 
