@@ -272,9 +272,9 @@ class VirusDBUpdater:
     def _find_sigtool_executable(self):
         """Find sigtool executable in common locations."""
         common_paths = [
-            r'C:\Program Files\ClamAV\bin\sigtool.exe',
-            r'C:\Program Files (x86)\ClamAV\bin\sigtool.exe',
-            r'C:\ClamAV\bin\sigtool.exe',
+            r'C:\Program Files\ClamAV\sigtool.exe',
+            r'C:\Program Files (x86)\ClamAV\sigtool.exe',
+            r'C:\ClamAV\sigtool.exe',
             '/usr/bin/sigtool',
             '/usr/local/bin/sigtool',
             '/opt/clamav/bin/sigtool'

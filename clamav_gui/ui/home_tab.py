@@ -35,6 +35,9 @@ class HomeTab(QWidget):
         # Start update timer for real-time information
         self.start_update_timer()
 
+        # Initial status update
+        QTimer.singleShot(1000, self.update_system_status)  # Update after 1 second
+
     def init_ui(self):
         """Initialize the user interface."""
         # Main vertical layout for the entire tab
@@ -56,7 +59,7 @@ class HomeTab(QWidget):
         # Right column: Welcome text
         welcome_layout = QVBoxLayout()
         welcome_group = QGroupBox(self.tr("Welcome to ClamAV GUI"))
-        welcome_group.setStyleSheet("QGroupBox { margin: 10px; }")
+        welcome_group.setStyleSheet("QGroupBox { margin: 10px; font-size: 18px; font-weight: bold; }")
         welcome_text_layout = QVBoxLayout() 
 
         welcome_text = QLabel(self.tr(
@@ -204,6 +207,7 @@ class HomeTab(QWidget):
                 border-radius: 5px;
                 text-align: center;
                 font-weight: bold;
+                color: #75b5aa;
             }
             QProgressBar::chunk {
                 background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
@@ -246,6 +250,19 @@ class HomeTab(QWidget):
         # If no logo found, hide the label
         self.logo_label.setVisible(False)
         logger.info("No logo file found, hiding logo area")
+
+    def darken_color(self, color, factor=0.9):
+        """Darken a color by a factor."""
+        # Simple color darkening for hover effects
+        if color == "#4CAF50":
+            return "#45a049"
+        elif color == "#2196F3":
+            return "#1976D2"
+        elif color == "#FF9800":
+            return "#F57C00"
+        elif color == "#9C27B0":
+            return "#7B1FA2"
+        return color
 
     def create_action_button(self, title, tooltip, color, callback):
         """Create a styled action button."""
@@ -290,7 +307,7 @@ class HomeTab(QWidget):
         layout = QVBoxLayout(container)
 
         label = QLabel(label_text)
-        label.setStyleSheet("font-weight: bold; color: #333; font-size: 11px;")
+        label.setStyleSheet("font-weight: bold; color: #00ffff; font-size: 11px;")
         layout.addWidget(label)
 
         value = QLabel(value_text)
@@ -299,18 +316,46 @@ class HomeTab(QWidget):
 
         return container
 
-    def darken_color(self, color, factor=0.9):
-        """Darken a color by a factor."""
-        # Simple color darkening for hover effects
-        if color == "#4CAF50":
-            return "#45a049"
-        elif color == "#2196F3":
-            return "#1976D2"
-        elif color == "#FF9800":
-            return "#F57C00"
-        elif color == "#9C27B0":
-            return "#7B1FA2"
-        return color
+    def update_status_label(self, container, label_text, value_text, color):
+        """Update a status label container with new values."""
+        try:
+            # Find the value label within the container using findChildren
+            value_labels = container.findChildren(QLabel)
+
+            # Find the value label (the one that doesn't contain the label text)
+            value_label = None
+            for label in value_labels:
+                if label_text not in label.text():  # This should be the value label
+                    value_label = label
+                    break
+
+            if value_label:
+                # Update the value text
+                value_label.setText(value_text)
+
+                # Update the color based on status
+                color_map = {
+                    "green": "#4CAF50",
+                    "red": "#F44336",
+                    "orange": "#FF9800",
+                    "gray": "#9E9E9E"
+                }
+
+                hex_color = color_map.get(color, "#4CAF50")
+                value_label.setStyleSheet(f"font-size: 14px; font-weight: bold; color: {hex_color};")
+
+                # Update container background color too
+                container.setStyleSheet(f"""
+                    QFrame {{
+                        background-color: #1f1f1f;
+                        border: 1px solid gray;
+                        border-radius: 5px;
+                        padding: 8px;
+                    }}
+                """)
+
+        except Exception as e:
+            logger.error(f"Error updating status label: {e}")
 
     def start_update_timer(self):
         """Start timer for periodic status updates."""
@@ -330,6 +375,9 @@ class HomeTab(QWidget):
             # Update threats count
             self.update_threats_status()
 
+            # Update protection status (overall system state)
+            self.update_protection_status()
+
             # Add activity entry
             self.add_activity_entry(self.tr("Status updated"))
 
@@ -339,53 +387,185 @@ class HomeTab(QWidget):
     def update_database_status(self):
         """Update virus database status."""
         try:
-            # Try to get database info from virus DB updater
-            if hasattr(self.parent, 'virus_db_updater') and self.parent.virus_db_updater:
-                db_info = self.parent.virus_db_updater.get_database_info()
+            # First try to get database info from status tab (which we know works)
+            if hasattr(self.parent, 'status_tab'):
+                # Get fresh database info from status tab
+                db_info = self.parent.status_tab._get_database_info()
 
-                if 'error' in db_info and db_info['error']:
-                    status = self.tr("Error")
-                    color = "red"
+                if db_info and db_info.get('total_signatures') not in ['Database not accessible', 'Unknown', 'Error accessing database:']:
+                    # Database is accessible
+                    signatures = db_info.get('total_signatures', 'Unknown')
+                    version = db_info.get('database_version', 'Unknown')
+                    last_update = db_info.get('last_update', 'Unknown')
+
+                    if signatures and signatures != 'Unknown':
+                        status = f"{version} ({signatures} signatures)"
+                        color = "green"
+                    else:
+                        status = self.tr("Checking...")
+                        color = "orange"
                 else:
-                    version = db_info.get('version', self.tr('Unknown'))
-                    signatures = db_info.get('signatures', self.tr('Unknown'))
-                    status = f"{version} ({signatures} signatures)"
-                    color = "green"
+                    status = self.tr("Not available")
+                    color = "orange"
             else:
-                status = self.tr("Not available")
-                color = "orange"
+                # Fallback: try virus DB updater
+                if hasattr(self.parent, 'virus_db_updater') and self.parent.virus_db_updater:
+                    db_info = self.parent.virus_db_updater.get_database_info()
 
-            # Update the database status label (this is a simplified approach)
-            # In a real implementation, you'd update the actual label widget
+                    if 'error' in db_info and db_info['error']:
+                        status = self.tr("Error")
+                        color = "red"
+                    else:
+                        version = db_info.get('version', self.tr('Unknown'))
+                        signatures = db_info.get('signatures', self.tr('Unknown'))
+                        status = f"{version} ({signatures} signatures)"
+                        color = "green"
+                else:
+                    status = self.tr("Not available")
+                    color = "orange"
+
+            # Update the database status label
+            self.update_status_label(self.db_status_label, self.tr("Virus Database:"), status, color)
 
         except Exception as e:
             logger.error(f"Error updating database status: {e}")
+            self.update_status_label(self.db_status_label, self.tr("Virus Database:"), self.tr("Error"), "red")
 
     def update_scan_status(self):
         """Update last scan status."""
         try:
-            # This would typically read from scan history or logs
-            # For now, show a placeholder
-            status = self.tr("Ready")
-            color = "green"
+            # Try to get information from advanced reporting or scan history
+            if hasattr(self.parent, 'advanced_reporting'):
+                try:
+                    # Get recent scan statistics
+                    analytics = self.parent.advanced_reporting.generate_analytics_report(7)  # Last 7 days
+
+                    if 'error' not in analytics and analytics.get('total_scans', 0) > 0:
+                        last_scan_date = analytics.get('last_scan_date', self.tr('Unknown'))
+                        total_scans = analytics.get('total_scans', 0)
+
+                        if last_scan_date != 'Unknown':
+                            status = f"{total_scans} scans (last: {last_scan_date})"
+                        else:
+                            status = f"{total_scans} scans"
+                        color = "green"
+                    else:
+                        status = self.tr("Ready")
+                        color = "green"
+                except Exception as e:
+                    logger.warning(f"Error getting scan analytics: {e}")
+                    status = self.tr("Ready")
+                    color = "green"
+            else:
+                status = self.tr("Ready")
+                color = "green"
 
             # Update the last scan label
+            self.update_status_label(self.last_scan_label, self.tr("Last Scan:"), status, color)
 
         except Exception as e:
             logger.error(f"Error updating scan status: {e}")
+            self.update_status_label(self.last_scan_label, self.tr("Last Scan:"), self.tr("Error"), "red")
 
     def update_threats_status(self):
         """Update threats found status."""
         try:
-            # This would typically read from quarantine or scan results
-            # For now, show 0 threats
-            threats = "0"
-            color = "green"
+            # Get real information from quarantine manager
+            if hasattr(self.parent, 'quarantine_manager') and self.parent.quarantine_manager:
+                try:
+                    stats = self.parent.quarantine_manager.get_quarantine_stats()
+                    threats = str(stats.get('total_quarantined', 0))
+                    color = "orange" if int(threats) > 0 else "green"
+                except Exception as e:
+                    logger.warning(f"Error getting quarantine stats: {e}")
+                    threats = "0"
+                    color = "green"
+            else:
+                threats = "0"
+                color = "green"
 
             # Update the threats label
+            self.update_status_label(self.threats_label, self.tr("Threats Found:"), threats, color)
 
         except Exception as e:
             logger.error(f"Error updating threats status: {e}")
+            self.update_status_label(self.threats_label, self.tr("Threats Found:"), self.tr("Error"), "red")
+
+    def update_protection_status(self):
+        """Update overall system protection status."""
+        try:
+            # Evaluate overall protection state
+            protection_level = self.evaluate_protection_level()
+
+            # Update the protection label
+            self.update_status_label(self.protection_label, self.tr("Protection:"), protection_level['status'], protection_level['color'])
+
+        except Exception as e:
+            logger.error(f"Error updating protection status: {e}")
+            self.update_status_label(self.protection_label, self.tr("Protection:"), self.tr("Error"), "red")
+
+    def evaluate_protection_level(self):
+        """Evaluate the overall system protection level."""
+        try:
+            # Check database status
+            db_ok = False
+            if hasattr(self.parent, 'status_tab'):
+                db_info = self.parent.status_tab._get_database_info()
+                if db_info and db_info.get('total_signatures') not in ['Database not accessible', 'Unknown', 'Error accessing database:']:
+                    db_ok = True
+
+            # Check threats
+            threats_count = 0
+            if hasattr(self.parent, 'quarantine_manager') and self.parent.quarantine_manager:
+                try:
+                    stats = self.parent.quarantine_manager.get_quarantine_stats()
+                    threats_count = stats.get('total_quarantined', 0)
+                except:
+                    pass
+
+            # Check scan history
+            recent_scans = False
+            if hasattr(self.parent, 'advanced_reporting'):
+                try:
+                    analytics = self.parent.advanced_reporting.generate_analytics_report(7)
+                    if 'error' not in analytics and analytics.get('total_scans', 0) > 0:
+                        recent_scans = True
+                except:
+                    pass
+
+            # Evaluate overall protection
+            if not db_ok:
+                return {
+                    'status': self.tr("Database Error"),
+                    'color': "red"
+                }
+            elif threats_count > 5:
+                return {
+                    'status': self.tr("Multiple Threats"),
+                    'color': "red"
+                }
+            elif threats_count > 0:
+                return {
+                    'status': self.tr("Threats Detected"),
+                    'color': "orange"
+                }
+            elif recent_scans:
+                return {
+                    'status': self.tr("Protected"),
+                    'color': "green"
+                }
+            else:
+                return {
+                    'status': self.tr("Ready"),
+                    'color': "green"
+                }
+
+        except Exception as e:
+            logger.error(f"Error evaluating protection level: {e}")
+            return {
+                'status': self.tr("Unknown"),
+                'color': "orange"
+            }
 
     def add_activity_entry(self, activity):
         """Add an entry to the activity list."""

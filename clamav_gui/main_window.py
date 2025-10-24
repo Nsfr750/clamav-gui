@@ -1268,18 +1268,18 @@ Last activity:
             layout.addWidget(QLabel(self.tr("Network Scan tab not available")))
             return tab
 
-    def create_ml_detection_tab(self):
-        """Create the ML detection tab using MLDetectionTab class."""
+    def create_virus_db_tab(self):
+        """Create the virus database tab using VirusDBTab class."""
         try:
-            from clamav_gui.ui.ml_detection_tab import MLDetectionTab
-            return MLDetectionTab(self)
+            from clamav_gui.ui.virus_db_tab import VirusDBTab
+            return VirusDBTab(self)
         except ImportError as e:
-            logger.warning(f"Could not import MLDetectionTab: {e}")
-            # Fallback to simple ML detection tab
+            logger.warning(f"Could not import VirusDBTab: {e}")
+            # Fallback to simple virus database tab
             from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
             tab = QWidget()
             layout = QVBoxLayout(tab)
-            layout.addWidget(QLabel(self.tr("ML Detection tab not available")))
+            layout.addWidget(QLabel(self.tr("Virus Database tab not available")))
             return tab
 
     # Add the rest of the original methods here

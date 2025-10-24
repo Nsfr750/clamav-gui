@@ -218,7 +218,7 @@ class ScanTab(QWidget):
         self.progress = QProgressBar()
         self.progress.setRange(0, 100)  # 0-100% range
         self.progress.setValue(0)  # Start at 0%
-        self.progress.setFormat("Idle - %p%")
+        self.progress.setFormat("Scanning files... %p%")
         self.progress.setStyleSheet("""
             QProgressBar {
                 border: 2px solid #333;
@@ -226,152 +226,12 @@ class ScanTab(QWidget):
                 text-align: center;
                 font-weight: bold;
                 height: 25px;
+                background-color: #f0f0f0;
             }
             QProgressBar::chunk {
                 background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
-                    stop: 0 #4CAF50, stop: 0.5 #2196F3, stop: 1 #4CAF50);
+                    stop: 0 #4CAF50, stop: 1 #45a049);
                 border-radius: 3px;
-                width: 10px;  /* Width of each chunk */
-            }
-        """)
-
-        # Buttons
-        button_layout = QHBoxLayout()
-
-        self.scan_btn = QPushButton(self.tr("Start Scan"))
-        self.scan_btn.clicked.connect(self.start_scan)
-        self.scan_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                font-weight: bold;
-                border-radius: 5px;
-            }
-            QPushButton:hover {
-                background-color: #45a049;
-            }
-            QPushButton:pressed {
-                background-color: #3e8e41;
-            }
-        """)
-        button_layout.addWidget(self.scan_btn)
-
-        self.stop_btn = QPushButton(self.tr("Stop"))
-        self.stop_btn.setEnabled(False)
-        self.stop_btn.clicked.connect(self.stop_scan)
-        self.stop_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #f44336;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                font-weight: bold;
-                border-radius: 5px;
-            }
-            QPushButton:hover {
-                background-color: #da190b;
-            }
-            QPushButton:pressed {
-                background-color: #c62828;
-            }
-        """)
-        button_layout.addWidget(self.stop_btn)
-
-        # Report buttons
-        self.save_report_btn = QPushButton(self.tr("Save Report"))
-        self.save_report_btn.setEnabled(False)
-        self.save_report_btn.clicked.connect(self.save_scan_report)
-        button_layout.addWidget(self.save_report_btn)
-
-        self.view_quarantine_btn = QPushButton(self.tr("View Quarantine"))
-        self.view_quarantine_btn.clicked.connect(self.show_quarantine_dialog)
-        button_layout.addWidget(self.view_quarantine_btn)
-
-        # Add all to main layout
-        layout.addWidget(target_group)
-        layout.addWidget(options_group)
-        layout.addWidget(output_group)
-        layout.addWidget(self.progress)
-        layout.addLayout(button_layout)
-        self.init_ui()
-
-    def init_ui(self):
-        """Initialize the user interface."""
-        layout = QVBoxLayout(self)
-
-        # Target selection
-        target_group = QGroupBox(self.tr("Scan Target"))
-        target_layout = QHBoxLayout()
-
-        self.target_input = QLineEdit()
-        self.target_input.setPlaceholderText(self.tr("Select a file or directory to scan..."))
-        target_layout.addWidget(self.target_input)
-
-        browse_btn = QPushButton(self.tr("Browse..."))
-        browse_btn.clicked.connect(self.browse_target)
-        target_layout.addWidget(browse_btn)
-
-        target_group.setLayout(target_layout)
-
-        # Scan options
-        options_group = QGroupBox(self.tr("Scan Options"))
-        options_layout = QVBoxLayout()
-
-        self.recursive_scan = QCheckBox(self.tr("Scan subdirectories"))
-        self.recursive_scan.setChecked(True)
-        options_layout.addWidget(self.recursive_scan)
-
-        self.heuristic_scan = QCheckBox(self.tr("Enable heuristic scan"))
-        self.heuristic_scan.setChecked(True)
-        options_layout.addWidget(self.heuristic_scan)
-
-        self.enable_smart_scanning = QCheckBox(self.tr("Enable smart scanning (skip known safe files)"))
-        self.enable_smart_scanning.setChecked(False)
-        self.enable_smart_scanning.setToolTip(self.tr("Use hash database to skip files that have been previously scanned and confirmed safe"))
-        options_layout.addWidget(self.enable_smart_scanning)
-
-        # Advanced scan options
-        self.scan_archives = QCheckBox(self.tr("Scan archives (zip, rar, etc.)"))
-        self.scan_archives.setChecked(True)
-        options_layout.addWidget(self.scan_archives)
-
-        self.scan_pua = QCheckBox(self.tr("Scan potentially unwanted applications (PUA)"))
-        self.scan_pua.setChecked(False)
-        self.scan_pua.setToolTip(self.tr("Enable scanning for potentially unwanted applications"))
-        options_layout.addWidget(self.scan_pua)
-
-        options_group.setLayout(options_layout)
-
-        # Output
-        output_group = QGroupBox(self.tr("Output"))
-        output_layout = QVBoxLayout()
-
-        self.output = QTextEdit()
-        self.output.setReadOnly(True)
-        output_layout.addWidget(self.output)
-
-        output_group.setLayout(output_layout)
-
-        # Progress
-        self.progress = QProgressBar()
-        self.progress.setRange(0, 100)  # 0-100% range
-        self.progress.setValue(0)  # Start at 0%
-        self.progress.setFormat("Idle - %p%")
-        self.progress.setStyleSheet("""
-            QProgressBar {
-                border: 2px solid #333;
-                border-radius: 5px;
-                text-align: center;
-                font-weight: bold;
-                height: 25px;
-            }
-            QProgressBar::chunk {
-                background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
-                    stop: 0 #4CAF50, stop: 0.5 #2196F3, stop: 1 #4CAF50);
-                border-radius: 3px;
-                width: 10px;  /* Width of each chunk */
             }
         """)
 
