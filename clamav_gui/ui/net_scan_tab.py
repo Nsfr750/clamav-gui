@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
     QPushButton, QTextEdit, QProgressBar, QCheckBox, QLabel,
     QListWidget, QListWidgetItem, QMessageBox, QFormLayout,
     QComboBox, QSpinBox, QTableWidget, QTableWidgetItem,
-    QHeaderView, QAbstractItemView, QDialog, QDialogButtonBox
+    QHeaderView, QAbstractItemView
 )
 from PySide6.QtCore import Qt, Signal, QTimer
 from PySide6.QtGui import QFont, QPixmap, QIcon
@@ -21,30 +21,29 @@ from clamav_gui.utils.network_scanner import NetworkScanner, NetworkScanThread
 logger = logging.getLogger(__name__)
 
 
-class NetworkScanTab(QDialog):
-    """Network scanning dialog for scanning network drives and UNC paths."""
+class NetworkScanTab(QWidget):
+    """Network scanning tab for scanning network drives and UNC paths."""
 
     def __init__(self, parent=None):
         """Initialize the network scan tab.
 
         Args:
-            parent: Parent widget
+            parent: Parent widget (main window)
         """
         super().__init__(parent)
+        self.parent = parent  # Reference to main window
         self.scanner = None
         self.scan_thread = None
         self.network_drives = []
-
-        # Set dialog properties
-        self.setWindowTitle(self.tr("Network Scanning"))
-        self.setModal(True)
-        self.resize(900, 700)
 
         # Initialize UI
         self.init_ui()
 
         # Connect signals
         self.connect_signals()
+
+        # Initialize network scanner
+        self.initialize_scanner()
 
     def init_ui(self):
         """Initialize the user interface."""
@@ -219,12 +218,6 @@ class NetworkScanTab(QDialog):
         layout.addWidget(self.scan_progress)
         layout.addLayout(button_layout)
 
-        # Dialog buttons
-        self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        self.button_box.accepted.connect(self.accept)
-        self.button_box.rejected.connect(self.reject)
-        layout.addWidget(self.button_box)
-
         # Initialize scanner
         self.initialize_scanner()
 
@@ -232,39 +225,11 @@ class NetworkScanTab(QDialog):
         """Connect UI signals."""
         pass
 
-    def accept(self):
-        """Override accept to handle dialog closing."""
-        # Don't close if scan is in progress
-        if (hasattr(self, 'scan_thread') and self.scan_thread and
-            self.scan_thread.isRunning()):
-            QMessageBox.warning(
-                self, self.tr("Scan in Progress"),
-                self.tr("Cannot close dialog while network scan is running. Please stop the scan first.")
-            )
-            return
-        super().accept()
-
-    def reject(self):
-        """Override reject to handle dialog closing."""
-        # Don't close if scan is in progress
-        if (hasattr(self, 'scan_thread') and self.scan_thread and
-            self.scan_thread.isRunning()):
-            reply = QMessageBox.question(
-                self, self.tr("Scan in Progress"),
-                self.tr("Network scan is currently running. Do you want to stop it and close the dialog?"),
-                QMessageBox.Yes | QMessageBox.No
-            )
-            if reply == QMessageBox.Yes:
-                self.stop_network_scan()
-                super().reject()
-        else:
-            super().reject()
-
     def initialize_scanner(self):
         """Initialize the network scanner."""
         try:
             # Get clamscan path from settings if available
-            clamscan_path = getattr(self.parent(), 'clamscan_path', None) if self.parent() else None
+            clamscan_path = getattr(self.parent, 'clamscan_path', None) if self.parent else None
             clamscan_path = clamscan_path.text() if clamscan_path else "clamscan"
 
             self.scanner = NetworkScanner(clamscan_path)

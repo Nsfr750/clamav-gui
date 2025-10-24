@@ -1,0 +1,4 @@
+2025-10-19 07:50:58 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-19 07:50:58 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-19 07:50:58 - ClamAV-GUI - INFO - Application starting...
+2025-10-19 07:50:59 - ClamAV-GUI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\ui\img\icon.png

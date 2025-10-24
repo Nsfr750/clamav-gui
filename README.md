@@ -6,7 +6,7 @@
 ![License](https://img.shields.io/badge/License-GPLv3-blue)
 [![Issues](https://img.shields.io/github/issues/Nsfr750/clamav-gui)](https://github.com/Nsfr750/clamav-gui/issues)
 
-![ss](clamav_gui/ui/img/ss.png)
+![ss](clamav_gui/assets/ss.png)
 
 A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows.
 
@@ -93,8 +93,65 @@ A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows.
 ### Prerequisites
 
 - Python 3.8 or higher
-- ClamAV installed on your system
+- **ClamAV installed on your system**
 - Git (for cloning the repository)
+
+### Installing ClamAV
+
+#### Windows
+
+1. **Official Installer (Recommended)**:
+   Download and install ClamAV for Windows from the official website:
+   [https://www.clamav.net/downloads](https://www.clamav.net/downloads)
+
+2. **Chocolatey Package Manager**:
+
+   ```bash
+   choco install clamav
+   ```
+
+3. **Scoop Package Manager**:
+
+   ```bash
+   scoop install clamav
+   ```
+
+#### Linux
+
+```bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install clamav clamav-daemon
+
+# CentOS/RHEL/Fedora
+sudo yum install clamav
+# or
+sudo dnf install clamav
+
+# Arch Linux
+sudo pacman -S clamav
+```
+
+#### macOS
+
+```bash
+# Using Homebrew
+brew install clamav
+
+# Using MacPorts
+sudo port install clamav
+```
+
+After installation, ensure ClamAV executables (`clamscan`, `freshclam`, `clamd`) are in your system PATH, or update the paths in the application settings.
+
+### Verifying Installation
+
+To verify ClamAV is installed correctly:
+
+```bash
+clamscan --version
+freshclam --version
+```
 
 ### Quick Start
 

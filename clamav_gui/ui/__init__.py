@@ -10,7 +10,7 @@ try:
     from . import about
     from . import help
     from . import menu
-    from . import settings
+    from . import settings_tab
     from . import sponsor
     from . import updates_dialog
 except ImportError:

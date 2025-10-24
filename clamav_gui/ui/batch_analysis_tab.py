@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
     QListWidget, QListWidgetItem, QMessageBox, QFormLayout,
     QSpinBox, QTableWidget, QTableWidgetItem, QHeaderView,
     QAbstractItemView, QFileDialog, QSplitter, QTreeWidget,
-    QTreeWidgetItem, QTabWidget, QScrollArea, QComboBox, QDialog
+    QTreeWidgetItem, QTabWidget, QScrollArea, QComboBox
 )
 from PySide6.QtCore import Qt, Signal, QThread, QTimer
 from PySide6.QtGui import QFont, QPixmap, QIcon
@@ -22,25 +22,21 @@ from clamav_gui.utils.batch_analysis import BatchAnalyzer, BatchAnalysisThread
 logger = logging.getLogger(__name__)
 
 
-class BatchAnalysisTab(QDialog):
-    """Batch Analysis dialog for scanning multiple files and directories."""
+class BatchAnalysisTab(QWidget):
+    """Batch Analysis tab for scanning multiple files and directories."""
 
     def __init__(self, parent=None):
         """Initialize the batch analysis tab.
 
         Args:
-            parent: Parent widget
+            parent: Parent widget (main window)
         """
         super().__init__(parent)
+        self.parent = parent  # Reference to main window
         self.batch_analyzer = None
         self.analysis_thread = None
         self.batch_items = []
         self.analysis_results = []
-
-        # Set dialog properties
-        self.setWindowTitle(self.tr("Batch Analysis"))
-        self.setModal(True)
-        self.resize(1000, 800)
 
         # Initialize UI
         self.init_ui()
@@ -292,50 +288,11 @@ class BatchAnalysisTab(QDialog):
 
         layout.addWidget(splitter)
 
-        # Dialog buttons
-        from PySide6.QtWidgets import QDialogButtonBox
-        self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        self.button_box.accepted.connect(self.accept)
-        self.button_box.rejected.connect(self.reject)
-        layout.addWidget(self.button_box)
-
-    def connect_signals(self):
-        """Connect UI signals."""
-        pass
-
-    def accept(self):
-        """Override accept to handle dialog closing."""
-        # Don't close if analysis is in progress
-        if (hasattr(self, 'analysis_thread') and self.analysis_thread and
-            self.analysis_thread.isRunning()):
-            QMessageBox.warning(
-                self, self.tr("Analysis in Progress"),
-                self.tr("Cannot close dialog while batch analysis is running. Please stop the analysis first.")
-            )
-            return
-        super().accept()
-
-    def reject(self):
-        """Override reject to handle dialog closing."""
-        # Don't close if analysis is in progress
-        if (hasattr(self, 'analysis_thread') and self.analysis_thread and
-            self.analysis_thread.isRunning()):
-            reply = QMessageBox.question(
-                self, self.tr("Analysis in Progress"),
-                self.tr("Batch analysis is currently running. Do you want to stop it and close the dialog?"),
-                QMessageBox.Yes | QMessageBox.No
-            )
-            if reply == QMessageBox.Yes:
-                self.stop_batch_analysis()
-                super().reject()
-        else:
-            super().reject()
-
     def initialize_analyzer(self):
         """Initialize the batch analyzer."""
         try:
             # Get clamscan path from settings if available
-            clamscan_path = getattr(self.parent(), 'clamscan_path', None) if self.parent() else None
+            clamscan_path = getattr(self.parent, 'clamscan_path', None) if self.parent else None
             clamscan_path = clamscan_path.text() if clamscan_path else "clamscan"
 
             self.batch_analyzer = BatchAnalyzer(clamscan_path)

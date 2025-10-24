@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
     QListWidget, QListWidgetItem, QMessageBox, QFormLayout,
     QSpinBox, QTableWidget, QTableWidgetItem, QHeaderView,
     QAbstractItemView, QFileDialog, QSplitter, QTreeWidget,
-    QTreeWidgetItem, QTabWidget, QScrollArea, QComboBox, QDialog, QDialogButtonBox
+    QTreeWidgetItem, QTabWidget, QScrollArea, QComboBox
 )
 from PySide6.QtCore import Qt, Signal, QThread, QTimer
 from PySide6.QtGui import QFont, QPixmap, QIcon
@@ -22,25 +22,21 @@ from clamav_gui.utils.smart_scanning import SmartScanner, SmartScanThread
 logger = logging.getLogger(__name__)
 
 
-class SmartScanningTab(QDialog):
-    """Smart Scanning dialog for hash-based efficient scanning."""
+class SmartScanningTab(QWidget):
+    """Smart Scanning tab for hash-based efficient scanning."""
 
     def __init__(self, parent=None):
-        """Initialize the smart scanning dialog.
+        """Initialize the smart scanning tab.
 
         Args:
-            parent: Parent widget
+            parent: Parent widget (main window)
         """
         super().__init__(parent)
+        self.parent = parent  # Reference to main window
         self.smart_scanner = None
         self.scan_thread = None
         self.scan_items = []
         self.scan_results = []
-
-        # Set dialog properties
-        self.setWindowTitle(self.tr("Smart Scanning"))
-        self.setModal(True)
-        self.resize(900, 700)
 
         # Initialize UI
         self.init_ui()
@@ -183,41 +179,9 @@ class SmartScanningTab(QDialog):
 
         layout.addWidget(splitter)
 
-        # Dialog buttons
-        self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        self.button_box.accepted.connect(self.accept)
-        self.button_box.rejected.connect(self.reject)
-        layout.addWidget(self.button_box)
-
     def connect_signals(self):
         """Connect widget signals."""
         pass
-
-    def accept(self):
-        """Override accept to handle dialog closing."""
-        if (hasattr(self, 'scan_thread') and self.scan_thread and
-            self.scan_thread.isRunning()):
-            QMessageBox.warning(
-                self, self.tr("Scan in Progress"),
-                self.tr("Cannot close dialog while smart scan is running. Please stop the scan first.")
-            )
-            return
-        super().accept()
-
-    def reject(self):
-        """Override reject to handle dialog closing."""
-        if (hasattr(self, 'scan_thread') and self.scan_thread and
-            self.scan_thread.isRunning()):
-            reply = QMessageBox.question(
-                self, self.tr("Scan in Progress"),
-                self.tr("Smart scan is currently running. Do you want to stop it and close the dialog?"),
-                QMessageBox.Yes | QMessageBox.No
-            )
-            if reply == QMessageBox.Yes:
-                self.stop_scan()
-                super().reject()
-        else:
-            super().reject()
 
     def initialize_scanner(self):
         """Initialize the smart scanner."""

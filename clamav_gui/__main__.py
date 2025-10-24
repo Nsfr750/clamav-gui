@@ -53,8 +53,8 @@ def setup_application():
         # Try multiple possible icon locations
         possible_icon_paths = [
             # New location in ui/img/ folder
-            Path(__file__).parent / "ui" / "img" / "icon.png",
-            Path(__file__).parent / "ui" / "img" / "icon.ico",
+            Path(__file__).parent / "assets" / "icon.png",
+            Path(__file__).parent / "assets" / "icon.ico",
         ]
 
         icon_loaded = False

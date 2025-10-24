@@ -9,7 +9,6 @@ from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGroupBox,
 
 logger = logging.getLogger(__name__)
 
-
 class StatusTab(QWidget):
     """Status tab widget showing ClamAV system and database information."""
 
@@ -82,7 +81,7 @@ class StatusTab(QWidget):
             clamav_available = version_info.get('version', '').startswith('ClamAV')
 
             # Format information in a clean, organized way
-            info_text = f"""ClamAV Information:
+            info_text = f"""Information:
 ==================
 
 📋 Version Information:
@@ -128,8 +127,15 @@ class StatusTab(QWidget):
         }
 
         try:
-            # Get clamscan path from parent (main window)
-            clamscan_path = self.parent.clamscan_path.text().strip() if hasattr(self.parent, 'clamscan_path') else 'clamscan'
+            # Get clamscan path from parent settings
+            if hasattr(self.parent, 'current_settings') and self.parent.current_settings:
+                clamscan_path = self.parent.current_settings.get('clamscan_path', 'clamscan')
+            elif hasattr(self.parent, 'settings') and self.parent.settings:
+                settings = self.parent.settings.load_settings() or {}
+                clamscan_path = settings.get('clamscan_path', 'clamscan')
+            else:
+                clamscan_path = 'clamscan'
+
             if not clamscan_path:
                 clamscan_path = 'clamscan'
 
@@ -323,9 +329,17 @@ class StatusTab(QWidget):
 
         # Method 3: Try to detect from clamscan location if available
         try:
-            clamscan_path = getattr(self.parent, 'clamscan_path', None)
-            if clamscan_path and hasattr(clamscan_path, 'text'):
-                clamscan_dir = os.path.dirname(clamscan_path.text().strip())
+            # Get clamscan path from parent settings
+            if hasattr(self.parent, 'current_settings') and self.parent.current_settings:
+                clamscan_path = self.parent.current_settings.get('clamscan_path', 'clamscan')
+            elif hasattr(self.parent, 'settings') and self.parent.settings:
+                settings = self.parent.settings.load_settings() or {}
+                clamscan_path = settings.get('clamscan_path', 'clamscan')
+            else:
+                clamscan_path = 'clamscan'
+
+            if clamscan_path and clamscan_path != 'clamscan':
+                clamscan_dir = os.path.dirname(clamscan_path)
                 if clamscan_dir and clamscan_dir != '.':
                     # Assume database is in same directory or subdirectory
                     possible_db_paths = [
@@ -362,7 +376,15 @@ class StatusTab(QWidget):
 
         # Method 2: Try clamscan --list-sigs (more reliable but slower)
         try:
-            clamscan_path = self.parent.clamscan_path.text().strip() if hasattr(self.parent, 'clamscan_path') else 'clamscan'
+            # Get clamscan path from parent settings
+            if hasattr(self.parent, 'current_settings') and self.parent.current_settings:
+                clamscan_path = self.parent.current_settings.get('clamscan_path', 'clamscan')
+            elif hasattr(self.parent, 'settings') and self.parent.settings:
+                settings = self.parent.settings.load_settings() or {}
+                clamscan_path = settings.get('clamscan_path', 'clamscan')
+            else:
+                clamscan_path = 'clamscan'
+
             if not clamscan_path or clamscan_path == 'clamscan':
                 # Try to find clamscan in PATH
                 clamscan_path = self._find_clamscan_executable()

@@ -226,7 +226,7 @@ class HomeTab(QWidget):
 
     def load_logo(self):
         """Load and display the application logo."""
-        logo_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ui', 'img', 'logo.png')
+        logo_path = 'clamav_gui/assets/logo.png'
 
         if os.path.exists(logo_path):
             try:

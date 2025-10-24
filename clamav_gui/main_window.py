@@ -37,6 +37,12 @@ from clamav_gui.lang.lang_manager import SimpleLanguageManager
 # Import ClamAV validator
 from clamav_gui.utils.clamav_validator import ClamAVValidator
 
+# Import ClamAV manager for integrated scanning
+from clamav_gui.utils.clamav_integration import ClamAVManager
+
+# Import fallback manager for robust integration
+from clamav_gui.utils.clamav_fallback_manager import ClamAVFallbackManager
+
 # Import scan report generator
 from clamav_gui.utils.scan_report import ScanReportGenerator
 
@@ -52,8 +58,8 @@ from clamav_gui.utils.scan_thread import ScanThread
 # Import hash database for smart scanning
 from clamav_gui.utils.hash_database import HashDatabase
 
-# Import fallback manager for robust ClamAV integration
-from clamav_gui.utils.clamav_fallback_manager import ClamAVFallbackManager
+# Import advanced reporting for scan analytics
+from clamav_gui.utils.advanced_reporting import AdvancedReporting
 
 # Optional ML imports (only if needed and available)
 _ML_AVAILABLE = True
@@ -96,10 +102,20 @@ class ClamAVGUI(ClamAVMainWindow):
         self.advanced_reporting = AdvancedReporting()
 
         # Initialize ClamAV manager for integrated scanning
-        self.clamav_manager = ClamAVManager()
+        try:
+            self.clamav_manager = ClamAVManager()
+            logger.info("ClamAV manager initialized successfully")
+        except Exception as e:
+            logger.error(f"Failed to initialize ClamAV manager: {e}")
+            self.clamav_manager = None
 
         # Initialize fallback manager for robust integration
-        self.fallback_manager = ClamAVFallbackManager()
+        try:
+            self.fallback_manager = ClamAVFallbackManager()
+            logger.info("ClamAV fallback manager initialized successfully")
+        except Exception as e:
+            logger.error(f"Failed to initialize ClamAV fallback manager: {e}")
+            self.fallback_manager = None
 
         # Initialize ML components only if available
         self.ml_detector = None
@@ -226,6 +242,7 @@ class ClamAVGUI(ClamAVMainWindow):
         self.config_editor_tab = self.create_config_editor_tab()
         self.network_scan_tab = self.create_network_scan_tab()
         self.ml_detection_tab = self.create_ml_detection_tab()
+        self.smart_scanning_tab = self.create_smart_scanning_tab()
         self.status_tab = StatusTab(self)
         
         self.tabs.addTab(self.home_tab, self.tr("Home"))
@@ -238,6 +255,7 @@ class ClamAVGUI(ClamAVMainWindow):
         self.tabs.addTab(self.config_editor_tab, self.tr("Config Editor"))
         self.tabs.addTab(self.network_scan_tab, self.tr("Network Scan"))
         self.tabs.addTab(self.ml_detection_tab, self.tr("ML Detection"))
+        self.tabs.addTab(self.smart_scanning_tab, self.tr("Smart Scanning"))
         self.tabs.addTab(self.status_tab, self.tr("Status"))
         
         # Status bar
@@ -469,7 +487,8 @@ class ClamAVGUI(ClamAVMainWindow):
                 self.tabs.setTabText(7, self.tr("Config Editor"))
                 self.tabs.setTabText(8, self.tr("Network Scan"))
                 self.tabs.setTabText(9, self.tr("ML Detection"))
-                self.tabs.setTabText(10, self.tr("Status"))
+                self.tabs.setTabText(10, self.tr("Smart Scanning"))
+                self.tabs.setTabText(11, self.tr("Status"))
             
             # Update status bar
             if hasattr(self, 'status_bar'):
@@ -719,115 +738,6 @@ class ClamAVGUI(ClamAVMainWindow):
 
         return tab
     
-    def create_settings_tab(self):
-        """Create the settings tab."""
-        tab = QWidget()
-        layout = QVBoxLayout(tab)
-        
-        # ClamAV Path settings
-        path_group = QGroupBox(self.tr("ClamAV Paths"))
-        path_layout = QFormLayout()
-        
-        self.clamd_path = QLineEdit()
-        path_layout.addRow(self.tr("ClamD Path:"), self.clamd_path)
-        
-        self.freshclam_path = QLineEdit()
-        path_layout.addRow(self.tr("FreshClam Path:"), self.freshclam_path)
-        
-        self.clamscan_path = QLineEdit()
-        path_layout.addRow(self.tr("ClamScan Path:"), self.clamscan_path)
-        
-        path_group.setLayout(path_layout)
-        
-        # Scan settings
-        scan_group = QGroupBox(self.tr("Scan Settings"))
-        scan_layout = QVBoxLayout()
-        
-        # Basic scan options
-        basic_options = QGroupBox(self.tr("Basic Options"))
-        basic_layout = QVBoxLayout()
-        
-        self.scan_archives = QCheckBox(self.tr("Scan archives (zip, rar, etc.)"))
-        self.scan_archives.setChecked(True)
-        basic_layout.addWidget(self.scan_archives)
-        
-        self.scan_heuristics = QCheckBox(self.tr("Enable heuristic analysis"))
-        self.scan_heuristics.setChecked(True)
-        basic_layout.addWidget(self.scan_heuristics)
-        
-        self.scan_pua = QCheckBox(self.tr("Scan potentially unwanted applications"))
-        self.scan_pua.setChecked(False)
-        basic_layout.addWidget(self.scan_pua)
-        
-        self.enable_quarantine = QCheckBox(self.tr("Auto-quarantine infected files"))
-        self.enable_quarantine.setChecked(True)
-        basic_layout.addWidget(self.enable_quarantine)
-        
-        basic_options.setLayout(basic_layout)
-        scan_layout.addWidget(basic_options)
-        
-        # Performance settings
-        perf_options = QGroupBox(self.tr("Performance Settings"))
-        perf_layout = QFormLayout()
-        
-        self.max_file_size = QLineEdit()
-        self.max_file_size.setText("100")
-        self.max_file_size.setToolTip(self.tr("Maximum file size to scan (MB)"))
-        perf_layout.addRow(self.tr("Max file size (MB):"), self.max_file_size)
-        
-        self.max_scan_time = QLineEdit()
-        self.max_scan_time.setText("300")
-        self.max_scan_time.setToolTip(self.tr("Maximum scan time per file (seconds)"))
-        perf_layout.addRow(self.tr("Max scan time (sec):"), self.max_scan_time)
-        
-        perf_options.setLayout(perf_layout)
-        scan_layout.addWidget(perf_options)
-        
-        # Scanner type selection
-        scanner_group = QGroupBox(self.tr("Scanner Integration"))
-        scanner_layout = QFormLayout()
-        
-        self.scanner_type_combo = QComboBox()
-        self.scanner_type_combo.addItem(self.tr("Integrated Scanner (Recommended)"), "integrated")
-        self.scanner_type_combo.addItem(self.tr("External Scanner (clamscan)"), "external")
-        self.scanner_type_combo.addItem(self.tr("Auto-detect (Let app decide)"), "auto")
-        self.scanner_type_combo.setToolTip(self.tr("Choose scanner integration method:\n• Integrated: Direct ClamAV library integration (fastest)\n• External: Use clamscan.exe subprocess (most compatible)\n• Auto-detect: Let app choose best available method"))
-        scanner_layout.addRow(self.tr("Scanner type:"), self.scanner_type_combo)
-        
-        scanner_group.setLayout(scanner_layout)
-        scan_layout.addWidget(scanner_group)
-        
-        # File patterns
-        pattern_group = QGroupBox(self.tr("File Patterns"))
-        pattern_layout = QFormLayout()
-        
-        self.exclude_patterns = QLineEdit()
-        self.exclude_patterns.setText("*.log,*.tmp,*.cache")
-        self.exclude_patterns.setToolTip(self.tr("Comma-separated patterns to exclude (e.g., *.log,*.tmp)"))
-        pattern_layout.addRow(self.tr("Exclude patterns:"), self.exclude_patterns)
-        
-        self.include_patterns = QLineEdit()
-        self.include_patterns.setText("*")
-        self.include_patterns.setToolTip(self.tr("Comma-separated patterns to include (default: *)"))
-        pattern_layout.addRow(self.tr("Include patterns:"), self.include_patterns)
-        
-        pattern_group.setLayout(pattern_layout)
-        scan_layout.addWidget(pattern_group)
-        
-        scan_group.setLayout(scan_layout)
-        
-        # Save button
-        save_btn = QPushButton(self.tr("Save Settings"))
-        save_btn.clicked.connect(self.save_settings)
-        
-        # Add to main layout
-        layout.addWidget(path_group)
-        layout.addWidget(scan_group)
-        layout.addStretch()
-        layout.addWidget(save_btn)
-        
-        return tab
-    
     def create_quarantine_tab(self):
         """Create the quarantine tab using QuarantineTab class."""
         try:
@@ -844,6 +754,20 @@ class ClamAVGUI(ClamAVMainWindow):
             tab = QWidget()
             layout = QVBoxLayout(tab)
             layout.addWidget(QLabel(self.tr("Quarantine tab not available")))
+            return tab
+    
+    def create_smart_scanning_tab(self):
+        """Create the smart scanning tab using SmartScanningTab class."""
+        try:
+            from clamav_gui.ui.smart_scanning_tab import SmartScanningTab
+            return SmartScanningTab(self)
+        except ImportError as e:
+            logger.warning(f"Could not import SmartScanningTab: {e}")
+            # Fallback to simple smart scanning tab
+            from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+            tab = QWidget()
+            layout = QVBoxLayout(tab)
+            layout.addWidget(QLabel(self.tr("Smart Scanning tab not available")))
             return tab
     
     def refresh_quarantine_stats(self):
@@ -1403,7 +1327,7 @@ Last activity:
 
         # Check scanner availability based on type
         if scanner_type == 'integrated':
-            if not self.clamav_manager.is_available():
+            if not self.clamav_manager or not self.clamav_manager.is_available():
                 QMessageBox.critical(
                     self, self.tr("ClamAV Not Available"),
                     self.tr("Integrated ClamAV scanner is not available. Please ensure ClamAV is properly installed and configured, or switch to External Scanner mode.")
@@ -1427,12 +1351,21 @@ Last activity:
                 except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
                     QMessageBox.critical(
                         self, self.tr("ClamAV Not Available"),
-                        self.tr("External ClamAV scanner (clamscan) is not available. Please install ClamAV or switch to Integrated Scanner mode.")
+                        self.tr("External ClamAV scanner (clamscan) is not available.\n\n"
+                               "To fix this issue:\n"
+                               "1. Install ClamAV for Windows from the official website:\n"
+                               "   https://www.clamav.net/downloads\n\n"
+                               "2. Or install via Chocolatey (if available):\n"
+                               "   choco install clamav\n\n"
+                               "3. Or install via Scoop (if available):\n"
+                               "   scoop install clamav\n\n"
+                               "After installation, make sure clamscan is in your system PATH, "
+                               "or update the ClamAV paths in Settings.")
                     )
                     return
         elif scanner_type == 'auto':
             # Auto-detect: prefer integrated if available, fallback to external
-            if self.clamav_manager.is_available():
+            if self.clamav_manager and self.clamav_manager.is_available():
                 scanner_type = 'integrated'
             else:
                 scanner_type = 'external'
@@ -1442,7 +1375,16 @@ Last activity:
                     if not os.path.exists(clamscan_path):
                         QMessageBox.critical(
                             self, self.tr("ClamAV Not Available"),
-                            self.tr("No ClamAV integration is available. Please install ClamAV or check your settings.")
+                            self.tr("No ClamAV integration is available.\n\n"
+                                   "To fix this issue:\n"
+                                   "1. Install ClamAV for Windows from the official website:\n"
+                                   "   https://www.clamav.net/downloads\n\n"
+                                   "2. Or install via Chocolatey (if available):\n"
+                                   "   choco install clamav\n\n"
+                                   "3. Or install via Scoop (if available):\n"
+                                   "   scoop install clamav\n\n"
+                                   "After installation, make sure clamscan is in your system PATH, "
+                                   "or update the ClamAV paths in Settings.")
                         )
                         return
                 else:
@@ -1451,7 +1393,16 @@ Last activity:
                     except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
                         QMessageBox.critical(
                             self, self.tr("ClamAV Not Available"),
-                            self.tr("No ClamAV integration is available. Please install ClamAV or check your settings.")
+                            self.tr("No ClamAV integration is available.\n\n"
+                                   "To fix this issue:\n"
+                                   "1. Install ClamAV for Windows from the official website:\n"
+                                   "   https://www.clamav.net/downloads\n\n"
+                                   "2. Or install via Chocolatey (if available):\n"
+                                   "   choco install clamav\n\n"
+                                   "3. Or install via Scoop (if available):\n"
+                                   "   scoop install clamav\n\n"
+                                   "After installation, make sure clamscan is in your system PATH, "
+                                   "or update the ClamAV paths in Settings.")
                         )
                         return
 
@@ -1718,7 +1669,7 @@ Last activity:
     def stop_scan(self):
         """Stop the current scan."""
         # Stop the integrated scan if running
-        if hasattr(self, 'clamav_manager'):
+        if hasattr(self, 'clamav_manager') and self.clamav_manager:
             self.clamav_manager.stop_scan()
 
         # Stop external scan if running
@@ -2017,6 +1968,9 @@ Last activity:
                     if self.scanner_type_combo.itemData(i) == scanner_type:
                         self.scanner_type_combo.setCurrentIndex(i)
                         break
+        if 'enable_smart_scanning' in scan_settings:
+            if hasattr(self, 'enable_smart_scanning'):
+                self.enable_smart_scanning.setChecked(scan_settings['enable_smart_scanning'])
         
     def _auto_quarantine_infected_files(self):
         """Automatically quarantine infected files found during scan."""
