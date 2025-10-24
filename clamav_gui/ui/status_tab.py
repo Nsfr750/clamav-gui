@@ -80,6 +80,13 @@ class StatusTab(QWidget):
             # Check if ClamAV is available
             clamav_available = version_info.get('version', '').startswith('ClamAV')
 
+            # Debug: Print what we got
+            print(f"StatusTab DEBUG: Version info - {version_info}")
+            print(f"StatusTab DEBUG: Database info - {db_info}")
+            print(f"StatusTab DEBUG: System info - {system_info}")
+            print(f"StatusTab DEBUG: ClamAV paths - {clamav_paths}")
+            print(f"StatusTab DEBUG: ClamAV available - {clamav_available}")
+
             # Format information in a clean, organized way
             info_text = f"""Information:
 ==================
@@ -130,14 +137,26 @@ class StatusTab(QWidget):
             # Get clamscan path from parent settings
             if hasattr(self.parent, 'current_settings') and self.parent.current_settings:
                 clamscan_path = self.parent.current_settings.get('clamscan_path', 'clamscan')
+                print(f"StatusTab DEBUG: Using current_settings: {clamscan_path}")
             elif hasattr(self.parent, 'settings') and self.parent.settings:
                 settings = self.parent.settings.load_settings() or {}
                 clamscan_path = settings.get('clamscan_path', 'clamscan')
+                print(f"StatusTab DEBUG: Using settings.load_settings(): {clamscan_path}")
             else:
-                clamscan_path = 'clamscan'
+                # Try to get from SettingsTab if it exists
+                if hasattr(self.parent, 'settings_tab') and self.parent.settings_tab:
+                    settings = self.parent.settings_tab.get_settings()
+                    clamscan_path = settings.get('clamscan_path', 'clamscan')
+                    print(f"StatusTab DEBUG: Using settings_tab.get_settings(): {clamscan_path}")
+                else:
+                    clamscan_path = 'clamscan'
+                    print(f"StatusTab DEBUG: Using default 'clamscan'")
 
             if not clamscan_path:
                 clamscan_path = 'clamscan'
+                print(f"StatusTab DEBUG: clamscan_path was empty, using default")
+
+            print(f"StatusTab DEBUG: Final clamscan_path: '{clamscan_path}'")
 
             # Check if clamscan exists
             if not os.path.exists(clamscan_path) and clamscan_path != 'clamscan':
@@ -155,22 +174,31 @@ class StatusTab(QWidget):
                 output = process.stdout.strip()
                 lines = output.split('\n')
 
+                # Debug: Print actual ClamAV output
+                print(f"StatusTab DEBUG: ClamAV version output: '{output}'")
+                print(f"StatusTab DEBUG: ClamAV version lines: {lines}")
+
                 if lines:
                     # Parse the version output - typical format:
                     # "ClamAV 1.3.0/26987/Mon Jan 15 08:30:00 2024"
 
                     # First line contains main version info
                     first_line = lines[0].strip()
+                    print(f"StatusTab DEBUG: First line: '{first_line}'")
+
                     if 'ClamAV' in first_line:
-                        # Extract main version
+                        # Extract main version - improved parsing
                         parts = first_line.split()
+                        print(f"StatusTab DEBUG: Split parts: {parts}")
                         for i, part in enumerate(parts):
                             if 'ClamAV' in part and i + 1 < len(parts):
                                 # Version is typically the next part after "ClamAV"
                                 version_part = parts[i + 1]
+                                print(f"StatusTab DEBUG: Version part: '{version_part}'")
                                 if '/' in version_part:
                                     # Format: "1.3.0/26987/Mon Jan 15 08:30:00 2024"
                                     version_components = version_part.split('/')
+                                    print(f"StatusTab DEBUG: Version components: {version_components}")
                                     if len(version_components) >= 1:
                                         info['engine_version'] = version_components[0]  # "1.3.0"
                                         if len(version_components) >= 2:
@@ -183,42 +211,78 @@ class StatusTab(QWidget):
                                         if len(version_components) >= 3:
                                             # Build date
                                             info['build_date'] = version_components[2]
+                                            if len(version_components) >= 4:
+                                                # Additional date parts
+                                                info['build_date'] += f" {version_components[3]} {version_components[4]}"
                                     else:
                                         info['version'] = f"ClamAV {version_part}"
                                 else:
                                     info['version'] = f"ClamAV {version_part}"
                                 break
 
-                    # Look for platform information in subsequent lines
-                    for line in lines[1:]:
-                        line = line.strip().lower()
-                        if 'platform' in line or 'compiled' in line or 'built' in line:
+                    # Look for platform information in all lines (improved detection)
+                    for line in lines:
+                        line_lower = line.strip().lower()
+                        print(f"StatusTab DEBUG: Checking line for platform: '{line_lower}'")
+                        if any(keyword in line_lower for keyword in ['platform', 'compiled', 'built', 'target']):
                             # Extract platform info
-                            if 'windows' in line:
+                            if 'windows' in line_lower or 'mingw' in line_lower or 'msvc' in line_lower:
                                 info['platform'] = 'Windows'
-                            elif 'linux' in line:
+                                print(f"StatusTab DEBUG: Detected Windows platform")
+                                break
+                            elif 'linux' in line_lower:
                                 info['platform'] = 'Linux'
-                            elif 'darwin' in line or 'macos' in line:
+                                print(f"StatusTab DEBUG: Detected Linux platform")
+                                break
+                            elif 'darwin' in line_lower or 'macos' in line_lower or 'apple' in line_lower:
                                 info['platform'] = 'macOS'
-                            elif 'freebsd' in line:
+                                print(f"StatusTab DEBUG: Detected macOS platform")
+                                break
+                            elif 'freebsd' in line_lower:
                                 info['platform'] = 'FreeBSD'
-                            else:
-                                info['platform'] = 'Unknown'
+                                print(f"StatusTab DEBUG: Detected FreeBSD platform")
+                                break
+                            elif 'solaris' in line_lower or 'sun' in line_lower:
+                                info['platform'] = 'Solaris'
+                                print(f"StatusTab DEBUG: Detected Solaris platform")
+                                break
 
-                        # Also check for build date in the line
-                        if any(month in line for month in ['jan', 'feb', 'mar', 'apr', 'may', 'jun',
-                                                         'jul', 'aug', 'sep', 'oct', 'nov', 'dec']):
+                        # Also check for build date in any line
+                        if any(month in line_lower for month in ['jan', 'feb', 'mar', 'apr', 'may', 'jun',
+                                                               'jul', 'aug', 'sep', 'oct', 'nov', 'dec']):
                             # This line might contain build date
                             date_parts = line.split()
                             for part in date_parts:
                                 if any(month in part.lower() for month in ['jan', 'feb', 'mar', 'apr', 'may', 'jun',
                                                                          'jul', 'aug', 'sep', 'oct', 'nov', 'dec']):
-                                    info['build_date'] = part
+                                    if not info['build_date'] or info['build_date'] == 'Not available':
+                                        info['build_date'] = part
+                                        print(f"StatusTab DEBUG: Found build date: '{part}'")
                                     break
 
                 if info['version'] == 'ClamAV not found - Please install ClamAV':
                     info['version'] = f"ClamAV found: {clamscan_path}"
+
+                # If platform is still not detected, try to determine from system
+                if info['platform'] == 'Not available':
+                    try:
+                        import platform
+                        system = platform.system().lower()
+                        if 'windows' in system:
+                            info['platform'] = 'Windows'
+                        elif 'linux' in system:
+                            info['platform'] = 'Linux'
+                        elif 'darwin' in system:
+                            info['platform'] = 'macOS'
+                        elif 'freebsd' in system:
+                            info['platform'] = 'FreeBSD'
+                        print(f"StatusTab DEBUG: Fallback platform detection: {info['platform']}")
+                    except Exception:
+                        pass
+
             else:
+                print(f"StatusTab DEBUG: ClamAV command failed with return code {process.returncode}")
+                print(f"StatusTab DEBUG: stderr: '{process.stderr.strip()}'")
                 info['version'] = f"Error running clamscan: {process.stderr.strip()}"
                 info['engine_version'] = 'Check ClamAV installation'
                 info['platform'] = 'Check ClamAV installation'
@@ -261,42 +325,58 @@ class StatusTab(QWidget):
             # Try multiple methods to find ClamAV database directory
             db_dir = self._find_database_directory()
 
+            print(f"StatusTab DEBUG: Database directory found: '{db_dir}'")
+
             if db_dir and os.path.exists(db_dir):
                 info['database_path'] = db_dir
 
                 # Check for database files
                 db_files = [f for f in os.listdir(db_dir) if f.endswith('.cvd') or f.endswith('.cld')]
+                print(f"StatusTab DEBUG: Database files found: {db_files}")
+
                 if db_files:
                     # Try to get signature count using multiple methods
                     sig_count = self._get_signature_count(db_dir, db_files)
                     if sig_count:
                         info['total_signatures'] = str(sig_count)
+                        print(f"StatusTab DEBUG: Signature count: {sig_count}")
+                    else:
+                        print(f"StatusTab DEBUG: Signature count could not be determined")
 
                     # Get database version from file names or info
                     db_version = self._get_database_version(db_dir, db_files)
                     if db_version:
                         info['database_version'] = db_version
+                        print(f"StatusTab DEBUG: Database version: {db_version}")
+                    else:
+                        print(f"StatusTab DEBUG: Database version could not be determined")
 
                     # Get last update time
                     last_update = self._get_last_update_time(db_dir, db_files)
                     if last_update:
                         info['last_update'] = last_update.strftime('%Y-%m-%d %H:%M:%S')
+                        print(f"StatusTab DEBUG: Last update: {info['last_update']}")
+                    else:
+                        print(f"StatusTab DEBUG: Last update could not be determined")
 
                 else:
                     info['total_signatures'] = 'No database files found'
                     info['database_version'] = 'No database files found'
                     info['last_update'] = 'No database files found'
+                    print(f"StatusTab DEBUG: No database files found in directory")
             else:
                 info['database_path'] = 'Database directory not found - Check ClamAV installation'
                 info['total_signatures'] = 'Configure ClamAV paths in Settings'
                 info['database_version'] = 'Configure ClamAV paths in Settings'
                 info['last_update'] = 'Configure ClamAV paths in Settings'
+                print(f"StatusTab DEBUG: Database directory not found")
 
         except Exception as e:
             logger.error(f"Error getting database info: {e}")
             info['total_signatures'] = f'Error accessing database: {str(e)}'
             info['database_version'] = f'Error accessing database: {str(e)}'
             info['last_update'] = f'Error accessing database: {str(e)}'
+            print(f"StatusTab DEBUG: Error getting database info: {e}")
 
         return info
 
@@ -304,9 +384,9 @@ class StatusTab(QWidget):
         """Find the ClamAV database directory using multiple methods."""
         # Method 1: Check common Windows installation paths
         common_paths = [
-            r'C:\Program Files\ClamAV\database',
-            r'C:\Program Files (x86)\ClamAV\database',
-            r'C:\ClamAV\database',
+            r'C:\ProgramData\ClamAV\db',
+            r'C:\Program Files\ClamAV\db',
+            r'C:\ClamAV\db',
         ]
 
         for path in common_paths:
@@ -320,6 +400,7 @@ class StatusTab(QWidget):
                 user_paths = [
                     os.path.join(app_data, 'ClamAV', 'database'),
                     os.path.join(app_data, '.clamav', 'database'),
+                    os.path.join(app_data, 'clamav', 'database'),
                 ]
                 for path in user_paths:
                     if os.path.exists(path):
@@ -327,7 +408,21 @@ class StatusTab(QWidget):
         except Exception:
             pass
 
-        # Method 3: Try to detect from clamscan location if available
+        # Method 3: Check ProgramData (system-wide app data)
+        try:
+            program_data = os.getenv('PROGRAMDATA')
+            if program_data:
+                system_paths = [
+                    os.path.join(program_data, 'ClamAV', 'database'),
+                    os.path.join(program_data, 'clamav', 'database'),
+                ]
+                for path in system_paths:
+                    if os.path.exists(path):
+                        return path
+        except Exception:
+            pass
+
+        # Method 4: Try to detect from clamscan location if available
         try:
             # Get clamscan path from parent settings
             if hasattr(self.parent, 'current_settings') and self.parent.current_settings:
@@ -345,12 +440,26 @@ class StatusTab(QWidget):
                     possible_db_paths = [
                         os.path.join(clamscan_dir, 'database'),
                         os.path.join(os.path.dirname(clamscan_dir), 'database'),
+                        os.path.join(clamscan_dir, '..', 'database'),
+                        os.path.join(clamscan_dir, 'share', 'clamav'),
                     ]
                     for path in possible_db_paths:
                         if os.path.exists(path):
                             return path
         except Exception:
             pass
+
+        # Method 5: Check common Linux/Unix paths (if running on non-Windows)
+        if os.name != 'nt':
+            unix_paths = [
+                '/var/lib/clamav',
+                '/usr/share/clamav',
+                '/usr/local/share/clamav',
+                '/opt/clamav/share/clamav',
+            ]
+            for path in unix_paths:
+                if os.path.exists(path):
+                    return path
 
         return None
 
@@ -390,21 +499,61 @@ class StatusTab(QWidget):
                 clamscan_path = self._find_clamscan_executable()
 
             if clamscan_path and os.path.exists(clamscan_path):
+                print(f"StatusTab DEBUG: Running clamscan --list-sigs with path: {clamscan_path}")
                 process = subprocess.run([clamscan_path, '--list-sigs'],
-                                       capture_output=True, text=True, timeout=30,
+                                       capture_output=True, text=True, timeout=60,  # Increased timeout
                                        cwd=db_dir)
                 if process.returncode == 0:
                     sig_count = len([line for line in process.stdout.split('\n') if line.strip()])
+                    print(f"StatusTab DEBUG: clamscan --list-sigs returned {sig_count} signatures")
                     if sig_count > 0:
                         return sig_count
-        except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
+                else:
+                    print(f"StatusTab DEBUG: clamscan --list-sigs failed with return code {process.returncode}")
+                    print(f"StatusTab DEBUG: stderr: {process.stderr.strip()}")
+        except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError) as e:
+            print(f"StatusTab DEBUG: Error running clamscan --list-sigs: {e}")
             pass
 
-        # Method 3: Count files as rough estimate
+        # Method 3: Try to get signature count from CVD file headers (more accurate)
+        print(f"StatusTab DEBUG: Trying to get signature count from CVD headers")
+        for db_file in db_files:
+            if db_file.endswith('.cvd'):
+                db_path = os.path.join(db_dir, db_file)
+                try:
+                    with open(db_path, 'rb') as f:
+                        # CVD format: signature count is typically at offset 512-516 (4 bytes, little endian)
+                        f.seek(512, 0)
+                        header_data = f.read(16)
+                        # Look for 4-byte signature count (little endian)
+                        for i in range(len(header_data) - 3):
+                            if all(32 <= header_data[j] <= 126 or header_data[j] == 0 for j in range(4)):  # Printable ASCII or null
+                                count_bytes = header_data[i:i+4]
+                                if len(count_bytes) == 4:
+                                    # Try to decode as little-endian integer
+                                    count = int.from_bytes(count_bytes, byteorder='little', signed=False)
+                                    if 1000000 <= count <= 20000000:  # Reasonable range for signature count
+                                        print(f"StatusTab DEBUG: Found signature count in {db_file}: {count}")
+                                        return count
+                except Exception as e:
+                    print(f"StatusTab DEBUG: Error reading {db_file}: {e}")
+                    continue
+
+        # Method 4: Count files as rough estimate (improved)
         total_files = len([f for f in db_files if f.endswith('.cvd') or f.endswith('.cld')])
         if total_files > 0:
-            # Rough estimate: each CVD file typically contains ~1M signatures
-            return total_files * 1000000
+            # More accurate estimate based on file types
+            cvd_count = len([f for f in db_files if f.endswith('.cvd')])
+            cld_count = len([f for f in db_files if f.endswith('.cld')])
+
+            # CVD files typically contain ~2-4M signatures each
+            # CLD files typically contain ~100K-500K signatures each
+            # Daily database usually has the most signatures
+            estimated_sigs = (cvd_count * 3000000) + (cld_count * 200000)
+
+            print(f"StatusTab DEBUG: Estimated signature count: {estimated_sigs} (CVD: {cvd_count}, CLD: {cld_count})")
+            if estimated_sigs > 0:
+                return estimated_sigs
 
         return None
 
@@ -486,12 +635,18 @@ class StatusTab(QWidget):
     def _find_sigtool(self):
         """Find the sigtool executable."""
         # First try to derive from clamscan path if available
-        if hasattr(self.parent, 'clamscan_path') and self.parent.clamscan_path:
-            clamscan_path = self.parent.clamscan_path.text().strip()
-            if clamscan_path and clamscan_path != 'clamscan':
-                sigtool_path = clamscan_path.replace('clamscan', 'sigtool')
-                if os.path.exists(sigtool_path):
-                    return sigtool_path
+        if hasattr(self.parent, 'current_settings') and self.parent.current_settings:
+            clamscan_path = self.parent.current_settings.get('clamscan_path', 'clamscan')
+        elif hasattr(self.parent, 'settings') and self.parent.settings:
+            settings = self.parent.settings.load_settings() or {}
+            clamscan_path = settings.get('clamscan_path', 'clamscan')
+        else:
+            clamscan_path = 'clamscan'
+
+        if clamscan_path and clamscan_path != 'clamscan':
+            sigtool_path = clamscan_path.replace('clamscan', 'sigtool')
+            if os.path.exists(sigtool_path):
+                return sigtool_path
 
         # Check common installation paths
         common_paths = [
@@ -520,33 +675,65 @@ class StatusTab(QWidget):
         info = {
             'app_version': 'Unknown',
             'os_version': 'Unknown',
-            'python_version': 'Unknown'            
+            'python_version': 'Unknown'
         }
 
         try:
             # Get OS version
             try:
                 import platform
-                info['os_version'] = platform.platform()
-            except Exception:
-                pass
+                system = platform.system()
+                release = platform.release()
+                machine = platform.machine()
+
+                # Create more detailed OS description
+                if system == 'Windows':
+                    info['os_version'] = f"Windows {release} ({machine})"
+                elif system == 'Linux':
+                    # Try to get distribution info
+                    try:
+                        import distro
+                        dist = distro.name()
+                        version = distro.version()
+                        info['os_version'] = f"{dist} {version} ({machine})"
+                    except ImportError:
+                        info['os_version'] = f"Linux {release} ({machine})"
+                elif system == 'Darwin':
+                    info['os_version'] = f"macOS {release} ({machine})"
+                else:
+                    info['os_version'] = f"{system} {release} ({machine})"
+
+                print(f"StatusTab DEBUG: OS detected: {info['os_version']}")
+            except Exception as e:
+                print(f"StatusTab DEBUG: Error getting OS info: {e}")
 
             # Get Python version
             try:
                 import sys
                 info['python_version'] = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
-            except Exception:
-                pass
+                print(f"StatusTab DEBUG: Python version: {info['python_version']}")
+            except Exception as e:
+                print(f"StatusTab DEBUG: Error getting Python version: {e}")
 
             # Get app version
             try:
-                from clamav_gui import __version__
+                from clamav_gui.utils.version import __version__
                 info['app_version'] = __version__
-            except Exception:
-                pass
+                print(f"StatusTab DEBUG: App version: {info['app_version']}")
+            except Exception as e:
+                print(f"StatusTab DEBUG: Error getting app version: {e}")
+                try:
+                    # Try alternative import path
+                    import clamav_gui
+                    if hasattr(clamav_gui, '__version__'):
+                        info['app_version'] = clamav_gui.__version__
+                        print(f"StatusTab DEBUG: App version (alternative): {info['app_version']}")
+                except Exception as e2:
+                    print(f"StatusTab DEBUG: Error getting app version (alternative): {e2}")
 
         except Exception as e:
             logger.error(f"Error getting system info: {e}")
+            print(f"StatusTab DEBUG: Error in system info: {e}")
 
         return info
 
@@ -559,7 +746,7 @@ class StatusTab(QWidget):
         }
 
         try:
-            # Get paths from parent settings if available
+            # Get paths from parent settings
             if hasattr(self.parent, 'current_settings') and self.parent.current_settings:
                 settings = self.parent.current_settings
                 paths['clamscan_path'] = settings.get('clamscan_path', 'Not configured')
@@ -571,9 +758,20 @@ class StatusTab(QWidget):
                 paths['clamscan_path'] = settings.get('clamscan_path', 'Not configured')
                 paths['freshclam_path'] = settings.get('freshclam_path', 'Not configured')
                 paths['clamd_path'] = settings.get('clamd_path', 'Not configured')
+            else:
+                # Try to get from SettingsTab if it exists
+                if hasattr(self.parent, 'settings_tab') and self.parent.settings_tab:
+                    settings = self.parent.settings_tab.get_settings()
+                    paths['clamscan_path'] = settings.get('clamscan_path', 'Not configured')
+                    paths['freshclam_path'] = settings.get('freshclam_path', 'Not configured')
+                    paths['clamd_path'] = settings.get('clamd_path', 'Not configured')
+                else:
+                    # Last resort: check if settings are available through other means
+                    print(f"StatusTab DEBUG: No settings access method available")
 
         except Exception as e:
             logger.error(f"Error getting ClamAV paths: {e}")
+            print(f"StatusTab DEBUG: Error getting paths: {e}")
 
         return paths
 
