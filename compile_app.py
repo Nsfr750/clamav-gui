@@ -117,8 +117,8 @@ class AppCompiler:
     def find_icon(self):
         """Cerca l'icona dell'applicazione."""
         possible_icons = [
-            self.root_dir / "clamav_gui" / "ui" / "img" / "icon.ico",
-            self.root_dir / "clamav_gui" / "ui" / "img" / "icon.png",
+            self.root_dir / "clamav_gui" / "assets" / "icon.ico",
+            self.root_dir / "clamav_gui" / "assets" / "icon.png",
         ]
 
         for icon_path in possible_icons:
@@ -328,7 +328,7 @@ coll = COLLECT(
                 cmd.extend(["--add-data", f"{src};{dst}"])
 
         # Aggiungi file immagini separatamente per sicurezza
-        img_dir = "clamav_gui/ui/img"
+        img_dir = "clamav_gui/assets"
         if os.path.exists(img_dir):
             cmd.extend(["--add-data", f"{img_dir};{img_dir}"])
 

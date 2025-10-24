@@ -52,7 +52,7 @@ def setup_application():
     try:
         # Try multiple possible icon locations
         possible_icon_paths = [
-            # New location in ui/img/ folder
+            # New location in assets/ folder
             Path(__file__).parent / "assets" / "icon.png",
             Path(__file__).parent / "assets" / "icon.ico",
         ]
