@@ -260,8 +260,7 @@ We would like to thank the following individuals and organizations for responsib
 
 ### Security Contact
 
-- **Email**: [security@clamav-gui.org](mailto:security@clamav-gui.org)
-- **Alternative**: [Nsfr750](mailto:nsfr750@yandex.com)
+- **Email**: [Nsfr750](mailto:nsfr750@yandex.com)
 
 ### General Contact
 
