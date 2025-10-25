@@ -108,13 +108,51 @@ class SmartScanningTab(QWidget):
 
         self.start_scan_btn = QPushButton(self.tr("Start Smart Scan"))
         self.start_scan_btn.clicked.connect(self.start_scan)
-        self.start_scan_btn.setStyleSheet("QPushButton { font-weight: bold; color: green; }")
+        self.start_scan_btn.setStyleSheet(
+            "QPushButton {"
+            "    background-color: #4CAF50;"  # Green background
+            "    color: white;"  # White text
+            "    border: none;"
+            "    padding: 8px 16px;"
+            "    font-weight: bold;"
+            "    border-radius: 4px;"
+            "}"
+            "QPushButton:hover {"
+            "    background-color: #45a049;"  # Darker green on hover
+            "}"
+            "QPushButton:pressed {"
+            "    background-color: #3d8b40;"  # Even darker when pressed
+            "}"
+            "QPushButton:disabled {"
+            "    background-color: #cccccc;"  # Gray when disabled
+            "    color: #666666;"
+            "}"
+        )
         scan_btn_layout.addWidget(self.start_scan_btn)
 
         self.stop_scan_btn = QPushButton(self.tr("Stop Scan"))
         self.stop_scan_btn.clicked.connect(self.stop_scan)
         self.stop_scan_btn.setEnabled(False)
-        self.stop_scan_btn.setStyleSheet("QPushButton { font-weight: bold; color: red; }")
+        self.stop_scan_btn.setStyleSheet(
+            "QPushButton {"
+            "    background-color: #f44336;"  # Red background
+            "    color: white;"  # White text
+            "    border: none;"
+            "    padding: 8px 16px;"
+            "    font-weight: bold;"
+            "    border-radius: 4px;"
+            "}"
+            "QPushButton:hover {"
+            "    background-color: #da190b;"  # Darker red on hover
+            "}"
+            "QPushButton:pressed {"
+            "    background-color: #c21807;"  # Even darker when pressed
+            "}"
+            "QPushButton:disabled {"
+            "    background-color: #cccccc;"  # Gray when disabled
+            "    color: #666666;"
+            "}"
+        )
         scan_btn_layout.addWidget(self.stop_scan_btn)
 
         controls_layout.addLayout(scan_btn_layout)

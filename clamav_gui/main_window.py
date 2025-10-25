@@ -506,227 +506,32 @@ class ClamAVGUI(ClamAVMainWindow):
             return tab
     
     def create_scan_tab(self):
-        """Create the scan tab."""
-        tab = QWidget()
-        layout = QVBoxLayout(tab)
-        
-        # Target selection
-        target_group = QGroupBox(self.tr("Scan Target"))
-        target_layout = QHBoxLayout()
-        
-        self.target_input = QLineEdit()
-        self.target_input.setPlaceholderText(self.tr("Select a file or directory to scan..."))
-        target_layout.addWidget(self.target_input)
-        
-        browse_btn = QPushButton(self.tr("Browse..."))
-        browse_btn.clicked.connect(self.browse_target)
-        target_layout.addWidget(browse_btn)
-        
-        target_group.setLayout(target_layout)
-        
-        # Scan options
-        options_group = QGroupBox(self.tr("Scan Options"))
-        options_layout = QVBoxLayout()
-        
-        self.recursive_scan = QCheckBox(self.tr("Scan subdirectories"))
-        self.recursive_scan.setChecked(True)
-        options_layout.addWidget(self.recursive_scan)
-        
-        self.heuristic_scan = QCheckBox(self.tr("Enable heuristic scan"))
-        self.heuristic_scan.setChecked(True)
-        options_layout.addWidget(self.heuristic_scan)
-        
-        self.scan_archives = QCheckBox(self.tr("Scan archives (zip, rar, etc.)"))
-        self.scan_archives.setChecked(True)
-        options_layout.addWidget(self.scan_archives)
-        
-        self.scan_pua = QCheckBox(self.tr("Scan potentially unwanted applications (PUA)"))
-        self.scan_pua.setChecked(False)
-        self.scan_pua.setToolTip(self.tr("Enable scanning for potentially unwanted applications"))
-        options_layout.addWidget(self.scan_pua)
-        
-        self.enable_smart_scanning = QCheckBox(self.tr("Enable smart scanning (skip known safe files)"))
-        self.enable_smart_scanning.setChecked(False)
-        self.enable_smart_scanning.setToolTip(self.tr("Use hash database to skip files that have been previously scanned and confirmed safe"))
-        options_layout.addWidget(self.enable_smart_scanning)
-        
-        options_group.setLayout(options_layout)
-        
-        # Output
-        output_group = QGroupBox(self.tr("Output"))
-        output_layout = QVBoxLayout()
-        
-        self.output = QTextEdit()
-        self.output.setReadOnly(True)
-        output_layout.addWidget(self.output)
-        
-        output_group.setLayout(output_layout)
-        
-        # Progress
-        self.progress = QProgressBar()
-        self.progress.setRange(0, 0)  # Animated progress bar
-        self.progress.setStyleSheet("""
-            QProgressBar {
-                border: 2px solid #333;
-                border-radius: 5px;
-                text-align: center;
-                font-weight: bold;
-            }
-            QProgressBar::chunk {
-                background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
-                    stop: 0 #4CAF50, stop: 0.5 #2196F3, stop: 1 #4CAF50);
-                border-radius: 3px;
-            }
-        """)
-
-        # Buttons
-        button_layout = QHBoxLayout()
-
-        self.scan_btn = QPushButton(self.tr("Start Scan"))
-        self.scan_btn.clicked.connect(self.start_scan)
-        self.scan_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                font-weight: bold;
-                border-radius: 5px;
-            }
-            QPushButton:hover {
-                background-color: #45a049;
-            }
-            QPushButton:pressed {
-                background-color: #3e8e41;
-            }
-        """)
-        button_layout.addWidget(self.scan_btn)
-
-        self.stop_btn = QPushButton(self.tr("Stop"))
-        self.stop_btn.setEnabled(False)
-        self.stop_btn.clicked.connect(self.stop_scan)
-        self.stop_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #f44336;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                font-weight: bold;
-                border-radius: 5px;
-            }
-            QPushButton:hover {
-                background-color: #da190b;
-            }
-            QPushButton:pressed {
-                background-color: #c62828;
-            }
-        """)
-        button_layout.addWidget(self.stop_btn)
-        
-        # Report buttons
-        self.save_report_btn = QPushButton(self.tr("Save Report"))
-        self.save_report_btn.setEnabled(False)
-        self.save_report_btn.clicked.connect(self.save_scan_report)
-        button_layout.addWidget(self.save_report_btn)
-        
-        self.view_quarantine_btn = QPushButton(self.tr("View Quarantine"))
-        self.view_quarantine_btn.clicked.connect(self.show_quarantine_dialog)
-        button_layout.addWidget(self.view_quarantine_btn)
-        
-        # Add all to main layout
-        layout.addWidget(target_group)
-        layout.addWidget(options_group)
-        layout.addWidget(output_group)
-        layout.addWidget(self.progress)
-        layout.addLayout(button_layout)
-        
-        return tab
+        """Create the scan tab using ScanTab class."""
+        try:
+            from clamav_gui.ui.scan_tab import ScanTab
+            return ScanTab(self)
+        except ImportError as e:
+            logger.warning(f"Could not import ScanTab: {e}")
+            # Fallback to simple scan tab
+            from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+            tab = QWidget()
+            layout = QVBoxLayout(tab)
+            layout.addWidget(QLabel(self.tr("Scan tab not available")))
+            return tab
     
     def create_email_scan_tab(self):
-        """Create the email scanning tab."""
-        tab = QWidget()
-        layout = QVBoxLayout(tab)
-
-        # Email file selection
-        email_group = QGroupBox(self.tr("Email Files to Scan"))
-        email_layout = QVBoxLayout()
-
-        # File list for multiple email files
-        self.email_files_list = QListWidget()
-        self.email_files_list.setSelectionMode(QAbstractItemView.MultiSelection)
-        self.email_files_list.setMaximumHeight(150)
-        email_layout.addWidget(self.email_files_list)
-
-        # Buttons for file management
-        file_btn_layout = QHBoxLayout()
-
-        add_file_btn = QPushButton(self.tr("Add Email File"))
-        add_file_btn.clicked.connect(self.add_email_file)
-        file_btn_layout.addWidget(add_file_btn)
-
-        remove_file_btn = QPushButton(self.tr("Remove Selected"))
-        remove_file_btn.clicked.connect(self.remove_email_file)
-        file_btn_layout.addWidget(remove_file_btn)
-
-        clear_files_btn = QPushButton(self.tr("Clear All"))
-        clear_files_btn.clicked.connect(self.clear_email_files)
-        file_btn_layout.addWidget(clear_files_btn)
-
-        email_layout.addLayout(file_btn_layout)
-        email_group.setLayout(email_layout)
-
-        # Scan options
-        options_group = QGroupBox(self.tr("Scan Options"))
-        options_layout = QVBoxLayout()
-
-        self.scan_email_attachments = QCheckBox(self.tr("Scan email attachments"))
-        self.scan_email_attachments.setChecked(True)
-        options_layout.addWidget(self.scan_email_attachments)
-
-        self.scan_email_content = QCheckBox(self.tr("Scan email content for suspicious patterns"))
-        self.scan_email_content.setChecked(True)
-        options_layout.addWidget(self.scan_email_content)
-
-        options_group.setLayout(options_layout)
-
-        # Output
-        output_group = QGroupBox(self.tr("Scan Output"))
-        output_layout = QVBoxLayout()
-
-        self.email_output = QTextEdit()
-        self.email_output.setReadOnly(True)
-        output_layout.addWidget(self.email_output)
-
-        output_group.setLayout(output_layout)
-
-        # Progress
-        self.email_progress = QProgressBar()
-
-        # Buttons
-        button_layout = QHBoxLayout()
-
-        self.start_email_scan_btn = QPushButton(self.tr("Start Email Scan"))
-        self.start_email_scan_btn.clicked.connect(self.start_email_scan)
-        button_layout.addWidget(self.start_email_scan_btn)
-
-        self.stop_email_scan_btn = QPushButton(self.tr("Stop"))
-        self.stop_email_scan_btn.setEnabled(False)
-        self.stop_email_scan_btn.clicked.connect(self.stop_email_scan)
-        button_layout.addWidget(self.stop_email_scan_btn)
-
-        self.save_email_report_btn = QPushButton(self.tr("Save Report"))
-        self.save_email_report_btn.setEnabled(False)
-        self.save_email_report_btn.clicked.connect(self.save_email_report)
-        button_layout.addWidget(self.save_email_report_btn)
-
-        # Add all to main layout
-        layout.addWidget(email_group)
-        layout.addWidget(options_group)
-        layout.addWidget(output_group)
-        layout.addWidget(self.email_progress)
-        layout.addLayout(button_layout)
-
-        return tab
+        """Create the email scanning tab using EmailScanTab class."""
+        try:
+            from clamav_gui.ui.email_scan_tab import EmailScanTab
+            return EmailScanTab(self)
+        except ImportError as e:
+            logger.warning(f"Could not import EmailScanTab: {e}")
+            # Fallback to simple email scan tab
+            from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+            tab = QWidget()
+            layout = QVBoxLayout(tab)
+            layout.addWidget(QLabel(self.tr("Email Scan tab not available")))
+            return tab
     
     def create_quarantine_tab(self):
         """Create the quarantine tab using QuarantineTab class."""

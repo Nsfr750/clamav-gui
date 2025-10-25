@@ -47,6 +47,7 @@ TRANSLATIONS = {
         "Scan email files and attachments for threats": "Scan email files and attachments for threats",
         "Scan multiple files and directories simultaneously": "Scan multiple files and directories simultaneously",
         "Scan network shares and remote locations": "Scan network shares and remote locations",
+        
         # Batch Analysis tab
         "Items to Analyze": "Items to Analyze",
         "Enter file/directory path or use browse button...": "Enter file/directory path or use browse button...",
@@ -223,7 +224,6 @@ TRANSLATIONS = {
         "home.check_updates": "Check for Updates",
         "home.open_logs": "Open Logs Folder",
         
-        # Status tab
         "status.env": "Environment",
         "status.tools": "Tools",
         "status.app_version": "App Version:",
@@ -232,7 +232,7 @@ TRANSLATIONS = {
         "status.open_settings": "Open Settings",
         "status.view_logs": "View Logs",
         
-        # Email scan tab
+        # Status tab strings
         "email.files_to_scan": "Email Files to Scan",
         "email.add_file": "Add Email File",
         "email.remove_selected": "Remove Selected",
@@ -356,12 +356,32 @@ TRANSLATIONS = {
         "help.translation_error": "Error retranslating UI: {error}",
         "help.language_switched": "Language switched to {language}",
         "help.language_switch_error": "Error switching language: {error}",
-        "help.link_open_error": "Error opening link {url}: {error}",
+                "status.information": "Information:",
+        "status.version_info": "📋 Version Information:",
+        "status.database_info": "🗃️ Database Information:",
+        "status.system_info": "💻 System Information:",
+        "status.clamav_paths": "🔧 ClamAV Paths:",
+        "status.clamav_ready": "✅ ClamAV detected and ready",
+        "status.clamav_not_found": "⚠️ ClamAV not found - Please install ClamAV or check paths in Settings",
+        "status.error_retrieving": "❌ Error retrieving ClamAV status:",
+        "status.clamav_not_found_install": "ClamAV not found - Please install ClamAV",
+        "status.not_available": "Not available",
+        "status.configure_path": "Configure ClamAV path in Settings",
+        "status.check_installation": "Check ClamAV installation",
+        "status.install_clamav": "Install ClamAV",
+        "status.check_config": "Check system configuration",
+        "status.database_not_accessible": "Database not accessible",
+        "status.no_database_files": "No database files found",
+        "status.database_dir_not_found": "Database directory not found - Check ClamAV installation",
+        "status.configure_paths": "Configure ClamAV paths in Settings",
+        "status.not_configured": "Not configured""status.error_accessing_db": "Error accessing database:",
+        "status.update_unavailable": "Update Database Unavailable",
+        "status.updater_not_ready": "Updater Not Ready",
+        "status.database_update": "Database Update",
+        "status.starting_update": "Starting database update...",
+        "status.update_error": "Update Error",
+        "status.update_completed": "Update completed successfully!",
+        "status.update_failed": "Update failed. Check output below.",
+        "status.updating_database": "Updating database...",
     }
-}
-
-# Available languages - keep only those with actual translations
-AVAILABLE_LANGUAGES = {
-    "en_US": "English (United States)",
-    "it_IT": "Italiano (Italia)",   
 }

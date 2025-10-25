@@ -174,7 +174,7 @@ class AppCompiler:
         icon_path = self.find_icon()
 
         # Determina il tipo di build
-        console = "true" if debug else "false"
+        console = "false" if not debug else "true"
 
         # Configurazione PyInstaller
         spec_content = f'''# -*- mode: python ; coding: utf-8 -*-
@@ -184,7 +184,9 @@ block_cipher = None
 a = Analysis(
     ['clamav_gui/__main__.py'],
     pathex=['X:/GitHub/clamav-gui'],
-    binaries=[],
+    binaries=[
+        # ClamAV libraries will be added dynamically
+    ],
     datas=[
         ('clamav_gui', 'clamav_gui'),
         ('script', 'script'),
@@ -194,7 +196,28 @@ a = Analysis(
     hiddenimports=[
         'scipy',
         'scipy.sparse',
+        'scipy.stats',
+        'scipy.stats.distributions',
+        'scipy.stats._distn_infrastructure',
+        'scipy.special',
+        'scipy._lib',
+        'sklearn',
+        'sklearn.utils',
+        'sklearn.utils._param_validation',
+        'sklearn.utils.validation',
+        'sklearn.utils._array_api',
+        'sklearn.utils.fixes',
+        'sklearn.base',
         'numpy',
+        'numpy.random',
+        'numpy.linalg',
+        'numpy.fft',
+        'numpy.core',
+        'numpy.lib',
+        'matplotlib',
+        'matplotlib.pyplot',
+        'matplotlib.backends',
+        'matplotlib.backends.backend_qt5agg',
         'PySide6.QtCore',
         'PySide6.QtGui',
         'PySide6.QtWidgets',
@@ -265,6 +288,21 @@ coll = COLLECT(
 )
 '''
 
+        # Trova librerie ClamAV per aggiungerle al spec file
+        clamav_binaries = []
+        clamav_lib_paths = self._find_clamav_libraries()
+        for lib_path in clamav_lib_paths:
+            if lib_path:
+                lib_filename = os.path.basename(lib_path)
+                clamav_binaries.append(f"('{lib_path}', '{lib_filename}')")
+
+        if clamav_binaries:
+            binaries_str = ",\n        ".join(clamav_binaries)
+            spec_content = spec_content.replace(
+                "    binaries=[\n        # ClamAV libraries will be added dynamically\n    ],",
+                f"    binaries=[\n        {binaries_str},\n    ],"
+            )
+
         with open(self.spec_file, 'w', encoding='utf-8') as f:
             f.write(spec_content)
 
@@ -272,8 +310,6 @@ coll = COLLECT(
         return self.spec_file
 
     def install_dependencies(self):
-        """Installa le dipendenze necessarie per la compilazione."""
-        print("\n📦 Installazione dipendenze...")
 
         requirements = [
             "pyinstaller>=6.0.0",
@@ -307,13 +343,9 @@ coll = COLLECT(
             cmd.append("--noupx")
 
         if debug:
-            cmd.append("--debug=all")
-
-        # Aggiungi metadati
-        cmd.extend([
-            "--name", APP_NAME,
-            "--version-file", str(self.root_dir / "version_info.txt"),
-        ])
+            cmd.append("--console")  # Solo per debug
+        else:
+            cmd.append("--windowed")  # No console per release builds
 
         # Aggiungi dati necessari (immagini, script, config, docs)
         data_files = [
@@ -332,11 +364,28 @@ coll = COLLECT(
         if os.path.exists(img_dir):
             cmd.extend(["--add-data", f"{img_dir};{img_dir}"])
 
+        # Aggiungi hidden imports per librerie scientifiche
+        hidden_imports = [
+            'scipy', 'scipy.sparse', 'scipy.stats', 'scipy.stats.distributions',
+            'scipy.stats._distn_infrastructure', 'scipy.special', 'scipy._lib',
+            'sklearn', 'sklearn.utils', 'sklearn.utils._param_validation',
+            'sklearn.utils.validation', 'sklearn.utils._array_api', 'sklearn.utils.fixes',
+            'sklearn.base', 'numpy', 'numpy.random', 'numpy.linalg', 'numpy.fft',
+            'numpy.core', 'numpy.lib', 'matplotlib', 'matplotlib.pyplot',
+            'matplotlib.backends', 'matplotlib.backends.backend_qt5agg',
+            'PySide6.QtCore', 'PySide6.QtGui', 'PySide6.QtWidgets'
+        ]
+
+        for hidden_import in hidden_imports:
+            cmd.extend(['--hidden-import', hidden_import])
+
         # Aggiungi supporto per librerie ClamAV se disponibili
         clamav_lib_paths = self._find_clamav_libraries()
         for lib_path in clamav_lib_paths:
             if lib_path:
-                cmd.extend(["--add-binary", lib_path])
+                # Usa la sintassi corretta SOURCE:DEST per PyInstaller
+                lib_filename = os.path.basename(lib_path)
+                cmd.extend([f"--add-binary={lib_path};{lib_filename}"])
 
         # Aggiungi icona se disponibile
         icon_path = self.find_icon()

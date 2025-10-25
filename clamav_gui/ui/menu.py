@@ -134,21 +134,25 @@ class ClamAVMenuBar(QMenuBar):
         
         # About action
         self.about_action = QAction(self.tr("&About"), self)
+        self.about_action.setShortcut("F2")
         self.about_action.triggered.connect(self.show_about_dialog)
         self.help_menu.addAction(self.about_action)
         
         # Sponsor action
         self.sponsor_action = QAction(self.tr("&Sponsor"), self)
+        self.sponsor_action.setShortcut("F3")
         self.sponsor_action.triggered.connect(self.show_sponsor_dialog)
         self.help_menu.addAction(self.sponsor_action)
         
         # Wiki action
         self.wiki_action = QAction(self.tr("&Wiki"), self)
+        self.wiki_action.setShortcut("F4")
         self.wiki_action.triggered.connect(self.open_wiki)
         self.help_menu.addAction(self.wiki_action)
 
         # View Logs action (must be added after help_menu exists)
         self.view_logs_action = QAction(self.tr("View &Logs"), self)
+        self.view_logs_action.setShortcut("F5")
         self.view_logs_action.triggered.connect(self.show_logs_dialog)
         if self.help_menu is not None:
             self.help_menu.addAction(self.view_logs_action)

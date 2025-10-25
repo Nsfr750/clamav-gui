@@ -7,6 +7,9 @@
 # Core Application Code
 clamav_gui/ @Nsfr750
 
+# Assets and Resources
+clamav_gui/assets/ @Nsfr750
+
 # User Interface Components
 clamav_gui/ui/ @Nsfr750
 
@@ -22,9 +25,14 @@ docs/ @Nsfr750
 # Test Suite
 tests/ @Nsfr750
 
+# Configuration Files
+config/ @Nsfr750
+script/ @Nsfr750
+
 # Build and Configuration
 .github/ @Nsfr750
 build.py @Nsfr750
+compile_app.py @Nsfr750
 setup.py @Nsfr750
 requirements.txt @Nsfr750
 requirements-dev.txt @Nsfr750
@@ -34,12 +42,45 @@ README.md @Nsfr750
 LICENSE @Nsfr750
 CHANGELOG.md @Nsfr750
 TO_DO.md @Nsfr750
+COMPILAZIONE.md @Nsfr750
+
+# Git Configuration
+.gitattributes @Nsfr750
+.gitignore @Nsfr750
 
 # CI/CD and Automation
 .github/workflows/ @Nsfr750
 Makefile @Nsfr750
 clean_pycache.py @Nsfr750
+clear_cache.py @Nsfr750
+
+# Batch Scripts and Build Tools
+*.bat @Nsfr750
+compila.bat @Nsfr750
+firma.bat @Nsfr750
 
 # Version Management
 version_info.txt @Nsfr750
 clamav_gui/version.py @Nsfr750
+clamav_gui/utils/version.py @Nsfr750
+
+# PyInstaller Configuration
+ClamAV-GUI.spec @Nsfr750
+
+# Build Artifacts and Distribution
+dist/ @Nsfr750
+build/ @Nsfr750
+
+# Logs (usually not committed but good to define ownership)
+logs/ @Nsfr750
+
+# Development and Build Scripts
+*.py @Nsfr750
+
+# Security and Documentation
+SECURITY.md @Nsfr750
+CODE_OF_CONDUCT.md @Nsfr750
+CONTRIBUTING.md @Nsfr750
+
+# Personal Development Notes
+TXT @Nsfr750

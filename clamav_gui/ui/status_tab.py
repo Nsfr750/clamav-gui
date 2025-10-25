@@ -2,6 +2,7 @@
 import os
 import subprocess
 import logging
+import re
 from datetime import datetime
 from PySide6 import QtCore, QtWidgets
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGroupBox,
@@ -483,11 +484,11 @@ class StatusTab(QWidget):
 
     def _get_signature_count(self, db_dir, db_files):
         """Get signature count using multiple methods."""
-        # Method 1: Try sigtool if available
+        # Method 1: Try sigtool --info
         try:
             sigtool_path = self._find_sigtool()
             if sigtool_path:
-                process = subprocess.run([sigtool_path, '--info'],
+                process = subprocess.run([sigtool_path, '--info', db_dir],
                                        capture_output=True, text=True, timeout=10,
                                        cwd=db_dir)
                 if process.returncode == 0:
@@ -501,36 +502,31 @@ class StatusTab(QWidget):
         except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
             pass
 
-        # Method 2: Try clamscan --list-sigs (more reliable but slower)
+        # Method 2: Try sigtool --info (more reliable for signature count)
         try:
-            # Get clamscan path from parent settings
-            if hasattr(self.parent, 'current_settings') and self.parent.current_settings:
-                clamscan_path = self.parent.current_settings.get('clamscan_path', 'clamscan')
-            elif hasattr(self.parent, 'settings') and self.parent.settings:
-                settings = self.parent.settings.load_settings() or {}
-                clamscan_path = settings.get('clamscan_path', 'clamscan')
-            else:
-                clamscan_path = 'clamscan'
+            # Get sigtool path
+            sigtool_path = self._find_sigtool()
 
-            if not clamscan_path or clamscan_path == 'clamscan':
-                # Try to find clamscan in PATH
-                clamscan_path = self._find_clamscan_executable()
-
-            if clamscan_path and os.path.exists(clamscan_path):
-                print(f"StatusTab DEBUG: Running clamscan --list-sigs with path: {clamscan_path}")
-                process = subprocess.run([clamscan_path, '--list-sigs'],
-                                       capture_output=True, text=True, timeout=60,  # Increased timeout
+            if sigtool_path:
+                print(f"StatusTab DEBUG: Running sigtool --info with path: {sigtool_path}")
+                process = subprocess.run([sigtool_path, '--info', db_dir],
+                                       capture_output=True, text=True, timeout=30,
                                        cwd=db_dir)
                 if process.returncode == 0:
-                    sig_count = len([line for line in process.stdout.split('\n') if line.strip()])
-                    print(f"StatusTab DEBUG: clamscan --list-sigs returned {sig_count} signatures")
-                    if sig_count > 0:
-                        return sig_count
+                    output = process.stdout.strip()
+                    print(f"StatusTab DEBUG: sigtool --info output: '{output}'")
+                    # Extract the number from output (sigtool --info typically outputs signature info)
+                    numbers = re.findall(r'\d+', output)
+                    if numbers:
+                        sig_count = int(numbers[0])
+                        if sig_count > 100000:  # Reasonable signature count
+                            print(f"StatusTab DEBUG: sigtool --info returned {sig_count} signatures")
+                            return sig_count
                 else:
-                    print(f"StatusTab DEBUG: clamscan --list-sigs failed with return code {process.returncode}")
+                    print(f"StatusTab DEBUG: sigtool --info failed with return code {process.returncode}")
                     print(f"StatusTab DEBUG: stderr: {process.stderr.strip()}")
         except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError) as e:
-            print(f"StatusTab DEBUG: Error running clamscan --list-sigs: {e}")
+            print(f"StatusTab DEBUG: Error running sigtool --info: {e}")
             pass
 
         # Method 3: Try to get signature count from CVD file headers (more accurate)
@@ -632,47 +628,47 @@ class StatusTab(QWidget):
             return 'Unknown'
 
     def _get_accurate_signature_count(self, db_dir):
-        """Get accurate signature count using freshclam --info or similar."""
+        """Get accurate signature count using sigtool --info or similar."""
         try:
-            # Try to get freshclam path from settings
+            # Try to get sigtool path from settings
             if hasattr(self.parent, 'current_settings') and self.parent.current_settings:
-                freshclam_path = self.parent.current_settings.get('freshclam_path', 'freshclam')
+                sigtool_path = self.parent.current_settings.get('sigtool_path', 'sigtool')
             elif hasattr(self.parent, 'settings') and self.parent.settings:
                 settings = self.parent.settings.load_settings() or {}
-                freshclam_path = settings.get('freshclam_path', 'freshclam')
+                sigtool_path = settings.get('sigtool_path', 'sigtool')
             else:
-                freshclam_path = 'freshclam'
+                sigtool_path = 'sigtool'
 
-            if not freshclam_path or freshclam_path == 'freshclam':
-                # Try to find freshclam in PATH
-                freshclam_path = self._find_freshclam_executable()
+            if not sigtool_path or sigtool_path == 'sigtool':
+                # Try to find sigtool in PATH
+                sigtool_path = self._find_sigtool_executable()
 
-            if freshclam_path and os.path.exists(freshclam_path):
-                print(f"StatusTab DEBUG: Running freshclam to get signature info: {freshclam_path}")
-                # Try freshclam --info (if available)
-                process = subprocess.run([freshclam_path, '--info'],
-                                       capture_output=True, text=True, timeout=30,
-                                       cwd=db_dir)
+            if sigtool_path and os.path.exists(sigtool_path):
+                print(f"StatusTab DEBUG: Running sigtool to get signature info: {sigtool_path}")
+                # Try sigtool --info with database directory as argument
+                process = subprocess.run([sigtool_path, '--info', db_dir],
+                                       capture_output=True, text=True, timeout=30)
                 if process.returncode == 0:
                     output = process.stdout.strip()
-                    print(f"StatusTab DEBUG: freshclam --info output: {output}")
+                    print(f"StatusTab DEBUG: sigtool --info output: {output}")
                     # Look for signature count in output
                     for line in output.split('\n'):
                         line_lower = line.lower()
                         if 'signatures' in line_lower or 'total' in line_lower:
                             # Try to extract number
-                            import re
                             numbers = re.findall(r'\d+', line)
                             if numbers:
                                 count = int(numbers[0])
                                 if count > 1000000:  # Reasonable signature count
-                                    print(f"StatusTab DEBUG: Found signature count in freshclam output: {count}")
+                                    print(f"StatusTab DEBUG: Found signature count in sigtool output: {count}")
                                     return count
                 else:
-                    print(f"StatusTab DEBUG: freshclam --info failed with return code {process.returncode}")
+                    print(f"StatusTab DEBUG: sigtool --info failed with return code {process.returncode}")
+                    if process.stderr:
+                        print(f"StatusTab DEBUG: stderr: {process.stderr.strip()}")
 
         except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError) as e:
-            print(f"StatusTab DEBUG: Error running freshclam: {e}")
+            print(f"StatusTab DEBUG: Error running sigtool: {e}")
 
         # Alternative: try to read the total signature count from all CVD files
         try:
@@ -808,6 +804,38 @@ class StatusTab(QWidget):
         for path in common_paths:
             if path == 'sigtool':
                 # Check if in PATH
+                try:
+                    subprocess.run([path, '--version'],
+                                 capture_output=True, timeout=5)
+                    return path
+                except (FileNotFoundError, subprocess.TimeoutExpired):
+                    continue
+            elif os.path.exists(path):
+                return path
+
+        # Last resort: use the dedicated finder method
+        return self._find_sigtool_executable()
+
+    def _find_sigtool_executable(self):
+        """Find sigtool executable in common locations or PATH."""
+        # Check if it's in PATH
+        try:
+            subprocess.run(['sigtool', '--version'],
+                         capture_output=True, timeout=5)
+            return 'sigtool'
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            pass
+
+        # Check common installation paths
+        common_paths = [
+            r'C:\Program Files\ClamAV\sigtool.exe',
+            r'C:\Program Files (x86)\ClamAV\sigtool.exe',
+            r'C:\ClamAV\sigtool.exe',
+            'sigtool'  # Check PATH again
+        ]
+
+        for path in common_paths:
+            if path == 'sigtool':
                 try:
                     subprocess.run([path, '--version'],
                                  capture_output=True, timeout=5)

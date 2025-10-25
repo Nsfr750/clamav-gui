@@ -46,6 +46,7 @@ TRANSLATIONS = {
         "AI-powered threat detection and analysis": "Rilevamento e analisi minacce basato su IA",
         "Scan email files and attachments for threats": "Scansiona file email e allegati per minacce",
         "Scan multiple files and directories simultaneously": "Scansiona più file e directory simultaneamente",
+        
         # Help dialog strings
         "help.window_title": "Aiuto GUI ClamAV",
         "common.close": "Chiudi",
@@ -231,7 +232,7 @@ TRANSLATIONS = {
         "home.check_updates": "Controlla Aggiornamenti",
         "home.open_logs": "Apri Cartella Log",
 
-        # Status tab
+        # Status tab detailed display strings
         "status.env": "Ambiente",
         "status.tools": "Strumenti",
         "status.app_version": "Versione App:",
@@ -240,7 +241,7 @@ TRANSLATIONS = {
         "status.open_settings": "Apri Impostazioni",
         "status.view_logs": "Visualizza Log",
 
-        # Virus DB tab
+        # Status tab detailed strings
         "virus_db.info": "Aggiorna le definizioni dei virus di ClamAV con freshclam",
         "virus_db.update": "Aggiorna Database Virus",
         "virus_db.stopped": "Aggiornamento del database virus interrotto.",
@@ -532,12 +533,32 @@ TRANSLATIONS = {
         "dialog.save": "Salva",
         "dialog.cancel": "Annulla",
         "dialog.select_folder": "Seleziona Cartella",
-        "dialog.all_files": "Tutti i file (*)"
+        "status.information": "Informazioni:",
+        "status.version_info": "📋 Informazioni Versione:",
+        "status.database_info": "🗃️ Informazioni Database:",
+        "status.system_info": "💻 Informazioni Sistema:",
+        "status.clamav_paths": "🔧 Percorsi ClamAV:",
+        "status.clamav_ready": "✅ ClamAV rilevato e pronto",
+        "status.clamav_not_found": "⚠️ ClamAV non trovato - Installare ClamAV o controllare i percorsi",
+        "status.error_retrieving": "❌ Errore nel recupero dello stato ClamAV:",
+        "status.clamav_not_found_install": "ClamAV non trovato - Installare ClamAV",
+        "status.not_available": "Non disponibile",
+        "status.configure_path": "Configurare percorso ClamAV nelle Impostazioni",
+        "status.check_installation": "Controllare installazione ClamAV",
+        "status.install_clamav": "Installare ClamAV",
+        "status.check_config": "Controllare configurazione sistema",
+        "status.database_not_accessible": "Database non accessibile",
+        "status.no_database_files": "Nessun file database trovato",
+        "status.database_dir_not_found": "Directory database non trovata - Controllare installazione ClamAV",
+        "status.configure_paths": "Configurare percorsi ClamAV nelle Impostazioni",
+        "status.not_configured": "Non configurato""status.error_accessing_db": "Errore nell'accesso al database:",
+        "status.update_unavailable": "Aggiornamento Database Non Disponibile",
+        "status.updater_not_ready": "Aggiornatore Non Pronto",
+        "status.database_update": "Aggiornamento Database",
+        "status.starting_update": "Avvio aggiornamento database...",
+        "status.update_error": "Errore Aggiornamento",
+        "status.update_completed": "Aggiornamento completato con successo!",
+        "status.update_failed": "Aggiornamento fallito. Controllare l'output qui sotto.",
+        "status.updating_database": "Aggiornamento database...",
     }
-}    
-
-# Available languages - solo quelle con traduzioni effettive
-AVAILABLE_LANGUAGES = {
-    "en_US": "English (United States)",
-    "it_IT": "Italiano (Italia)",
 }
