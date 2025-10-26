@@ -1,0 +1,1303 @@
+2025-10-25 15:37:25 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-25 15:37:25 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-25 15:37:25 - ClamAV-GUI - INFO - Application starting...
+2025-10-25 15:37:25 - ClamAV-GUI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.png
+2025-10-25 15:37:25 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-25 15:37:25 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-25 15:37:25 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-25 15:37:25 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 15:37:25 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-25 15:37:25 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-25 15:37:25 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-25 15:37:25 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-25 15:37:25 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 15:37:25 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.ico
+2025-10-25 15:37:25 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-25 15:37:25 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-25 15:37:25 - clamav_gui.ui.home_tab - INFO - Successfully loaded logo from: clamav_gui/assets/logo.png
+2025-10-25 15:37:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:25 - clamav_gui.ui.home_tab - INFO - Attempting to reinitialize quarantine manager from home tab...
+2025-10-25 15:37:25 - clamav_gui.main_window - INFO - Quarantine manager reinitialized successfully
+2025-10-25 15:37:25 - clamav_gui.ui.home_tab - INFO - Quarantine manager successfully reinitialized
+2025-10-25 15:37:25 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:37:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:25 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 15:37:25 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 15:37:25 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 15:37:25 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 15:37:25 - clamav_gui.ui.ml_detection_tab - INFO - ML components initialized successfully
+2025-10-25 15:37:25 - clamav_gui.ui.smart_scanning_tab - INFO - Smart scanner initialized
+2025-10-25 15:37:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:26 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:26 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:26 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:26 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:26 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:26 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:28 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-25 15:37:29 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.5, latest: 1.2.5)
+2025-10-25 15:37:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:37:55 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:38:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:38:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:38:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:38:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:38:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:38:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:38:25 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:38:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:38:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:38:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:38:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:38:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:38:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:38:55 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:39:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:39:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:39:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:39:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:39:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:39:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:39:25 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:39:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:39:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:39:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:39:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:39:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:39:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:39:55 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:40:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:40:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:40:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:40:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:40:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:40:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:40:25 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:40:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:40:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:40:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:40:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:40:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:40:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:40:55 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:41:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:41:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:41:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:41:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:41:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:41:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:41:25 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:41:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:41:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:41:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:41:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:41:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:41:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:41:55 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:42:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:42:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:42:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:42:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:42:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:42:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:42:25 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:42:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:42:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:42:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:42:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:42:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:42:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:42:55 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:43:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:43:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:43:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:43:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:43:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:43:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:43:25 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:43:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:43:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:43:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:43:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:43:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:43:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:43:55 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:44:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:44:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:44:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:44:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:44:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:44:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:44:25 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:44:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:44:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:44:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:44:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:44:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:44:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:44:55 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:45:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:45:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:45:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:45:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:45:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:45:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:45:25 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:45:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:45:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:45:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:45:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:45:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:45:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:45:55 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:46:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:46:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:46:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:46:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:46:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:46:25 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:46:25 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:46:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:46:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:46:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:46:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:46:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:46:55 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:46:55 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:52:34 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-25 15:52:34 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-25 15:52:34 - ClamAV-GUI - INFO - Application starting...
+2025-10-25 15:52:34 - ClamAV-GUI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.png
+2025-10-25 15:52:34 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-25 15:52:34 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-25 15:52:34 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-25 15:52:34 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 15:52:34 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-25 15:52:34 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-25 15:52:34 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-25 15:52:34 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-25 15:52:34 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 15:52:34 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.ico
+2025-10-25 15:52:34 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-25 15:52:34 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-25 15:52:34 - clamav_gui.ui.home_tab - INFO - Successfully loaded logo from: clamav_gui/assets/logo.png
+2025-10-25 15:52:34 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:52:34 - clamav_gui.ui.home_tab - INFO - Attempting to reinitialize quarantine manager from home tab...
+2025-10-25 15:52:34 - clamav_gui.main_window - INFO - Quarantine manager reinitialized successfully
+2025-10-25 15:52:34 - clamav_gui.ui.home_tab - INFO - Quarantine manager successfully reinitialized
+2025-10-25 15:52:34 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:52:34 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:52:34 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 15:52:34 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 15:52:34 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 15:52:34 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 15:52:34 - clamav_gui.ui.ml_detection_tab - INFO - ML components initialized successfully
+2025-10-25 15:52:34 - clamav_gui.ui.smart_scanning_tab - INFO - Smart scanner initialized
+2025-10-25 15:52:35 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:52:35 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:52:37 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-25 15:52:38 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.5, latest: 1.2.5)
+2025-10-25 15:53:04 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:53:34 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:53:51 - clamav_gui.utils.ml_threat_detector - WARNING - scikit-learn not available: No module named 'joblib'. ML features will be disabled.
+2025-10-25 15:53:51 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-25 15:53:51 - ClamAV-GUI - INFO - Application starting...
+2025-10-25 15:53:51 - ClamAV-GUI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.png
+2025-10-25 15:53:51 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-25 15:53:51 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-25 15:53:51 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-25 15:53:51 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 15:53:51 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-25 15:53:51 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-25 15:53:51 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-25 15:53:51 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-25 15:53:51 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 15:53:51 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.ico
+2025-10-25 15:53:51 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-25 15:53:51 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-25 15:53:51 - clamav_gui.ui.home_tab - INFO - Successfully loaded logo from: clamav_gui/assets/logo.png
+2025-10-25 15:53:51 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:53:51 - clamav_gui.ui.home_tab - INFO - Attempting to reinitialize quarantine manager from home tab...
+2025-10-25 15:53:51 - clamav_gui.main_window - INFO - Quarantine manager reinitialized successfully
+2025-10-25 15:53:51 - clamav_gui.ui.home_tab - INFO - Quarantine manager successfully reinitialized
+2025-10-25 15:53:51 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 15:53:51 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:53:51 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 15:53:51 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 15:53:51 - clamav_gui.utils.ml_threat_detector - WARNING - ML features disabled due to missing scikit-learn
+2025-10-25 15:53:51 - clamav_gui.utils.ml_threat_detector - WARNING - ML features disabled due to missing scikit-learn
+2025-10-25 15:53:51 - clamav_gui.ui.ml_detection_tab - INFO - ML components initialized successfully
+2025-10-25 15:53:51 - clamav_gui.ui.smart_scanning_tab - INFO - Smart scanner initialized
+2025-10-25 15:53:52 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:53:52 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 15:53:55 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-25 15:53:55 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.5, latest: 1.2.5)
+2025-10-25 16:00:48 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-25 16:00:48 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-25 16:00:48 - ClamAV-GUI - INFO - Application starting...
+2025-10-25 16:00:48 - ClamAV-GUI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.png
+2025-10-25 16:00:48 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-25 16:00:48 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-25 16:00:48 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-25 16:00:48 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 16:00:48 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-25 16:00:48 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-25 16:00:48 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-25 16:00:48 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-25 16:00:48 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 16:00:48 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.ico
+2025-10-25 16:00:48 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-25 16:00:48 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-25 16:00:48 - clamav_gui.ui.home_tab - INFO - Successfully loaded logo from: clamav_gui/assets/logo.png
+2025-10-25 16:00:48 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:00:48 - clamav_gui.ui.home_tab - INFO - Attempting to reinitialize quarantine manager from home tab...
+2025-10-25 16:00:48 - clamav_gui.main_window - INFO - Quarantine manager reinitialized successfully
+2025-10-25 16:00:48 - clamav_gui.ui.home_tab - INFO - Quarantine manager successfully reinitialized
+2025-10-25 16:00:48 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:00:48 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:00:48 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 16:00:48 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 16:00:48 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 16:00:48 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 16:00:48 - clamav_gui.ui.ml_detection_tab - INFO - ML components initialized successfully
+2025-10-25 16:00:48 - clamav_gui.ui.smart_scanning_tab - INFO - Smart scanner initialized
+2025-10-25 16:00:49 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:00:49 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:00:51 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-25 16:00:52 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.5, latest: 1.2.5)
+2025-10-25 16:00:53 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-25 16:00:53 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-25 16:00:53 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-25 16:00:53 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 16:00:57 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-25 16:00:57 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-25 16:00:57 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-25 16:00:57 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 16:01:18 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:01:48 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:02:18 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:02:48 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:02:58 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-25 16:02:58 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.5, latest: 1.2.5)
+2025-10-25 16:49:33 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-25 16:49:33 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-25 16:49:33 - ClamAV-GUI - INFO - Application starting...
+2025-10-25 16:49:33 - ClamAV-GUI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.png
+2025-10-25 16:49:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-25 16:49:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-25 16:49:33 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-25 16:49:33 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 16:49:33 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-25 16:49:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-25 16:49:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-25 16:49:33 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-25 16:49:33 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 16:49:33 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.ico
+2025-10-25 16:49:33 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-25 16:49:33 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-25 16:49:33 - clamav_gui.ui.home_tab - INFO - Successfully loaded logo from: clamav_gui/assets/logo.png
+2025-10-25 16:49:33 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:49:33 - clamav_gui.ui.home_tab - INFO - Attempting to reinitialize quarantine manager from home tab...
+2025-10-25 16:49:33 - clamav_gui.main_window - INFO - Quarantine manager reinitialized successfully
+2025-10-25 16:49:33 - clamav_gui.ui.home_tab - INFO - Quarantine manager successfully reinitialized
+2025-10-25 16:49:33 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:49:33 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:49:33 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 16:49:33 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 16:49:33 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 16:49:33 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 16:49:33 - clamav_gui.ui.ml_detection_tab - INFO - ML components initialized successfully
+2025-10-25 16:49:33 - clamav_gui.ui.smart_scanning_tab - INFO - Smart scanner initialized
+2025-10-25 16:49:33 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:49:33 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:49:36 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-25 16:49:37 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.5, latest: 1.2.5)
+2025-10-25 16:49:46 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:49:46 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:49:46 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:49:46 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:50:03 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:50:33 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:51:03 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:51:33 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:52:03 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:52:33 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:53:03 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:53:33 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:54:03 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:54:33 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:55:03 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:55:33 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:56:03 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:56:14 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-25 16:56:14 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-25 16:56:14 - ClamAV-GUI - INFO - Application starting...
+2025-10-25 16:56:14 - ClamAV-GUI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.png
+2025-10-25 16:56:14 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 377)
+2025-10-25 16:56:14 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-25 16:56:14 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-25 16:56:14 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-25 16:56:14 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 16:56:14 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found in available languages
+2025-10-25 16:56:14 - clamav_gui.lang.lang_manager - WARNING - Language en not found in available languages
+2025-10-25 16:56:14 - ClamAV-GUI - WARNING - System language en_US not available, falling back to English
+2025-10-25 16:56:14 - clamav_gui.lang.lang_manager - WARNING - Language en not found in available languages
+2025-10-25 16:56:14 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 377)
+2025-10-25 16:56:14 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-25 16:56:14 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-25 16:56:14 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-25 16:56:14 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 16:56:14 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.ico
+2025-10-25 16:56:14 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-25 16:56:14 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-25 16:56:14 - clamav_gui.ui.home_tab - INFO - Successfully loaded logo from: clamav_gui/assets/logo.png
+2025-10-25 16:56:14 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:56:14 - clamav_gui.ui.home_tab - INFO - Attempting to reinitialize quarantine manager from home tab...
+2025-10-25 16:56:14 - clamav_gui.main_window - INFO - Quarantine manager reinitialized successfully
+2025-10-25 16:56:14 - clamav_gui.ui.home_tab - INFO - Quarantine manager successfully reinitialized
+2025-10-25 16:56:14 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:56:14 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:56:14 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 16:56:14 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 16:56:14 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 16:56:14 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 16:56:14 - clamav_gui.ui.ml_detection_tab - INFO - ML components initialized successfully
+2025-10-25 16:56:14 - clamav_gui.ui.smart_scanning_tab - INFO - Smart scanner initialized
+2025-10-25 16:56:15 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:56:15 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:56:18 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-25 16:56:18 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.5, latest: 1.2.5)
+2025-10-25 16:56:44 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:57:14 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:57:44 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:58:14 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:58:44 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:59:12 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-25 16:59:12 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-25 16:59:12 - ClamAV-GUI - INFO - Application starting...
+2025-10-25 16:59:12 - ClamAV-GUI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.png
+2025-10-25 16:59:12 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 377)
+2025-10-25 16:59:12 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-25 16:59:12 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-25 16:59:12 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-25 16:59:12 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 16:59:12 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found in available languages
+2025-10-25 16:59:12 - clamav_gui.lang.lang_manager - WARNING - Language en not found in available languages
+2025-10-25 16:59:12 - ClamAV-GUI - WARNING - System language en_US not available, falling back to English
+2025-10-25 16:59:12 - clamav_gui.lang.lang_manager - WARNING - Language en not found in available languages
+2025-10-25 16:59:12 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 377)
+2025-10-25 16:59:12 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-25 16:59:12 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-25 16:59:12 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-25 16:59:12 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 16:59:12 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.ico
+2025-10-25 16:59:12 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-25 16:59:12 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-25 16:59:13 - clamav_gui.ui.home_tab - INFO - Successfully loaded logo from: clamav_gui/assets/logo.png
+2025-10-25 16:59:13 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:59:13 - clamav_gui.ui.home_tab - INFO - Attempting to reinitialize quarantine manager from home tab...
+2025-10-25 16:59:13 - clamav_gui.main_window - INFO - Quarantine manager reinitialized successfully
+2025-10-25 16:59:13 - clamav_gui.ui.home_tab - INFO - Quarantine manager successfully reinitialized
+2025-10-25 16:59:13 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 16:59:13 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:59:13 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 16:59:13 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 16:59:13 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 16:59:13 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 16:59:13 - clamav_gui.ui.ml_detection_tab - INFO - ML components initialized successfully
+2025-10-25 16:59:13 - clamav_gui.ui.smart_scanning_tab - INFO - Smart scanner initialized
+2025-10-25 16:59:13 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:59:13 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 16:59:16 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-25 16:59:16 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.5, latest: 1.2.5)
+2025-10-25 16:59:43 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:00:08 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-25 17:00:08 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-25 17:00:08 - ClamAV-GUI - INFO - Application starting...
+2025-10-25 17:00:08 - ClamAV-GUI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.png
+2025-10-25 17:00:08 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 377)
+2025-10-25 17:00:08 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-25 17:00:08 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-25 17:00:08 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-25 17:00:08 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 17:00:08 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found in available languages
+2025-10-25 17:00:08 - clamav_gui.lang.lang_manager - WARNING - Language en not found in available languages
+2025-10-25 17:00:08 - ClamAV-GUI - WARNING - System language en_US not available, falling back to English
+2025-10-25 17:00:08 - clamav_gui.lang.lang_manager - WARNING - Language en not found in available languages
+2025-10-25 17:00:08 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 377)
+2025-10-25 17:00:08 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-25 17:00:08 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-25 17:00:08 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-25 17:00:08 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 17:00:08 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.ico
+2025-10-25 17:00:08 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-25 17:00:08 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-25 17:00:08 - clamav_gui.ui.home_tab - INFO - Successfully loaded logo from: clamav_gui/assets/logo.png
+2025-10-25 17:00:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:08 - clamav_gui.ui.home_tab - INFO - Attempting to reinitialize quarantine manager from home tab...
+2025-10-25 17:00:08 - clamav_gui.main_window - INFO - Quarantine manager reinitialized successfully
+2025-10-25 17:00:08 - clamav_gui.ui.home_tab - INFO - Quarantine manager successfully reinitialized
+2025-10-25 17:00:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:00:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:08 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 17:00:08 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 17:00:08 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 17:00:08 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 17:00:08 - clamav_gui.ui.ml_detection_tab - INFO - ML components initialized successfully
+2025-10-25 17:00:08 - clamav_gui.ui.smart_scanning_tab - INFO - Smart scanner initialized
+2025-10-25 17:00:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:11 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-25 17:00:11 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.5, latest: 1.2.5)
+2025-10-25 17:00:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:00:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:01:00 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 377)
+2025-10-25 17:01:00 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-25 17:01:00 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-25 17:01:00 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-25 17:01:00 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 17:01:02 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 377)
+2025-10-25 17:01:02 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-25 17:01:02 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-25 17:01:02 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-25 17:01:02 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 17:01:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:01:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:01:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:01:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:01:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:01:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:01:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:01:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:01:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:01:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:01:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:01:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:01:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:01:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:02:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:02:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:02:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:02:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:02:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:02:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:02:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:02:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:02:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:02:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:02:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:02:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:02:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:02:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:03:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:03:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:03:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:03:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:03:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:03:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:03:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:03:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:03:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:03:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:03:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:03:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:03:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:03:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:04:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:04:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:04:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:04:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:04:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:04:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:04:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:04:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:04:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:04:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:04:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:04:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:04:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:04:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:05:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:05:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:05:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:05:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:05:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:05:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:05:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:05:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:05:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:05:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:05:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:05:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:05:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:05:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:06:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:06:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:06:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:06:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:06:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:06:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:06:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:06:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:06:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:06:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:06:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:06:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:06:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:06:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:07:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:07:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:07:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:07:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:07:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:07:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:07:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:07:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:07:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:07:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:07:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:07:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:07:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:07:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:08:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:08:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:08:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:08:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:08:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:08:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:08:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:08:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:08:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:08:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:08:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:08:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:08:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:08:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:09:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:09:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:09:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:09:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:09:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:09:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:09:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:09:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:09:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:09:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:09:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:09:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:09:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:09:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:10:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:10:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:10:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:10:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:10:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:10:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:10:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:10:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:10:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:10:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:10:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:10:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:10:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:10:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:11:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:11:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:11:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:11:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:11:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:11:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:11:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:11:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:11:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:11:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:11:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:11:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:11:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:11:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:12:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:12:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:12:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:12:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:12:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:12:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:12:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:12:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:12:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:12:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:12:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:12:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:12:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:12:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:13:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:13:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:13:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:13:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:13:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:13:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:13:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:13:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:13:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:13:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:13:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:13:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:13:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:13:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:14:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:14:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:14:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:14:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:14:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:14:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:14:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:14:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:14:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:14:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:14:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:14:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:14:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:14:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:15:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:15:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:15:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:15:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:15:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:15:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:15:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:15:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:15:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:15:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:15:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:15:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:15:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:15:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:16:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:16:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:16:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:16:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:16:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:16:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:16:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:16:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:16:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:16:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:16:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:16:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:16:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:16:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:17:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:17:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:17:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:17:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:17:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:17:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:17:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:17:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:17:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:17:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:17:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:17:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:17:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:17:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:18:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:18:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:18:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:18:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:18:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:18:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:18:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:18:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:18:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:18:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:18:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:18:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:18:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:18:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:19:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:19:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:19:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:19:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:19:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:19:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:19:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:19:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:19:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:19:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:19:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:19:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:19:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:19:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:20:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:20:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:20:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:20:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:20:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:20:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:20:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:20:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:20:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:20:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:20:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:20:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:20:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:20:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:21:09 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-25 17:21:09 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-25 17:21:09 - ClamAV-GUI - INFO - Application starting...
+2025-10-25 17:21:09 - ClamAV-GUI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.png
+2025-10-25 17:21:09 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 377)
+2025-10-25 17:21:09 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-25 17:21:09 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-25 17:21:09 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-25 17:21:09 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 17:21:09 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found in available languages
+2025-10-25 17:21:09 - clamav_gui.lang.lang_manager - WARNING - Language en not found in available languages
+2025-10-25 17:21:09 - ClamAV-GUI - WARNING - System language en_US not available, falling back to English
+2025-10-25 17:21:09 - clamav_gui.lang.lang_manager - WARNING - Language en not found in available languages
+2025-10-25 17:21:09 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 377)
+2025-10-25 17:21:09 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-25 17:21:09 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-25 17:21:09 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-25 17:21:09 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 17:21:09 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.ico
+2025-10-25 17:21:09 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-25 17:21:09 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-25 17:21:09 - clamav_gui.ui.home_tab - INFO - Successfully loaded logo from: clamav_gui/assets/logo.png
+2025-10-25 17:21:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:09 - clamav_gui.ui.home_tab - INFO - Attempting to reinitialize quarantine manager from home tab...
+2025-10-25 17:21:09 - clamav_gui.main_window - INFO - Quarantine manager reinitialized successfully
+2025-10-25 17:21:09 - clamav_gui.ui.home_tab - INFO - Quarantine manager successfully reinitialized
+2025-10-25 17:21:09 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:21:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:09 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 17:21:09 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 17:21:09 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 17:21:09 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 17:21:09 - clamav_gui.ui.ml_detection_tab - INFO - ML components initialized successfully
+2025-10-25 17:21:09 - clamav_gui.ui.smart_scanning_tab - INFO - Smart scanner initialized
+2025-10-25 17:21:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:10 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:10 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:10 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:10 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:10 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:10 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:12 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-25 17:21:13 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.5, latest: 1.2.5)
+2025-10-25 17:21:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:21:39 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:22:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:22:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:22:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:22:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:22:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:22:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:22:09 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:22:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:22:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:22:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:22:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:22:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:22:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:22:39 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:23:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:23:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:23:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:23:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:23:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:23:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:23:09 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:23:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:23:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:23:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:23:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:23:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:23:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:23:39 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:24:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:24:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:24:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:24:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:24:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:24:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:24:09 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:24:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:24:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:24:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:24:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:24:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:24:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:24:39 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:25:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:25:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:25:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:25:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:25:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:25:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:25:09 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:25:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:25:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:25:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:25:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:25:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:25:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:25:39 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:26:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:26:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:26:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:26:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:26:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:26:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:26:09 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:26:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:26:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:26:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:26:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:26:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:26:39 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:26:39 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:27:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:27:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:27:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:27:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:27:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:27:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:27:09 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:30:08 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-25 17:30:08 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-25 17:30:08 - ClamAV-GUI - INFO - Application starting...
+2025-10-25 17:30:08 - ClamAV-GUI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.png
+2025-10-25 17:30:08 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 377)
+2025-10-25 17:30:08 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-25 17:30:08 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-25 17:30:08 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-25 17:30:08 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 17:30:08 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found in available languages
+2025-10-25 17:30:08 - clamav_gui.lang.lang_manager - WARNING - Language en not found in available languages
+2025-10-25 17:30:08 - ClamAV-GUI - WARNING - System language en_US not available, falling back to English
+2025-10-25 17:30:08 - clamav_gui.lang.lang_manager - WARNING - Language en not found in available languages
+2025-10-25 17:30:08 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 377)
+2025-10-25 17:30:08 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-25 17:30:08 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-25 17:30:08 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-25 17:30:08 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 17:30:08 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.ico
+2025-10-25 17:30:08 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-25 17:30:08 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-25 17:30:08 - clamav_gui.ui.home_tab - INFO - Successfully loaded logo from: clamav_gui/assets/logo.png
+2025-10-25 17:30:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:08 - clamav_gui.ui.home_tab - INFO - Attempting to reinitialize quarantine manager from home tab...
+2025-10-25 17:30:08 - clamav_gui.main_window - INFO - Quarantine manager reinitialized successfully
+2025-10-25 17:30:08 - clamav_gui.ui.home_tab - INFO - Quarantine manager successfully reinitialized
+2025-10-25 17:30:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:30:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:08 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 17:30:08 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 17:30:08 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 17:30:08 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 17:30:08 - clamav_gui.ui.ml_detection_tab - INFO - ML components initialized successfully
+2025-10-25 17:30:08 - clamav_gui.ui.smart_scanning_tab - INFO - Smart scanner initialized
+2025-10-25 17:30:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:11 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-25 17:30:12 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.5, latest: 1.2.5)
+2025-10-25 17:30:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:30:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:31:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:31:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:31:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:31:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:31:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:31:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:31:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:32:01 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-25 17:32:01 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-25 17:32:01 - ClamAV-GUI - INFO - Application starting...
+2025-10-25 17:32:01 - ClamAV-GUI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.png
+2025-10-25 17:32:01 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 377)
+2025-10-25 17:32:01 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-25 17:32:01 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-25 17:32:01 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-25 17:32:01 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 17:32:01 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found in available languages
+2025-10-25 17:32:01 - clamav_gui.lang.lang_manager - WARNING - Language en not found in available languages
+2025-10-25 17:32:01 - ClamAV-GUI - WARNING - System language en_US not available, falling back to English
+2025-10-25 17:32:01 - clamav_gui.lang.lang_manager - WARNING - Language en not found in available languages
+2025-10-25 17:32:01 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 377)
+2025-10-25 17:32:01 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-25 17:32:01 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-25 17:32:01 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-25 17:32:01 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 17:32:01 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.ico
+2025-10-25 17:32:01 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-25 17:32:01 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-25 17:32:01 - clamav_gui.ui.home_tab - INFO - Successfully loaded logo from: clamav_gui/assets/logo.png
+2025-10-25 17:32:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:01 - clamav_gui.ui.home_tab - INFO - Attempting to reinitialize quarantine manager from home tab...
+2025-10-25 17:32:01 - clamav_gui.main_window - INFO - Quarantine manager reinitialized successfully
+2025-10-25 17:32:01 - clamav_gui.ui.home_tab - INFO - Quarantine manager successfully reinitialized
+2025-10-25 17:32:01 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:32:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:01 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 17:32:01 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 17:32:01 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 17:32:01 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 17:32:01 - clamav_gui.ui.ml_detection_tab - INFO - ML components initialized successfully
+2025-10-25 17:32:01 - clamav_gui.ui.smart_scanning_tab - INFO - Smart scanner initialized
+2025-10-25 17:32:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:02 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:02 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:02 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:02 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:02 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:02 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:04 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-25 17:32:05 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.5, latest: 1.2.5)
+2025-10-25 17:32:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:32:31 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:33:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:33:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:33:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:33:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:33:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:33:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:33:01 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:33:20 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:33:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:33:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:33:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:33:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:33:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:33:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:33:31 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:34:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:34:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:34:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:34:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:34:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:34:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:34:01 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:34:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:34:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:34:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:34:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:34:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:34:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:34:31 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:35:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:35:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:35:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:35:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:35:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:35:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:35:01 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:35:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:35:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:35:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:35:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:35:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:35:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:35:31 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:36:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:36:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:36:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:36:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:36:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:36:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:36:01 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:36:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:36:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:36:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:36:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:36:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:36:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:36:31 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:37:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:37:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:37:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:37:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:37:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:37:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:37:01 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:37:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:37:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:37:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:37:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:37:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:37:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:37:31 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:38:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:38:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:38:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:38:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:38:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:38:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:38:01 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:38:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:38:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:38:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:38:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:38:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:38:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:38:31 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:39:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:39:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:39:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:39:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:39:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:39:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:39:01 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:39:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:39:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:39:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:39:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:39:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:39:31 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:39:31 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:40:07 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-25 17:40:07 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-25 17:40:07 - ClamAV-GUI - INFO - Application starting...
+2025-10-25 17:40:07 - ClamAV-GUI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.png
+2025-10-25 17:40:07 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 377)
+2025-10-25 17:40:07 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-25 17:40:07 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-25 17:40:07 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-25 17:40:07 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 17:40:07 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found in available languages
+2025-10-25 17:40:07 - clamav_gui.lang.lang_manager - WARNING - Language en not found in available languages
+2025-10-25 17:40:07 - ClamAV-GUI - WARNING - System language en_US not available, falling back to English
+2025-10-25 17:40:07 - clamav_gui.lang.lang_manager - WARNING - Language en not found in available languages
+2025-10-25 17:40:07 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 377)
+2025-10-25 17:40:07 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-25 17:40:07 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-25 17:40:07 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-25 17:40:07 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-25 17:40:07 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.ico
+2025-10-25 17:40:07 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-25 17:40:07 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-25 17:40:07 - clamav_gui.ui.home_tab - INFO - Successfully loaded logo from: clamav_gui/assets/logo.png
+2025-10-25 17:40:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:07 - clamav_gui.ui.home_tab - INFO - Attempting to reinitialize quarantine manager from home tab...
+2025-10-25 17:40:07 - clamav_gui.main_window - INFO - Quarantine manager reinitialized successfully
+2025-10-25 17:40:07 - clamav_gui.ui.home_tab - INFO - Quarantine manager successfully reinitialized
+2025-10-25 17:40:07 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:40:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:07 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 17:40:07 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-25 17:40:07 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 17:40:07 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-25 17:40:07 - clamav_gui.ui.ml_detection_tab - INFO - ML components initialized successfully
+2025-10-25 17:40:07 - clamav_gui.ui.smart_scanning_tab - INFO - Smart scanner initialized
+2025-10-25 17:40:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:09 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:11 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-25 17:40:11 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.5, latest: 1.2.5)
+2025-10-25 17:40:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:40:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:41:01 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:41:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:41:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:41:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:41:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:41:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:41:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:41:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:41:11 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:41:14 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:41:15 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:41:24 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:41:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:41:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:41:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:41:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:41:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:41:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:41:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:42:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:42:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:42:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:42:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:42:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:42:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:42:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:42:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:42:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:42:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:42:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:42:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:42:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:42:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:43:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:43:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:43:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:43:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:43:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:43:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:43:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:43:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:43:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:43:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:43:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:43:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:43:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:43:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:44:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:44:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:44:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:44:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:44:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:44:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:44:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:44:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:44:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:44:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:44:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:44:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:44:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:44:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:45:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:45:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:45:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:45:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:45:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:45:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:45:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:45:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:45:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:45:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:45:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:45:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:45:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:45:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:46:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:46:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:46:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:46:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:46:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:46:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:46:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:46:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:46:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:46:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:46:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:46:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:46:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:46:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:47:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:47:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:47:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:47:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:47:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:47:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:47:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:47:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:47:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:47:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:47:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:47:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:47:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:47:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:48:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:48:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:48:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:48:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:48:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:48:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:48:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:48:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:48:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:48:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:48:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:48:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:48:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:48:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:49:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:49:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:49:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:49:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:49:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:49:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:49:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:49:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:49:37 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:49:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:49:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:49:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:49:38 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:49:38 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-25 17:50:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:50:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:50:07 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:50:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:50:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:50:08 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-25 17:50:08 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully

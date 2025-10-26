@@ -139,7 +139,7 @@ class ClamAVGUI(ClamAVMainWindow):
             self.lang_manager.language_changed.connect(self.retranslate_ui)
         # Set up the main window
         self.setWindowTitle(self.tr("ClamAV GUI"))
-        self.resize(800, 680)
+        self.resize(800, 600)
         self.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint | Qt.WindowMaximizeButtonHint | Qt.WindowCloseButtonHint)
         self.setWindowIcon(QIcon("assets/icon.ico"))
                 
@@ -2022,7 +2022,7 @@ Recent files:
             # Show report in a dialog
             dialog = QDialog(self)
             dialog.setWindowTitle(self.tr("Scan Report"))
-            dialog.resize(800, 600)
+            dialog.resize(800, 500)
 
             layout = QVBoxLayout(dialog)
 
@@ -2370,7 +2370,7 @@ Recent files:
             # Display results in a dialog
             dialog = QDialog(self)
             dialog.setWindowTitle(self.tr("Batch ML Analysis Results"))
-            dialog.resize(800, 600)
+            dialog.resize(800, 500)
 
             layout = QVBoxLayout(dialog)
 

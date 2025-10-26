@@ -34,7 +34,7 @@ class StatusTab(QWidget):
         # Information display
         self.info_text = QTextEdit()
         self.info_text.setReadOnly(True)
-        self.info_text.setMaximumHeight(300)
+        self.info_text.setFixedHeight(500)
         info_layout.addWidget(self.info_text)
 
         # Action buttons layout (side by side)
@@ -488,17 +488,26 @@ class StatusTab(QWidget):
         try:
             sigtool_path = self._find_sigtool()
             if sigtool_path:
-                process = subprocess.run([sigtool_path, '--info', db_dir],
-                                       capture_output=True, text=True, timeout=10,
-                                       cwd=db_dir)
-                if process.returncode == 0:
-                    for line in process.stdout.split('\n'):
-                        if 'signatures' in line.lower():
-                            parts = line.split(':')
-                            if len(parts) > 1:
-                                sig_count = parts[1].strip().split()[0]
-                                if sig_count.isdigit():
-                                    return int(sig_count)
+                # Get list of CVD files and run sigtool on each
+                cvd_files = [f for f in db_files if f.endswith('.cvd')]
+                total_signatures = 0
+
+                for cvd_file in cvd_files:
+                    cvd_path = os.path.join(db_dir, cvd_file)
+                    process = subprocess.run([sigtool_path, '--info', cvd_path],
+                                           capture_output=True, text=True, timeout=10)
+                    if process.returncode == 0:
+                        for line in process.stdout.split('\n'):
+                            if 'signatures' in line.lower():
+                                parts = line.split(':')
+                                if len(parts) > 1:
+                                    sig_count = parts[1].strip().split()[0]
+                                    if sig_count.isdigit():
+                                        total_signatures += int(sig_count)
+                                        break
+
+                if total_signatures > 0:
+                    return total_signatures
         except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
             pass
 
@@ -509,22 +518,31 @@ class StatusTab(QWidget):
 
             if sigtool_path:
                 print(f"StatusTab DEBUG: Running sigtool --info with path: {sigtool_path}")
-                process = subprocess.run([sigtool_path, '--info', db_dir],
-                                       capture_output=True, text=True, timeout=30,
-                                       cwd=db_dir)
-                if process.returncode == 0:
-                    output = process.stdout.strip()
-                    print(f"StatusTab DEBUG: sigtool --info output: '{output}'")
-                    # Extract the number from output (sigtool --info typically outputs signature info)
-                    numbers = re.findall(r'\d+', output)
-                    if numbers:
-                        sig_count = int(numbers[0])
-                        if sig_count > 100000:  # Reasonable signature count
-                            print(f"StatusTab DEBUG: sigtool --info returned {sig_count} signatures")
-                            return sig_count
-                else:
-                    print(f"StatusTab DEBUG: sigtool --info failed with return code {process.returncode}")
-                    print(f"StatusTab DEBUG: stderr: {process.stderr.strip()}")
+                # Get list of CVD files and run sigtool on each
+                cvd_files = [f for f in db_files if f.endswith('.cvd')]
+                total_signatures = 0
+
+                for cvd_file in cvd_files:
+                    cvd_path = os.path.join(db_dir, cvd_file)
+                    process = subprocess.run([sigtool_path, '--info', cvd_path],
+                                           capture_output=True, text=True, timeout=10)
+                    if process.returncode == 0:
+                        output = process.stdout.strip()
+                        print(f"StatusTab DEBUG: sigtool --info output for {cvd_file}: '{output}'")
+                        # Extract the number from output (sigtool --info typically outputs signature info)
+                        numbers = re.findall(r'\d+', output)
+                        if numbers:
+                            sig_count = int(numbers[0])
+                            if sig_count > 100000:  # Reasonable signature count
+                                total_signatures += sig_count
+                                print(f"StatusTab DEBUG: sigtool --info returned {sig_count} signatures for {cvd_file}")
+                                break
+                    else:
+                        print(f"StatusTab DEBUG: sigtool --info failed for {cvd_file} with return code {process.returncode}")
+                        print(f"StatusTab DEBUG: stderr: {process.stderr.strip()}")
+
+                if total_signatures > 0:
+                    return total_signatures
         except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError) as e:
             print(f"StatusTab DEBUG: Error running sigtool --info: {e}")
             pass
@@ -645,27 +663,43 @@ class StatusTab(QWidget):
 
             if sigtool_path and os.path.exists(sigtool_path):
                 print(f"StatusTab DEBUG: Running sigtool to get signature info: {sigtool_path}")
-                # Try sigtool --info with database directory as argument
-                process = subprocess.run([sigtool_path, '--info', db_dir],
-                                       capture_output=True, text=True, timeout=30)
-                if process.returncode == 0:
-                    output = process.stdout.strip()
-                    print(f"StatusTab DEBUG: sigtool --info output: {output}")
-                    # Look for signature count in output
-                    for line in output.split('\n'):
-                        line_lower = line.lower()
-                        if 'signatures' in line_lower or 'total' in line_lower:
-                            # Try to extract number
-                            numbers = re.findall(r'\d+', line)
-                            if numbers:
-                                count = int(numbers[0])
-                                if count > 1000000:  # Reasonable signature count
-                                    print(f"StatusTab DEBUG: Found signature count in sigtool output: {count}")
-                                    return count
-                else:
-                    print(f"StatusTab DEBUG: sigtool --info failed with return code {process.returncode}")
-                    if process.stderr:
-                        print(f"StatusTab DEBUG: stderr: {process.stderr.strip()}")
+
+                # Get list of CVD files
+                cvd_files = [f for f in os.listdir(db_dir) if f.endswith('.cvd')]
+                total_signatures = 0
+
+                # Run sigtool --info on each CVD file individually
+                for cvd_file in cvd_files:
+                    cvd_path = os.path.join(db_dir, cvd_file)
+                    try:
+                        process = subprocess.run([sigtool_path, '--info', cvd_path],
+                                               capture_output=True, text=True, timeout=10)
+                        if process.returncode == 0:
+                            output = process.stdout.strip()
+                            print(f"StatusTab DEBUG: sigtool --info output for {cvd_file}: {output}")
+                            # Look for signature count in output
+                            for line in output.split('\n'):
+                                line_lower = line.lower()
+                                if 'signatures' in line_lower or 'total' in line_lower:
+                                    # Try to extract number
+                                    numbers = re.findall(r'\d+', line)
+                                    if numbers:
+                                        count = int(numbers[0])
+                                        if count > 100000:  # Reasonable signature count
+                                            total_signatures += count
+                                            print(f"StatusTab DEBUG: Found {count} signatures in {cvd_file}")
+                                            break
+                        else:
+                            print(f"StatusTab DEBUG: sigtool --info failed for {cvd_file} with return code {process.returncode}")
+                            if process.stderr:
+                                print(f"StatusTab DEBUG: stderr: {process.stderr.strip()}")
+                    except (subprocess.TimeoutExpired, subprocess.CalledProcessError) as e:
+                        print(f"StatusTab DEBUG: Error running sigtool on {cvd_file}: {e}")
+                        continue
+
+                if total_signatures > 0:
+                    print(f"StatusTab DEBUG: Total signature count from all CVD files: {total_signatures}")
+                    return total_signatures
 
         except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError) as e:
             print(f"StatusTab DEBUG: Error running sigtool: {e}")

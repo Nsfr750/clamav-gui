@@ -8,7 +8,7 @@ from PySide6 import QtCore, QtWidgets, QtGui
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QGroupBox, QLabel, QPushButton,
     QProgressBar, QGridLayout, QFrame, QSizePolicy, QSpacerItem,
-    QListWidget, QListWidgetItem, QTextEdit
+    QListWidget, QListWidgetItem, QTextEdit, QMessageBox
 )
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QFont, QColor, QPixmap

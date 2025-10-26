@@ -13,7 +13,6 @@ from clamav_gui.lang.lang_manager import SimpleLanguageManager
 
 logger = logging.getLogger(__name__)
 
-
 class ClamAVMainWindow(QMainWindow):
     """Advanced main window base class with full mode functionality."""
 

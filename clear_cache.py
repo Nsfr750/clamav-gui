@@ -25,3 +25,16 @@ if build_dir.exists():
         print(f"Error clearing build directory: {e}")
 else:
     print("Build directory does not exist")
+
+# Also clear dist directory
+build_dir = Path("dist")
+if build_dir.exists():
+    print(f"Clearing dist directory: {build_dir}")
+    try:
+        shutil.rmtree(build_dir)
+        print("Dist directory cleared successfully")
+    except Exception as e:
+        print(f"Error clearing dist directory: {e}")
+else:
+    print("Dist directory does not exist")
+
