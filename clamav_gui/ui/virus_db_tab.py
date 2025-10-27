@@ -16,7 +16,6 @@ from PySide6.QtGui import QFont
 import logging
 logger = logging.getLogger(__name__)
 
-
 class VirusDBTab(QWidget):
     """Tab for displaying and managing ClamAV virus database information."""
 
@@ -92,7 +91,6 @@ class VirusDBTab(QWidget):
             }
         """)
         buttons_layout.addWidget(self.refresh_btn)
-
         self.update_btn = QPushButton("Update Database")
         self.update_btn.clicked.connect(self.update_database)
         # Style the Update Database button with blue background and white text
@@ -117,7 +115,6 @@ class VirusDBTab(QWidget):
             }
         """)
         buttons_layout.addWidget(self.update_btn)
-
         buttons_layout.addStretch()
         main_layout.addLayout(buttons_layout)
 
@@ -526,7 +523,6 @@ class VirusDBTab(QWidget):
         if self.refresh_timer:
             self.refresh_timer.stop()
         event.accept()
-
 
 class DatabaseUpdateThread(QThread):
     """Thread for updating ClamAV database."""
