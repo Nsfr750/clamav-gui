@@ -347,6 +347,23 @@ TRANSLATIONS = {
         "tab.not_available": "Quarantine tab not available",
         "tab.config_not_available": "Config Editor tab not available",
         
+         # Sponsor dialog
+        "sponsor.message": "Se trovi questa applicazione utile, considera di supportare il suo sviluppo.\n\nIl tuo supporto aiuta a coprire i costi di hosting e incoraggia lo sviluppo ulteriore.",  
+        "sponsor.title": "Supporta il Progetto",
+        "sponsor.window_title": "Supporta il Progetto",
+        "sponsor.links.github_sponsors": "GitHub Sponsors",
+        "sponsor.links.paypal": "Dona con PayPal",
+        "sponsor.monero.label": "Monero:",
+        "sponsor.qr_tooltip": "Scansiona per donare XMR",
+        "sponsor.ways_to_support": "Modalità di supporto:", 
+        "sponsor.other_ways.title": "Altre modalità di supporto:",
+        "sponsor.other_ways.star": "Assegna una Stella al progetto su ",
+        "sponsor.other_ways.report": "Segnala errori e suggerisci funzionalità",
+        "sponsor.other_ways.share": "Condividi con altri che potrebbero trovarla utile",
+        "sponsor.buttons.donate_paypal": "Donazione con PayPal",
+        "sponsor.buttons.copy_monero": "Copia indirizzo Monero",
+  
+        
         # Help dialog strings
         "help.window_title": "ClamAV GUI Help",
         "common.close": "Close",
@@ -356,7 +373,7 @@ TRANSLATIONS = {
         "help.translation_error": "Error retranslating UI: {error}",
         "help.language_switched": "Language switched to {language}",
         "help.language_switch_error": "Error switching language: {error}",
-                "status.information": "Information:",
+        "status.information": "Information:",
         "status.version_info": "📋 Version Information:",
         "status.database_info": "🗃️ Database Information:",
         "status.system_info": "💻 System Information:",
