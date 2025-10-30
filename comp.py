@@ -332,7 +332,8 @@ coll = COLLECT(
         print(f"\n🔨 Compilazione applicazione ({'debug' if debug else 'release'})...")
 
         # Crea comando PyInstaller diretto invece di usare spec file
-        cmd = ["pyinstaller", "--clean"]
+        # Usa il modulo per evitare problemi di PATH su Windows
+        cmd = [sys.executable, "-m", "PyInstaller", "--clean"]
 
         if onefile:
             cmd.append("--onefile")
