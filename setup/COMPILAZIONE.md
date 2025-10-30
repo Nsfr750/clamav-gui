@@ -1,47 +1,22 @@
-# Guida alla Compilazione - ClamAV GUI
-
-Questa guida spiega come utilizzare gli script di compilazione per creare un eseguibile Windows (.exe) del ClamAV GUI.
-
-## Script Disponibili
-
-### 1. `compile_app.py` (Script Python principale)
-
-Script di compilazione avanzato con opzioni configurabili.
-
-### 2. `compila.bat` (Script Batch per Windows)
-
-Versione semplificata per utenti Windows, con menu interattivo.
-
-## Utilizzo
-
-### Utilizzo del Batch (Raccomandato per Windows)
-
-1. Apri il Prompt dei Comandi o PowerShell nella directory del progetto
-2. Esegui:
-
-   ```batch
-   compila.bat
-   ```
-
-3. Segui le istruzioni a schermo per scegliere le opzioni di compilazione
+# Guida alla Compilazione
 
 ### Utilizzo dello Script Python
 
 ```bash
 # Compilazione normale (raccomandata)
-python compile_app.py
+python comp.py
 
 # Compilazione con debug (console visibile)
-python compile_app.py --debug
+python comp.py --debug
 
 # Pulisce tutto e ricompila
-python compile_app.py --clean
+python comp.py --clean
 
 # Senza compressione UPX
-python compile_app.py --no-upx
+python comp.py --no-upx
 
 # Crea directory invece di singolo file
-python compile_app.py --onedir
+python comp.py --onedir
 ```
 
 ## Opzioni di Compilazione
@@ -134,7 +109,7 @@ pip install pyinstaller pywin32 pefile
 
 ## Personalizzazione
 
-Puoi modificare il file `compile_app.py` per personalizzare:
+Puoi modificare il file `comp.py` per personalizzare:
 
 ### Versione
 

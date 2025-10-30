@@ -40,7 +40,7 @@ class AppCompiler:
         self.dist_dir = self.root_dir / "dist"
         self.build_dir = self.root_dir / "build"
         self.output_dir = self.root_dir / "dist" / f"{APP_NAME}_Package"
-        self.spec_file = self.root_dir / f"{APP_NAME}.spec"
+        self.spec_file = self.root_dir / "AV.spec"
 
     def print_banner(self):
         """Stampa il banner informativo."""
@@ -182,7 +182,7 @@ class AppCompiler:
 block_cipher = None
 
 a = Analysis(
-    ['clamav_gui/__main__.py'],
+    ['../clamav_gui/__main__.py'],
     pathex=['X:/GitHub/clamav-gui'],
     binaries=[
         # ClamAV libraries will be added dynamically
@@ -249,7 +249,7 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name='{APP_NAME}',
+    name='ClamAV-GUI',
     debug={str(debug).lower()},
     bootloader_ignore_signals=False,
     strip=False,
@@ -331,72 +331,10 @@ coll = COLLECT(
         """Compila l'applicazione."""
         print(f"\n🔨 Compilazione applicazione ({'debug' if debug else 'release'})...")
 
-        # Crea comando PyInstaller diretto invece di usare spec file
+        # Compilazione tramite file .spec esistente
+        # Nota: le opzioni debug/onefile/use_upx devono essere gestite nel file AV.spec
         # Usa il modulo per evitare problemi di PATH su Windows
-        cmd = [sys.executable, "-m", "PyInstaller", "--clean"]
-
-        if onefile:
-            cmd.append("--onefile")
-        else:
-            cmd.append("--onedir")
-
-        if not use_upx:
-            cmd.append("--noupx")
-
-        if debug:
-            cmd.append("--console")  # Solo per debug
-        else:
-            cmd.append("--windowed")  # No console per release builds
-
-        # Aggiungi dati necessari (immagini, script, config, docs)
-        data_files = [
-            ("clamav_gui", "clamav_gui"),
-            ("script", "script"),
-            ("config", "config"),
-            ("docs", "docs"),
-        ]
-
-        for src, dst in data_files:
-            if os.path.exists(src):
-                cmd.extend(["--add-data", f"{src};{dst}"])
-
-        # Aggiungi file immagini separatamente per sicurezza
-        img_dir = "clamav_gui/assets"
-        if os.path.exists(img_dir):
-            cmd.extend(["--add-data", f"{img_dir};{img_dir}"])
-
-        # Aggiungi hidden imports per librerie scientifiche
-        hidden_imports = [
-            'scipy', 'scipy.sparse', 'scipy.stats', 'scipy.stats.distributions',
-            'scipy.stats._distn_infrastructure', 'scipy.special', 'scipy._lib',
-            'sklearn', 'sklearn.utils', 'sklearn.utils._param_validation',
-            'sklearn.utils.validation', 'sklearn.utils._array_api', 'sklearn.utils.fixes',
-            'sklearn.base', 'numpy', 'numpy.random', 'numpy.linalg', 'numpy.fft',
-            'numpy.core', 'numpy.lib', 'matplotlib', 'matplotlib.pyplot',
-            'matplotlib.backends', 'matplotlib.backends.backend_qt5agg',
-            'PySide6.QtCore', 'PySide6.QtGui', 'PySide6.QtWidgets'
-        ]
-
-        for hidden_import in hidden_imports:
-            cmd.extend(['--hidden-import', hidden_import])
-
-        # Aggiungi supporto per librerie ClamAV se disponibili
-        clamav_lib_paths = self._find_clamav_libraries()
-        for lib_path in clamav_lib_paths:
-            if lib_path:
-                # Usa la sintassi corretta SOURCE:DEST per PyInstaller
-                lib_filename = os.path.basename(lib_path)
-                cmd.extend([f"--add-binary={lib_path};{lib_filename}"])
-
-        # Aggiungi icona se disponibile
-        icon_path = self.find_icon()
-        if icon_path:
-            # Usa il percorso completo per l'icona
-            full_icon_path = self.root_dir / icon_path
-            cmd.extend(["--icon", str(full_icon_path)])
-
-        # Script principale
-        cmd.append("clamav_gui/__main__.py")
+        cmd = [sys.executable, "-m", "PyInstaller", "--clean", str(self.spec_file)]
 
         print(f"   Comando: {' '.join(cmd)}")
 
@@ -438,6 +376,22 @@ coll = COLLECT(
             if pattern.exists():
                 exe_source = pattern
                 break
+
+        # Fallback: cerca qualsiasi .exe nella cartella dist se il nome differisce da APP_NAME
+        if not exe_source:
+            try:
+                candidates = list(self.dist_dir.glob("*.exe"))
+                if not candidates:
+                    subdir_candidates = []
+                    for sub in self.dist_dir.iterdir():
+                        if sub.is_dir():
+                            subdir_candidates.extend(sub.glob("*.exe"))
+                    candidates = subdir_candidates
+                if candidates:
+                    # scegli il più recente
+                    exe_source = max(candidates, key=lambda p: p.stat().st_mtime)
+            except (OSError, IOError):
+                exe_source = None
 
         if not exe_source:
             print("❌ Eseguibile non trovato dopo la compilazione!")
@@ -545,8 +499,13 @@ Creato automaticamente dal compilatore ClamAV GUI
         if clean:
             self.clean_build()
 
-        # Crea versione file
-        self.create_version_info()
+        # Verifica file versione esterno
+        version_file = self.root_dir / "version_info.txt"
+        if not version_file.exists():
+            print("❌ version_info.txt non trovato in setup/. Crealo e riprova.")
+            return False
+        else:
+            print(f"📝 File versione rilevato: {version_file}")
 
         # Installa dipendenze se necessario
         self.install_dependencies()
