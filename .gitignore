@@ -195,3 +195,5 @@ step_by_step_import.py
 tests/
 
 
+compiler.py
+setup/comp.py

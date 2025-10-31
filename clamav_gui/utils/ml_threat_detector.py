@@ -23,7 +23,7 @@ try:
     from sklearn.metrics import accuracy_score, classification_report
     SKLEARN_AVAILABLE = True
     logger.info("scikit-learn and ML libraries successfully imported")
-except ImportError as e:
+except Exception as e:
     SKLEARN_AVAILABLE = False
     logger.warning(f"scikit-learn not available: {e}. ML features will be disabled.")
     # Define dummy classes to prevent import errors
