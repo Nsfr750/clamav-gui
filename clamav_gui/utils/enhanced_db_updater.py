@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 from datetime import datetime, timedelta
 from PySide6.QtCore import QThread, Signal
+from clamav_gui.utils.virus_db import get_cached_sig_info, VirusDBUpdater
 
 logger = logging.getLogger(__name__)
 
@@ -97,56 +98,20 @@ class EnhancedVirusDBUpdater:
                 'exists': os.path.exists(self.db_dir)
             }
 
-            # Try to get detailed signature information using sigtool if available
-            try:
-                result = subprocess.run(['sigtool', '--info'],
-                                      capture_output=True, text=True, timeout=10)
+            # Use cached signature information if available; do not execute sigtool here
+            cached = get_cached_sig_info()
+            if cached:
+                if 'signatures' in cached:
+                    try:
+                        base_info['signature_count'] = int(str(cached['signatures']).replace(',', ''))
+                    except ValueError:
+                        pass
+                if 'version' in cached:
+                    base_info['database_version'] = cached['version']
+                if 'build_time' in cached:
+                    base_info['build_time'] = cached['build_time']
 
-                if result.returncode == 0:
-                    output = result.stdout
-                    # Parse sigtool output for signature information
-                    for line in output.split('\n'):
-                        line = line.strip()
-                        if ': ' in line:
-                            key, value = line.split(': ', 1)
-                            key = key.lower().replace(' ', '_')
-                            if key == 'signatures':
-                                try:
-                                    base_info['signature_count'] = int(value.replace(',', ''))
-                                except ValueError:
-                                    pass
-                            elif key == 'version':
-                                base_info['database_version'] = value
-                            elif key == 'build_time':
-                                base_info['build_time'] = value
-
-            except (FileNotFoundError, subprocess.TimeoutExpired, subprocess.SubprocessError):
-                # sigtool not available or failed, use basic info
-                base_info['note'] = 'Detailed signature count requires sigtool (ClamAV development tools)'
-
-                # Try to estimate signature count based on file sizes
-                # This is a rough estimation based on typical ClamAV database characteristics
-                if 'main.cvd' in [f['name'] for f in db_files]:
-                    main_file = next(f for f in db_files if f['name'] == 'main.cvd')
-                    # Rough estimation: main.cvd typically contains ~50,000-100,000 signatures per 100MB
-                    estimated_main = int(main_file['size'] / 100000 * 75000)  # Conservative estimate
-                    base_info['estimated_main_signatures'] = estimated_main
-
-                if 'daily.cld' in [f['name'] for f in db_files]:
-                    daily_file = next(f for f in db_files if f['name'] == 'daily.cld')
-                    # Daily signatures are typically smaller and more numerous
-                    estimated_daily = int(daily_file['size'] / 1000 * 100)  # Rough estimate
-                    base_info['estimated_daily_signatures'] = estimated_daily
-
-                if 'bytecode.cvd' in [f['name'] for f in db_files]:
-                    bytecode_file = next(f for f in db_files if f['name'] == 'bytecode.cvd')
-                    # Bytecode signatures are specialized
-                    estimated_bytecode = int(bytecode_file['size'] / 10000 * 50)  # Rough estimate
-                    base_info['estimated_bytecode_signatures'] = estimated_bytecode
-
-                if 'estimated_main_signatures' in base_info or 'estimated_daily_signatures' in base_info or 'estimated_bytecode_signatures' in base_info:
-                    total_estimated = sum(base_info.get(key, 0) for key in ['estimated_main_signatures', 'estimated_daily_signatures', 'estimated_bytecode_signatures'])
-                    base_info['estimated_total_signatures'] = total_estimated
+            # If no cached info, keep base_info only (we avoid sigtool here)
 
             return base_info
 
@@ -262,6 +227,11 @@ class EnhancedVirusDBUpdater:
             if result.returncode == 0:
                 # Update metadata
                 self._update_metadata_after_update(result.stdout)
+                # Refresh cached sig info once update succeeds
+                try:
+                    VirusDBUpdater().refresh_sig_info()
+                except Exception:
+                    pass
                 return True, f"Database updated successfully: {result.stdout.strip()}"
             else:
                 # Try to restore from backup if update failed

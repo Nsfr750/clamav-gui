@@ -21,6 +21,7 @@ try:
     from clamav_gui.lang.lang_manager import SimpleLanguageManager
     from clamav_gui import __version__
     from clamav_gui.ui.updates_ui import check_for_updates
+    from clamav_gui.utils.virus_db import VirusDBUpdater
     
     # Ensure logs directory exists and log its path
     try:
@@ -111,6 +112,13 @@ def main():
         # Create and show main window (ClamAVGUI with full mode functionality)
         window = ClamAVGUI(lang_manager)
         window.show()
+
+        # One-time sigtool info refresh at startup (non-blocking)
+        try:
+            from PySide6.QtCore import QTimer
+            QTimer.singleShot(100, lambda: VirusDBUpdater().refresh_sig_info())
+        except Exception:
+            pass
         
         # Check for updates (non-blocking)
         if not getattr(sys, 'frozen', False):

@@ -7,6 +7,7 @@ from datetime import datetime
 from PySide6 import QtCore, QtWidgets
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGroupBox,
                              QTextEdit, QPushButton, QMessageBox)
+from clamav_gui.utils.virus_db import get_cached_sig_info
 
 logger = logging.getLogger(__name__)
 
@@ -483,69 +484,16 @@ class StatusTab(QWidget):
         return None
 
     def _get_signature_count(self, db_dir, db_files):
-        """Get signature count using multiple methods."""
-        # Method 1: Try sigtool --info
-        try:
-            sigtool_path = self._find_sigtool()
-            if sigtool_path:
-                # Get list of CVD files and run sigtool on each
-                cvd_files = [f for f in db_files if f.endswith('.cvd')]
-                total_signatures = 0
-
-                for cvd_file in cvd_files:
-                    cvd_path = os.path.join(db_dir, cvd_file)
-                    process = subprocess.run([sigtool_path, '--info', cvd_path],
-                                           capture_output=True, text=True, timeout=10)
-                    if process.returncode == 0:
-                        for line in process.stdout.split('\n'):
-                            if 'signatures' in line.lower():
-                                parts = line.split(':')
-                                if len(parts) > 1:
-                                    sig_count = parts[1].strip().split()[0]
-                                    if sig_count.isdigit():
-                                        total_signatures += int(sig_count)
-                                        break
-
-                if total_signatures > 0:
-                    return total_signatures
-        except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
-            pass
-
-        # Method 2: Try sigtool --info (more reliable for signature count)
-        try:
-            # Get sigtool path
-            sigtool_path = self._find_sigtool()
-
-            if sigtool_path:
-                print(f"StatusTab DEBUG: Running sigtool --info with path: {sigtool_path}")
-                # Get list of CVD files and run sigtool on each
-                cvd_files = [f for f in db_files if f.endswith('.cvd')]
-                total_signatures = 0
-
-                for cvd_file in cvd_files:
-                    cvd_path = os.path.join(db_dir, cvd_file)
-                    process = subprocess.run([sigtool_path, '--info', cvd_path],
-                                           capture_output=True, text=True, timeout=10)
-                    if process.returncode == 0:
-                        output = process.stdout.strip()
-                        print(f"StatusTab DEBUG: sigtool --info output for {cvd_file}: '{output}'")
-                        # Extract the number from output (sigtool --info typically outputs signature info)
-                        numbers = re.findall(r'\d+', output)
-                        if numbers:
-                            sig_count = int(numbers[0])
-                            if sig_count > 100000:  # Reasonable signature count
-                                total_signatures += sig_count
-                                print(f"StatusTab DEBUG: sigtool --info returned {sig_count} signatures for {cvd_file}")
-                                break
-                    else:
-                        print(f"StatusTab DEBUG: sigtool --info failed for {cvd_file} with return code {process.returncode}")
-                        print(f"StatusTab DEBUG: stderr: {process.stderr.strip()}")
-
-                if total_signatures > 0:
-                    return total_signatures
-        except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError) as e:
-            print(f"StatusTab DEBUG: Error running sigtool --info: {e}")
-            pass
+        """Get signature count using cached info or fallback methods. Does not execute sigtool."""
+        # Prefer cached info if available
+        cached = get_cached_sig_info()
+        if cached and isinstance(cached, dict):
+            try:
+                sigs = cached.get('signatures')
+                if isinstance(sigs, str) and sigs.replace(',', '').isdigit():
+                    return int(sigs.replace(',', ''))
+            except Exception:
+                pass
 
         # Method 3: Try to get signature count from CVD file headers (more accurate)
         print(f"StatusTab DEBUG: Trying to get signature count from CVD headers")
@@ -643,95 +591,22 @@ class StatusTab(QWidget):
         if versions:
             return ', '.join(versions)
         else:
-            return 'Unknown'
+            return None
 
     def _get_accurate_signature_count(self, db_dir):
-        """Get accurate signature count using sigtool --info or similar."""
+        """Get accurate signature count from cached sigtool info if available. Does not execute sigtool."""
         try:
-            # Try to get sigtool path from settings
-            if hasattr(self.parent, 'current_settings') and self.parent.current_settings:
-                sigtool_path = self.parent.current_settings.get('sigtool_path', 'sigtool')
-            elif hasattr(self.parent, 'settings') and self.parent.settings:
-                settings = self.parent.settings.load_settings() or {}
-                sigtool_path = settings.get('sigtool_path', 'sigtool')
-            else:
-                sigtool_path = 'sigtool'
-
-            if not sigtool_path or sigtool_path == 'sigtool':
-                # Try to find sigtool in PATH
-                sigtool_path = self._find_sigtool_executable()
-
-            if sigtool_path and os.path.exists(sigtool_path):
-                print(f"StatusTab DEBUG: Running sigtool to get signature info: {sigtool_path}")
-
-                # Get list of CVD files
-                cvd_files = [f for f in os.listdir(db_dir) if f.endswith('.cvd')]
-                total_signatures = 0
-
-                # Run sigtool --info on each CVD file individually
-                for cvd_file in cvd_files:
-                    cvd_path = os.path.join(db_dir, cvd_file)
-                    try:
-                        process = subprocess.run([sigtool_path, '--info', cvd_path],
-                                               capture_output=True, text=True, timeout=10)
-                        if process.returncode == 0:
-                            output = process.stdout.strip()
-                            print(f"StatusTab DEBUG: sigtool --info output for {cvd_file}: {output}")
-                            # Look for signature count in output
-                            for line in output.split('\n'):
-                                line_lower = line.lower()
-                                if 'signatures' in line_lower or 'total' in line_lower:
-                                    # Try to extract number
-                                    numbers = re.findall(r'\d+', line)
-                                    if numbers:
-                                        count = int(numbers[0])
-                                        if count > 100000:  # Reasonable signature count
-                                            total_signatures += count
-                                            print(f"StatusTab DEBUG: Found {count} signatures in {cvd_file}")
-                                            break
-                        else:
-                            print(f"StatusTab DEBUG: sigtool --info failed for {cvd_file} with return code {process.returncode}")
-                            if process.stderr:
-                                print(f"StatusTab DEBUG: stderr: {process.stderr.strip()}")
-                    except (subprocess.TimeoutExpired, subprocess.CalledProcessError) as e:
-                        print(f"StatusTab DEBUG: Error running sigtool on {cvd_file}: {e}")
-                        continue
-
-                if total_signatures > 0:
-                    print(f"StatusTab DEBUG: Total signature count from all CVD files: {total_signatures}")
-                    return total_signatures
-
-        except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError) as e:
-            print(f"StatusTab DEBUG: Error running sigtool: {e}")
-
-        # Alternative: try to read the total signature count from all CVD files
-        try:
-            total_count = 0
-            for db_file in os.listdir(db_dir):
-                if db_file.endswith('.cvd'):
-                    db_path = os.path.join(db_dir, db_file)
-                    try:
-                        with open(db_path, 'rb') as f:
-                            # Try different offsets for signature count
-                            for offset in [512, 516, 520, 524]:
-                                f.seek(offset, 0)
-                                count_data = f.read(4)
-                                if len(count_data) == 4:
-                                    count = int.from_bytes(count_data, byteorder='little', signed=False)
-                                    if 100000 <= count <= 10000000:  # Reasonable range
-                                        total_count += count
-                                        print(f"StatusTab DEBUG: Found {count} signatures in {db_file}")
-                                        break
-                    except Exception:
-                        continue
-
-            if total_count > 0:
-                print(f"StatusTab DEBUG: Total signature count from CVD files: {total_count}")
-                return total_count
-
-        except Exception as e:
-            print(f"StatusTab DEBUG: Error reading CVD files: {e}")
-
+            cached = get_cached_sig_info()
+            if cached and isinstance(cached, dict):
+                sigs = cached.get('signatures')
+                if isinstance(sigs, str):
+                    clean = sigs.replace(',', '').strip()
+                    if clean.isdigit():
+                        return int(clean)
+                elif isinstance(sigs, int):
+                    return sigs
+        except Exception:
+            pass
         return None
 
     def _find_freshclam_executable(self):

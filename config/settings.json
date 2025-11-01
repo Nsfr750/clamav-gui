@@ -10,8 +10,5 @@
   "exclude_patterns": "*.log,*.tmp,*.cache",
   "include_patterns": "*",
   "auto_update": true,
-  "scanner_type": "clamav",
-  "db_path": "C:\\ProgramData\\ClamAV\\db",
-  "db_update_interval": 7,
-  "db_mirror_url": "db.us.clamav.net"
+  "scanner_type": "clamav"
 }

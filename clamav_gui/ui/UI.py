@@ -500,6 +500,19 @@ class ClamAVMainWindow(QMainWindow):
             layout.addWidget(QLabel(self.tr("Scan functionality not implemented in base class")))
             return tab
 
+    def create_email_scan_tab(self):
+        """Create the email scan tab using the actual EmailScanTab implementation."""
+        try:
+            from clamav_gui.ui.email_scan_tab import EmailScanTab
+            return EmailScanTab(self)
+        except ImportError:
+            # Fallback to placeholder if EmailScanTab is not available
+            from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
+            tab = QWidget()
+            layout = QVBoxLayout(tab)
+            layout.addWidget(QLabel(self.tr("Email scanning not implemented in base class")))
+            return tab
+
     def create_smart_scanning_tab(self):
         """Create the smart scanning tab using the actual SmartScanningTab implementation."""
         try:

@@ -19,7 +19,7 @@ class AppCompiler:
 
     def __init__(self):
         self.project_root = Path(__file__).parent.parent
-        self.script_dir = self.project_root
+        self.script_dir = self.project_root / "clamav_gui"
         self.lang_dir = self.project_root / "clamav_gui/lang"
         self.config_dir = self.project_root / "config"
         self.ui_dir = self.project_root / "clamav_gui/ui"
@@ -32,9 +32,9 @@ class AppCompiler:
         # Application details
         self.app_name = "ClamAV-GUI"
         self.main_script = "clamav_gui/__main__.py"
-        self.version_file = self.project_root / "setup" / "version_info.txt"
-        self.icon_file = "icon.ico"
-        self.logo_file = "logo.png"
+        self.version_file = self.project_root / "version_info.txt"
+        self.icon_file = "clamav_gui/assets/icon.ico"
+        self.logo_file = "clamav_gui/assets/logo.png"
         
         # Prefer an existing version file in setup/, do not auto-generate
 
@@ -48,7 +48,13 @@ class AppCompiler:
             'PyInstaller',
             'PySide6',
             'wand',
-            'qrcode'
+            'qrcode',
+            'joblib',
+            'scikit-learn',
+            'psutil',
+            'pefile',
+            'pyclamd',
+            'clamd',
         ]
 
         # Map distribution names to potential importable modules
@@ -57,6 +63,12 @@ class AppCompiler:
             'PySide6': ['PySide6'],
             'wand': ['wand'],
             'qrcode': ['qrcode'],
+            'joblib': ['joblib'],
+            'scikit-learn': ['scikit-learn'],
+            'psutil': ['psutil'],
+            'pefile': ['pefile'],
+            'pyclamd': ['pyclamd'],
+            'clamd': ['clamd'],
         }
 
         missing_packages = []
@@ -135,8 +147,9 @@ class AppCompiler:
         if self.version_file.exists():
             args.extend(['--version-file', str(self.version_file)])
 
-        # Icon (if exists)
-        icon_path = self.assets_dir / self.icon_file if not self.icon_file.startswith('assets/') else self.project_root / self.icon_file
+        # Icon (if exists) - resolve relative to project root
+        icon_rel = Path(self.icon_file)
+        icon_path = icon_rel if icon_rel.is_absolute() else (self.project_root / icon_rel)
         if icon_path.exists():
             args.extend(['--icon', str(icon_path)])
 
@@ -193,8 +206,8 @@ class AppCompiler:
             '--hidden-import', 'scipy._lib.messagestream',
         ])
 
-        # Main script at project root
-        args.append(str(self.script_dir / self.main_script))
+        # Main script at project root (avoid duplicating 'clamav_gui')
+        args.append(str(self.project_root / self.main_script))
 
         return args
 

@@ -36,12 +36,14 @@ psutil>=5.9.0           # System and process monitoring (optional)
 ### Method 1: From Source (Recommended for Development)
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/Nsfr750/clamav-gui.git
    cd clamav-gui
    ```
 
 2. **Create and activate virtual environment**:
+
    ```bash
    # Windows
    python -m venv venv
@@ -53,11 +55,13 @@ psutil>=5.9.0           # System and process monitoring (optional)
    ```
 
 3. **Install dependencies**:
+
    ```bash
    pip install -r requirements.txt
    ```
 
 4. **Run the application**:
+
    ```bash
    python -m clamav_gui
    ```
@@ -96,16 +100,19 @@ pre-commit>=3.0.0       # Git hooks
 ### Development Installation
 
 1. **Install development dependencies**:
+
    ```bash
    pip install -r requirements-dev.txt
    ```
 
 2. **Set up pre-commit hooks**:
+
    ```bash
    pre-commit install
    ```
 
 3. **Configure development environment**:
+
    ```bash
    # Copy environment template if it exists
    cp .env.example .env  # (if provided)
@@ -138,6 +145,7 @@ python -m pytest -v
 ### Test Coverage
 
 The project aims for comprehensive test coverage including:
+
 - **Unit Tests**: Individual function and class testing
 - **Integration Tests**: Component interaction testing
 - **GUI Tests**: User interface testing with pytest-qt
@@ -179,16 +187,19 @@ python -m pytest tests/test_main.py -v
 ### Common Issues
 
 **Import Errors**:
+
 - Ensure all dependencies are installed: `pip install -r requirements.txt`
 - Check Python version: `python --version` (should be 3.10+)
 - Verify virtual environment activation
 
 **ClamAV Not Found**:
+
 - Install ClamAV from official sources
 - Add ClamAV to system PATH
 - Check antivirus settings if blocking ClamAV
 
 **GUI Issues**:
+
 - Update PySide6: `pip install --upgrade PySide6`
 - Check display drivers and resolution settings
 - Try running with different Qt backend
@@ -250,9 +261,6 @@ This project is licensed under the GPLv3 License - see the [LICENSE](../LICENSE)
 ### Commercial Support
 
 For commercial support or custom development:
-- Email: [nsfr750@yandex.com](mailto:nsfr750@yandex.com)
+
+- Email: [Nsfr750](mailto:nsfr750@yandex.com)
 - Response time: Within 48 hours for inquiries
-
----
-
-*Last updated: October 24, 2025*

@@ -34,13 +34,13 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.1] - 2025-10-15
 
-### Added
+### Added 1.1.1
 
 - **Enhanced UI Styling**: Improved scan progress bar with animated blue gradient visualization
 - **Color-coded Action Buttons**: Green "Start Scan" and red "Stop Scan" buttons with hover effects for better user experience
 - **Visual Feedback Improvements**: Better visual consistency across scan interface with modern styling
 
-### Improved
+### Improved 1.1.1
 
 - **Progress Bar Visualization**: Enhanced animated progress indicators with gradient effects
 - **Button Design**: Color-coded action buttons for improved user interface clarity
@@ -48,7 +48,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.0] - 2025-10-12
 
-### Added
+### Added 1.1.0
 
 - **Machine Learning Integration**: AI-powered threat detection with feature extraction and ML models for advanced threat analysis beyond traditional signatures
 - **Error Recovery System**: Automatic retry mechanisms for failed operations with exponential backoff strategies for different error types (network, file access, database, scan interruptions)
@@ -66,7 +66,7 @@ All notable changes to this project will be documented in this file.
 - **Extended Configuration Options**: Added performance settings (max file size, scan time limits), file pattern filtering (include/exclude), and advanced scan options
 - **Real-time Statistics**: Enhanced progress tracking and scan statistics display throughout the application
 
-### Improved
+### Improved 1.1.0
 
 - **User Experience**: Better error messages, user feedback, and status reporting throughout the application
 - **Robustness**: Enhanced handling of corrupted or incomplete metadata files
@@ -75,7 +75,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.0.0] - 2025-09-25
 
-### Added
+### Added 1.0.0
 
 - Initial release of ClamAV GUI
 - Basic scanning and updating functionality

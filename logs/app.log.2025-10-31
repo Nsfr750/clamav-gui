@@ -1,0 +1,175 @@
+2025-10-31 02:22:37 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-31 02:22:37 - ClamAV-GUI - INFO - Application starting...
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 394)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 394)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - WARNING - Language it_IT not found, using default 'en_US'
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 394)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - WARNING - Language invalid_lang not found, using default 'en_US'
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 394)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 394)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - WARNING - Language it_IT not found in available languages
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 394)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - WARNING - Language invalid_lang not found in available languages
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 394)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - WARNING - Language it_IT not found in available languages
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 394)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language en_US: invalid syntax (en_US.py, line 394)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - ERROR - Failed to load language it_IT: invalid syntax (it_IT.py, line 554)
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Loaded 0 languages: []
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - WARNING - Language en_US not found, using default 'en_US'
+2025-10-31 02:22:37 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 02:28:33 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-31 02:28:33 - ClamAV-GUI - INFO - Application starting...
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: it_IT
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - WARNING - Language invalid_lang not found, using default 'en_US'
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Language changed from en_US to it_IT
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Language changed from it_IT to en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - WARNING - Language invalid_lang not found in available languages
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Language changed from en_US to it_IT
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-31 02:28:33 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 03:40:47 - clamav_gui.utils.ml_threat_detector - INFO - scikit-learn and ML libraries successfully imported
+2025-10-31 03:40:47 - ClamAV-GUI - INFO - Logs directory: X:\GitHub\clamav-gui\logs
+2025-10-31 03:40:47 - ClamAV-GUI - INFO - Application starting...
+2025-10-31 03:40:47 - ClamAV-GUI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.png
+2025-10-31 03:40:47 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-31 03:40:47 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-31 03:40:47 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-31 03:40:47 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 03:40:47 - ClamAV-GUI - INFO - Using system language: en_US
+2025-10-31 03:40:47 - clamav_gui.lang.lang_manager - INFO - Loaded language: en_US
+2025-10-31 03:40:47 - clamav_gui.lang.lang_manager - INFO - Loaded language: it_IT
+2025-10-31 03:40:47 - clamav_gui.lang.lang_manager - INFO - Loaded 2 languages: ['en_US', 'it_IT']
+2025-10-31 03:40:47 - clamav_gui.lang.lang_manager - INFO - Language manager initialized with language: en_US
+2025-10-31 03:40:47 - clamav_gui.ui.UI - INFO - Successfully loaded application icon from: X:\GitHub\clamav-gui\clamav_gui\assets\icon.ico
+2025-10-31 03:40:47 - clamav_gui.main_window - INFO - Menu bar set: exists=True
+2025-10-31 03:40:47 - clamav_gui.main_window - INFO - Menu count=5 titles=['&Language', '&File', '&Tools', 'Advanced Functions', '&Help']
+2025-10-31 03:40:47 - clamav_gui.ui.home_tab - INFO - Successfully loaded logo from: clamav_gui/assets/logo.png
+2025-10-31 03:40:47 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:40:47 - clamav_gui.ui.home_tab - INFO - Attempting to reinitialize quarantine manager from home tab...
+2025-10-31 03:40:47 - clamav_gui.main_window - INFO - Quarantine manager reinitialized successfully
+2025-10-31 03:40:47 - clamav_gui.ui.home_tab - INFO - Quarantine manager successfully reinitialized
+2025-10-31 03:40:47 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-31 03:40:47 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:40:47 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-31 03:40:47 - clamav_gui.ui.net_scan_tab - INFO - Network scanner initialized successfully
+2025-10-31 03:40:47 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-31 03:40:47 - clamav_gui.utils.ml_threat_detector - INFO - No existing ML model found, will need training
+2025-10-31 03:40:47 - clamav_gui.ui.ml_detection_tab - INFO - ML components initialized successfully
+2025-10-31 03:40:47 - clamav_gui.ui.smart_scanning_tab - INFO - Smart scanner initialized
+2025-10-31 03:40:47 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:40:47 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:40:49 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:40:51 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:40:51 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:40:53 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:40:54 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:40:56 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:40:58 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-31 03:40:59 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.5, latest: 1.2.5)
+2025-10-31 03:41:17 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:41:19 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:41:21 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:41:22 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:41:24 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-31 03:41:47 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:41:49 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:41:51 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:41:52 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:41:54 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-31 03:42:17 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:42:19 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:42:21 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:42:23 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:42:24 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-31 03:42:47 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:42:49 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:42:51 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:42:52 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:42:54 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-31 03:43:09 - clamav_gui.utils.updates - INFO - Checking for updates...
+2025-10-31 03:43:09 - clamav_gui.utils.updates - INFO - No updates available (current: 1.2.5, latest: 1.2.5)
+2025-10-31 03:43:17 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:43:19 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:43:21 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:43:22 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:43:24 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-31 03:43:30 - clamav_gui.ui.settings - INFO - Settings saved to X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:43:47 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:43:49 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:43:51 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:43:52 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:43:54 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-31 03:44:17 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:44:19 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:44:21 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:44:22 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:44:24 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully
+2025-10-31 03:44:47 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:44:49 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:44:51 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:44:52 - clamav_gui.ui.settings - INFO - Loaded settings from X:\GitHub\clamav-gui\config\settings.json
+2025-10-31 03:44:55 - clamav_gui.ui.virus_db_tab - INFO - Virus database information refreshed successfully

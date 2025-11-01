@@ -6,6 +6,7 @@ import logging
 import subprocess
 from pathlib import Path
 from datetime import datetime
+from typing import Dict, Optional
 from PySide6.QtCore import QObject, Signal, QProcess
 
 logger = logging.getLogger(__name__)
@@ -41,6 +42,7 @@ class VirusDBUpdater:
         self.signals = UpdateSignals()
         self.process = None
         self._is_running = False
+        # Local cache reference (module-level cache declared below)
     
     def get_clamav_user_dir(self):
         """
@@ -159,6 +161,11 @@ class VirusDBUpdater:
         
         if exit_code == 0:
             self.signals.output.emit("Virus database update completed successfully.")
+            # Refresh cached signature information after a successful update
+            try:
+                self.refresh_sig_info()
+            except Exception as e:
+                logger.debug(f"Failed to refresh sig info after update: {e}")
         else:
             self.signals.output.emit("Virus database update failed.")
 
@@ -194,64 +201,12 @@ class VirusDBUpdater:
                     'build_time': 'Unknown'
                 }
 
-            # Try to find sigtool and get detailed info
-            try:
-                result = subprocess.run(['sigtool', '--info'],
-                                      capture_output=True, text=True, timeout=10, cwd=db_dir)
-            except FileNotFoundError:
-                # If sigtool not in PATH, try to find it in common locations
-                sigtool_path = self._find_sigtool_executable()
-                if sigtool_path:
-                    result = subprocess.run([sigtool_path, '--info'],
-                                          capture_output=True, text=True, timeout=10, cwd=db_dir)
-                else:
-                    # Fallback: try to get info from database files directly
-                    return self._get_database_info_from_files(db_dir, db_files)
+            # Use cached sigtool info if available; otherwise avoid running sigtool here
+            cached = _SIG_INFO_CACHE
+            if cached is not None:
+                return cached
 
-            if result.returncode == 0:
-                output = result.stdout
-
-                # Parse the sigtool output - improved parsing
-                info = {}
-                for line in output.split('\n'):
-                    line = line.strip()
-                    if ': ' in line:
-                        key, value = line.split(': ', 1)
-                        # Clean up key for consistent naming
-                        clean_key = key.lower().replace(' ', '_').replace('(', '').replace(')', '')
-                        info[clean_key] = value.strip()
-
-                # Extract and format the information
-                result_info = {
-                    'error': None,
-                    'version': 'Unknown',
-                    'signatures': 'Unknown',
-                    'build_time': 'Unknown'
-                }
-
-                # Get version
-                if 'version' in info:
-                    result_info['version'] = info['version']
-                elif 'clamav-vdb' in info:
-                    result_info['version'] = info['clamav-vdb']
-
-                # Get signature count
-                if 'signatures' in info:
-                    result_info['signatures'] = info['signatures']
-                elif 'total_signatures' in info:
-                    result_info['signatures'] = info['total_signatures']
-
-                # Get build time
-                if 'build_time' in info:
-                    result_info['build_time'] = info['build_time']
-                elif 'built' in info:
-                    result_info['build_time'] = info['built']
-
-                # If we have at least some info, return it
-                if result_info['version'] != 'Unknown' or result_info['signatures'] != 'Unknown':
-                    return result_info
-
-            # Fallback: try to get info from database files directly
+            # Fallback: try to get info from database files directly without executing sigtool
             return self._get_database_info_from_files(db_dir, db_files)
 
         except subprocess.TimeoutExpired:
@@ -272,9 +227,9 @@ class VirusDBUpdater:
     def _find_sigtool_executable(self):
         """Find sigtool executable in common locations."""
         common_paths = [
-            r'C:\Program Files\ClamAV\sigtool.exe',
-            r'C:\Program Files (x86)\ClamAV\sigtool.exe',
-            r'C:\ClamAV\sigtool.exe',
+            r'C:\\Program Files\\ClamAV\\sigtool.exe',
+            r'C:\\Program Files (x86)\\ClamAV\\sigtool.exe',
+            r'C:\\ClamAV\\sigtool.exe',
             '/usr/bin/sigtool',
             '/usr/local/bin/sigtool',
             '/opt/clamav/bin/sigtool'
@@ -293,6 +248,87 @@ class VirusDBUpdater:
             pass
 
         return None
+
+    def refresh_sig_info(self) -> Dict[str, str]:
+        """Compute and cache signature info using sigtool. Intended to be called only at startup and after updates."""
+        db_dir = self.get_database_dir()
+        if not db_dir or not os.path.exists(db_dir):
+            info = {
+                'error': 'Database directory not found or not accessible',
+                'version': 'Unknown',
+                'signatures': 'Unknown',
+                'build_time': 'Unknown',
+            }
+            _set_sig_info_cache(info)
+            return info
+
+        db_files = [f for f in os.listdir(db_dir) if f.endswith('.cvd') or f.endswith('.cld')]
+        if not db_files:
+            info = {
+                'error': 'No database files found in database directory',
+                'version': 'No files',
+                'signatures': '0',
+                'build_time': 'Unknown',
+            }
+            _set_sig_info_cache(info)
+            return info
+
+        # Try running sigtool --info
+        try:
+            result = subprocess.run(
+                ['sigtool', '--info'], capture_output=True, text=True, timeout=10, cwd=db_dir
+            )
+        except FileNotFoundError:
+            sigtool_path = self._find_sigtool_executable()
+            if sigtool_path:
+                result = subprocess.run(
+                    [sigtool_path, '--info'], capture_output=True, text=True, timeout=10, cwd=db_dir
+                )
+            else:
+                # Fallback to file-based info if sigtool not found
+                info = self._get_database_info_from_files(db_dir, db_files)
+                _set_sig_info_cache(info)
+                return info
+
+        if result.returncode != 0:
+            # On failure, fallback to file-based info
+            info = self._get_database_info_from_files(db_dir, db_files)
+            _set_sig_info_cache(info)
+            return info
+
+        output = result.stdout
+        parsed: Dict[str, str] = {}
+        for line in output.split('\n'):
+            line = line.strip()
+            if ': ' in line:
+                key, value = line.split(': ', 1)
+                clean_key = key.lower().replace(' ', '_').replace('(', '').replace(')', '')
+                parsed[clean_key] = value.strip()
+
+        result_info: Dict[str, str] = {
+            'error': None,  # type: ignore
+            'version': 'Unknown',
+            'signatures': 'Unknown',
+            'build_time': 'Unknown',
+        }
+
+        if 'version' in parsed:
+            result_info['version'] = parsed['version']
+        elif 'clamav-vdb' in parsed:
+            result_info['version'] = parsed['clamav-vdb']
+
+        if 'signatures' in parsed:
+            result_info['signatures'] = parsed['signatures']
+        elif 'total_signatures' in parsed:
+            result_info['signatures'] = parsed['total_signatures']
+
+        if 'build_time' in parsed:
+            result_info['build_time'] = parsed['build_time']
+        elif 'built' in parsed:
+            result_info['build_time'] = parsed['built']
+
+        _set_sig_info_cache(result_info)
+        return result_info
 
     def _get_database_info_from_files(self, db_dir, db_files):
         """Get database information by examining the database files directly."""
@@ -364,3 +400,14 @@ class VirusDBUpdater:
                 'signatures': 'Unknown',
                 'build_time': 'Unknown'
             }
+
+# Module-level cache for sigtool-derived database info
+_SIG_INFO_CACHE: Optional[Dict[str, str]] = None
+
+def _set_sig_info_cache(info: Dict[str, str]) -> None:
+    global _SIG_INFO_CACHE
+    _SIG_INFO_CACHE = info
+
+def get_cached_sig_info() -> Optional[Dict[str, str]]:
+    """Return the cached sigtool-derived database info if available."""
+    return _SIG_INFO_CACHE

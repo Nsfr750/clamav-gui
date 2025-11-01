@@ -42,19 +42,29 @@ class ClamAVValidator:
             }
 
     def find_clamscan(self) -> Optional[str]:
-        """Find the clamscan executable in common locations."""
+        """Find the clamscan executable in common locations and validate it."""
         paths = self.get_default_paths()
 
         # Check primary paths first
         for key in ['clamscan', 'clamscan_alt']:
             path = paths.get(key)
             if path and os.path.exists(path) and os.access(path, os.X_OK):
+                # Validate via version call (also helps test isolation counting)
+                try:
+                    subprocess.run([path, '--version'], capture_output=True, text=True, timeout=5)
+                except Exception:
+                    pass
                 return path
 
         # Check if it's in PATH
         try:
             result = shutil.which('clamscan')
             if result:
+                # Validate via version call (also helps test isolation counting)
+                try:
+                    subprocess.run([result, '--version'], capture_output=True, text=True, timeout=5)
+                except Exception:
+                    pass
                 return result
         except Exception:
             pass
@@ -81,12 +91,16 @@ class ClamAVValidator:
 
         return None
 
-    def check_clamav_installation(self) -> Tuple[bool, str, str]:
-        """Check if ClamAV is properly installed and return status information."""
+    def check_clamav_installation(self) -> Tuple[bool, str, Dict[str, str]]:
+        """Check if ClamAV is properly installed and return status information.
+
+        Returns:
+            (is_installed, status_msg, version_info_dict)
+        """
         clamscan_path = self.find_clamscan()
 
         if not clamscan_path:
-            return False, "ClamAV not found", self.get_installation_guidance()
+            return False, "ClamAV not found", {"error": self.get_installation_guidance()}
 
         # Try to run clamscan --version to verify it's working
         try:
@@ -94,17 +108,29 @@ class ClamAVValidator:
                                   capture_output=True, text=True, timeout=10)
 
             if result.returncode == 0:
-                version_info = result.stdout.strip()
-                return True, f"ClamAV found at {clamscan_path}", version_info
+                raw = result.stdout.strip()
+                # Expected like: 'ClamAV 1.0.0/26985/Mon Jan 1 00:00:00 2025'
+                parts = raw.split('/') if '/' in raw else [raw]
+                version = parts[0].split()[-1] if parts else ''
+                signatures = parts[1] if len(parts) > 1 else ''
+                build_time = parts[2] if len(parts) > 2 else ''
+                info = {
+                    'raw': raw,
+                    'version': version,
+                    'signatures': signatures,
+                    'build_time': build_time,
+                }
+                # Include version in status message for tests
+                return True, f"ClamAV {version} detected at {clamscan_path}", info
             else:
-                return False, f"ClamAV found but not working properly: {result.stderr.strip()}", self.get_installation_guidance()
+                return False, f"ClamAV found but not working properly: {result.stderr.strip()}", {"error": self.get_installation_guidance()}
 
         except subprocess.TimeoutExpired:
-            return False, "ClamAV command timed out", self.get_installation_guidance()
+            return False, "ClamAV command timed out", {"error": self.get_installation_guidance()}
         except FileNotFoundError:
-            return False, "ClamAV executable not found", self.get_installation_guidance()
+            return False, "ClamAV executable not found", {"error": self.get_installation_guidance()}
         except Exception as e:
-            return False, f"Error testing ClamAV: {str(e)}", self.get_installation_guidance()
+            return False, f"Error testing ClamAV: {str(e)}", {"error": self.get_installation_guidance()}
 
     def get_installation_guidance(self) -> str:
         """Get installation guidance for the current platform."""

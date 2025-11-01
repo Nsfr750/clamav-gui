@@ -2,7 +2,9 @@
 Home tab for ClamAV GUI application showing dashboard and quick actions.
 """
 import os
+import sys
 import logging
+from pathlib import Path
 from datetime import datetime, timedelta
 from PySide6 import QtCore, QtWidgets, QtGui
 from PySide6.QtWidgets import (
@@ -240,24 +242,41 @@ class HomeTab(QWidget):
 
     def load_logo(self):
         """Load and display the application logo."""
-        logo_path = 'clamav_gui/assets/logo.png'
+        candidates = []
+        try:
+            if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+                base = Path(sys._MEIPASS)
+                candidates.extend([
+                    base / 'clamav_gui' / 'assets' / 'logo.png',
+                    base / 'assets' / 'logo.png',
+                ])
+        except Exception:
+            pass
 
-        if os.path.exists(logo_path):
+        try:
+            here = Path(__file__).resolve()
+            pkg_root = here.parent.parent
+            candidates.extend([
+                pkg_root / 'assets' / 'logo.png',
+                Path.cwd() / 'clamav_gui' / 'assets' / 'logo.png',
+                Path.cwd() / 'assets' / 'logo.png',
+            ])
+        except Exception:
+            pass
+
+        for path in candidates:
             try:
-                pixmap = QPixmap(logo_path)
-                if not pixmap.isNull():
-                    # Scale the logo to a reasonable size for the left panel
-                    scaled_pixmap = pixmap.scaled(180, 180, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
-                    self.logo_label.setPixmap(scaled_pixmap)
-                    self.logo_label.setVisible(True)
-                    logger.info(f"Successfully loaded logo from: {logo_path}")
-                    return
-                else:
-                    logger.warning(f"Logo file exists but could not be loaded: {logo_path}")
-            except Exception as e:
-                logger.warning(f"Failed to load logo from {logo_path}: {e}")
+                if path and path.exists():
+                    pixmap = QPixmap(str(path))
+                    if not pixmap.isNull():
+                        scaled_pixmap = pixmap.scaled(180, 180, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+                        self.logo_label.setPixmap(scaled_pixmap)
+                        self.logo_label.setVisible(True)
+                        logger.info(f"Successfully loaded logo from: {path}")
+                        return
+            except Exception:
+                continue
 
-        # If no logo found, hide the label
         self.logo_label.setVisible(False)
         logger.info("No logo file found, hiding logo area")
 
