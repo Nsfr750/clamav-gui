@@ -1,9 +1,9 @@
 """
-Version information for ClamAV GUI.
+Version information for OpenPGP.
 """
 
 # Version as a tuple (major, minor, patch)
-VERSION = (1, 2, 5)
+VERSION = (2, 1, 0)
 
 # String version
 __version__ = ".".join(map(str, VERSION))
@@ -13,13 +13,13 @@ __status__ = "stable"
 __author__ = "Nsfr750"
 __maintainer__ = "Nsfr750"
 __organization__ = 'Tuxxle'
-__copyright__ = '© 2025 Nsfr750 - All Rights Reserved'
+__copyright__ = '© 2024-2025 Nsfr750 - All Rights Reserved'
 __email__ = "nsfr750@yandex.com"
 __license__ = "GPL-3.0"
 
 # Build information
 __build__ = ""
-__date__ = "2025-10-24"
+__date__ = "2025-11-10"
 
 # Version description
 __description__ = "A modern PySide6-based graphical user interface for ClamAV Antivirus on Windows with enhanced scanning, reporting, and quarantine management."
