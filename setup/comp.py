@@ -121,14 +121,20 @@ class AppCompiler:
         ]
 
         for dir_path in dirs_to_clean:
-            if dir_path.exists():
-                shutil.rmtree(dir_path)
-                print(f"  Removed: {dir_path}")
+            try:
+                if dir_path.exists():
+                    shutil.rmtree(dir_path)
+                    print(f"  Removed: {dir_path}")
+            except Exception as e:
+                print(f"  Warning: Could not remove {dir_path}: {str(e)}")
 
         # Clean .spec files
         for spec_file in self.project_root.glob("*.spec"):
-            spec_file.unlink()
-            print(f"  Removed: {spec_file}")
+            try:
+                spec_file.unlink()
+                print(f"  Removed: {spec_file}")
+            except Exception as e:
+                print(f"  Warning: Could not remove {spec_file}: {str(e)}")
 
         print("✅ Clean completed!")
 

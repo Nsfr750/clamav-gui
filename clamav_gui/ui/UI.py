@@ -3,9 +3,10 @@ Advanced main window base class for ClamAV GUI full mode functionality.
 """
 import logging
 import os
-from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QTabWidget, QStatusBar, QMessageBox
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QIcon, QTextCursor
+from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QTabWidget, QStatusBar, 
+                             QMessageBox, QSystemTrayIcon, QMenu, QApplication)
+from PySide6.QtCore import Qt, QTimer, QEvent
+from PySide6.QtGui import QIcon, QTextCursor, QAction
 
 from clamav_gui.ui.menu import ClamAVMenuBar
 from clamav_gui.ui.settings import AppSettings
@@ -34,6 +35,11 @@ class ClamAVMainWindow(QMainWindow):
         self.process = None
         self.scan_thread = None
         self.quarantine_manager = None
+        
+        # System tray
+        self.tray_icon = None
+        self.tray_menu = None
+        self.minimize_to_tray = True  # Enable minimize to tray by default
 
         # Menu components
         self.menu_bar = None
@@ -66,27 +72,116 @@ class ClamAVMainWindow(QMainWindow):
         # Connect language manager
         if hasattr(self.lang_manager, 'language_changed'):
             self.lang_manager.language_changed.connect(self.retranslate_ui)
+            
+        # Initialize system tray
+        self.init_system_tray()
 
+    def _get_icon_path(self):
+        """Get the path to the application icon."""
+        possible_paths = [
+            os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'icon.ico'),
+            os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'icon.png'),
+            'assets/icon.ico',
+            'assets/icon.png'
+        ]
+        
+        for icon_path in possible_paths:
+            if os.path.exists(icon_path):
+                logger.info(f"Found application icon at: {icon_path}")
+                return icon_path
+        
+        logger.warning("No application icon found in any of the expected locations")
+        return None
+    
     def _setup_window_icon(self):
         """Set up the application window icon."""
         try:
-            # Try multiple possible icon locations
-            possible_paths = [
-                os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'icon.ico'),
-                os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'icon.png'),
-                'assets/icon.ico',
-                'assets/icon.png'
-            ]
-
-            for icon_path in possible_paths:
-                if os.path.exists(icon_path):
-                    self.setWindowIcon(QIcon(icon_path))
-                    logger.info(f"Successfully loaded application icon from: {icon_path}")
-                    break
-            else:
-                logger.warning("No application icon found in any of the expected locations")
+            icon_path = self._get_icon_path()
+            if icon_path:
+                self.setWindowIcon(QIcon(icon_path))
         except Exception as e:
             logger.warning(f"Failed to load application icon: {e}")
+    
+    def init_system_tray(self):
+        """Initialize the system tray icon and menu."""
+        try:
+            # Create system tray icon
+            icon_path = self._get_icon_path()
+            if not icon_path:
+                logger.warning("Cannot create system tray icon: No icon found")
+                return
+                
+            self.tray_icon = QSystemTrayIcon(self)
+            self.tray_icon.setIcon(QIcon(icon_path))
+            self.tray_icon.setToolTip('ClamAV GUI')
+            
+            # Create tray menu
+            self.tray_menu = QMenu()
+            
+            # Add actions
+            self.show_action = QAction(self.tr("Show"), self)
+            self.show_action.triggered.connect(self.show_normal)
+            
+            self.exit_action = QAction(self.tr("Exit"), self)
+            self.exit_action.triggered.connect(self.close_application)
+            
+            # Add actions to menu
+            self.tray_menu.addAction(self.show_action)
+            self.tray_menu.addSeparator()
+            self.tray_menu.addAction(self.exit_action)
+            
+            # Set the context menu
+            self.tray_icon.setContextMenu(self.tray_menu)
+            
+            # Connect signals
+            self.tray_icon.activated.connect(self.tray_icon_activated)
+            
+            # Show the tray icon
+            self.tray_icon.show()
+            
+            logger.info("System tray initialized successfully")
+            
+        except Exception as e:
+            logger.error(f"Failed to initialize system tray: {e}")
+    
+    def tray_icon_activated(self, reason):
+        """Handle system tray icon activation."""
+        if reason == QSystemTrayIcon.DoubleClick:
+            self.show_normal()
+    
+    def show_normal(self):
+        """Restore the window from system tray."""
+        self.showNormal()
+        self.activateWindow()
+        self.raise_()
+    
+    def close_application(self):
+        """Clean up and close the application."""
+        if self.tray_icon:
+            self.tray_icon.hide()
+        QApplication.quit()
+    
+    def changeEvent(self, event):
+        """Handle window state changes."""
+        if event.type() == QEvent.WindowStateChange:
+            if self.windowState() & Qt.WindowMinimized and self.minimize_to_tray:
+                self.hide()
+                if self.tray_icon:
+                    self.tray_icon.showMessage(
+                        self.tr("ClamAV GUI"),
+                        self.tr("The application is running in the system tray"),
+                        QSystemTrayIcon.Information,
+                        2000
+                    )
+        super().changeEvent(event)
+    
+    def closeEvent(self, event):
+        """Handle window close event."""
+        if self.minimize_to_tray and self.tray_icon and self.tray_icon.isVisible():
+            self.hide()
+            event.ignore()
+        else:
+            self.close_application()
 
     def init_ui(self):
         """Initialize the user interface with advanced features."""

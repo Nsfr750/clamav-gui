@@ -3,7 +3,7 @@ Version information for OpenPGP.
 """
 
 # Version as a tuple (major, minor, patch)
-VERSION = (2, 1, 0)
+VERSION = (1, 2, 5)
 
 # String version
 __version__ = ".".join(map(str, VERSION))

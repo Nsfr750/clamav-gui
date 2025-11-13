@@ -1,26 +1,11 @@
 # To-Do List
 
-## High Priority
-
 - [ ] Implement scheduled scans
-- [ ] Add support for custom scan profiles
 - [ ] Implement scan history and logging
-
-## Medium Priority
-
 - [ ] Add more detailed statistics
-
-## Low Priority
-
 - [ ] Custom scan exclusions
 - [ ] Automatic actions for infected files
-
-## In Progress
-
-- [ ] Basic scan functionality
-- [ ] Database updates
 - [ ] Progress tracking
-- [ ] Multi-language support
 
 ## Completed in v1.2.5
 

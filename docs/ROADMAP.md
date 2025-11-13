@@ -47,20 +47,11 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 
 - [ ] **Dark Mode**: Complete dark theme support with system theme detection
 - [ ] **Multi-language Support**: Expand to 10+ languages beyond English and Italian
-- [ ] **Accessibility Improvements**: WCAG 2.1 compliance for users with disabilities
-- [ ] **Mobile-Responsive Design**: Better experience on high-DPI displays and tablets
 
 ### Additional Advanced Features
 
 - [ ] **API Endpoints**: REST API for integration with other security tools
 - [ ] **Advanced Reporting**: Detailed analytics and threat intelligence reports
-
-### Enterprise Features
-
-- [ ] **Centralized Management**: Admin console for managing multiple installations
-- [ ] **Compliance Reporting**: Generate reports for security audits and compliance
-- [ ] **LDAP Integration**: Enterprise authentication and user management
-- [ ] **SIEM Integration**: Send alerts and logs to enterprise monitoring systems
 
 ## Version 1.4.0 (Major Release) ⚡
 
@@ -69,7 +60,6 @@ This document outlines the development roadmap for ClamAV GUI, including upcomin
 - [ ] **Cross-Platform Support**: Native Linux and macOS versions
 - [ ] **Microservices Architecture**: Modular design for better maintainability
 - [ ] **Database Backend**: Replace file-based storage with proper database
-- [ ] **Web Interface**: Browser-based management interface
 
 ### Advanced Security
 

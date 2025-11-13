@@ -3,6 +3,9 @@ import os
 import subprocess
 import logging
 import time
+
+# Setup logger first
+logger = logging.getLogger(__name__)
 from pathlib import Path
 from datetime import datetime
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -72,8 +75,6 @@ except ImportError as e:
 # Import sandbox analyzer
 from clamav_gui.utils.sandbox_analyzer import SandboxAnalyzer
 
-# Setup logger
-logger = logging.getLogger(__name__)
 
 from clamav_gui.ui.UI import ClamAVMainWindow
 
