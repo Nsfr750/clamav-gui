@@ -197,3 +197,4 @@ tests/
 
 compiler.py
 setup/comp.py
+.windsurf/rules
